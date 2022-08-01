@@ -1,6 +1,11 @@
 # e2e测试生成
 通过录制的方式生成e2e测试的代码，支持插件，减少e2e测试的手动书写难度
 
+[![CI][ci-image]][ci-url]
+
+[ci-image]: https://github.com/macacajs/macaca-recorder/actions/workflows/ci.yml/badge.svg
+[ci-url]: https://github.com/macacajs/macaca-recorder/actions/workflows/ci.yml
+
 ## 整体思路
 以nodejs作为主流程控制器，用playwright实现页面录制，汇总事件流，通过事件流生成对应的代码。
 
