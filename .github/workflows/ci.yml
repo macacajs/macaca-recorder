@@ -33,7 +33,9 @@ jobs:
           npm i
 
       - name: Continuous integration
-        run: npm run test
+        run: |
+          npm run buildweb
+          npm run test
 
       - name: Code coverage
         uses: codecov/codecov-action@v3.0.0
