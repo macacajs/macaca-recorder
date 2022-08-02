@@ -1,18 +1,19 @@
 {
   "name": "macaca-recorder",
-  "version": "1.0.0",
+  "version": "0.1.1",
   "description": "auto create e2e test",
   "main": "index.js",
   "scripts": {
     "buildweb": "rollup -c",
     "test": "mocha --reporter spec --require ts-node/register test/**/*.test.ts",
-    "dev": "npm run buildweb && ts-node src/index.ts"
+    "dev": "npm run buildweb && ts-node src/index.ts",
+    "contributor": "git-contributor"
   },
   "dependencies": {
     "@types/mime": "^2.0.3",
     "@types/node": "^18.0.6",
     "mime": "^3.0.0",
-    "playwright": "^1.24.0"
+    "playwright": "1"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^8.3.3",
@@ -27,6 +28,7 @@
     "eslint-import-resolver-typescript": "^3.3.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.2.1",
+    "git-contributor": "1",
     "mocha": "^10.0.0",
     "prettier": "^2.7.1",
     "rollup": "^2.77.1",
