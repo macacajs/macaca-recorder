@@ -1,11 +1,11 @@
-import { FunctionWithSource, IPage } from '@/node/services/browser';
+import { FunctionWithSource, IPage } from "@/node/services/browser";
 import {
   FrameSession,
   mainFrameSession,
   Page,
   serverSideCallMetadata,
   WindowBounds,
-} from './types';
+} from "./types";
 
 export default class IPageDelegate implements IPage {
   private page: Page;
@@ -33,7 +33,7 @@ export default class IPageDelegate implements IPage {
   async evaluateExpression(
     expression: string,
     isFunction?: boolean,
-    arg?: unknown,
+    arg?: unknown
   ) {
     return this.page
       .mainFrame()
@@ -48,10 +48,14 @@ export default class IPageDelegate implements IPage {
   async exposeBinding(
     name: string,
     needsHandle: boolean,
-    playwrightBinding: FunctionWithSource,
+    playwrightBinding: FunctionWithSource
   ) {
     await this.page.exposeBinding(name, needsHandle, (_source, ...args) => {
       return playwrightBinding({ page: this }, ...args);
     });
+  }
+
+  async dispose(): Promise<void> {
+    await this.page.close(serverSideCallMetadata());
   }
 }

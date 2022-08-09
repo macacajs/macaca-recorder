@@ -1,5 +1,5 @@
-import { genInjectID, IEventManager, InjectIDType } from '@/core';
-import { ICodeGen } from './code-gen';
+import { genInjectID, IEventManager, InjectIDType } from "@/core";
+import { ICodeGen } from "./code-gen";
 
 // 对外报漏api
 export interface IApi {
@@ -10,6 +10,6 @@ export interface IApi {
   dispose(): Promise<void>;
 }
 
-export const iapiID = genInjectID<IApi>();
+export const IApi = genInjectID<IApi>();
 
-export default iapiID;
+export default IApi;

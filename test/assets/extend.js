@@ -1,11 +1,12 @@
+/* eslint-disable no-undef */
 class Extends {
   constructor(injected) {
-    if(!window.extends) {
+    if (!window.extends) {
       window.extends = {
         hello() {
-          return 'hello world';
-        }
-      }
+          return "hello world";
+        },
+      };
     }
   }
 }

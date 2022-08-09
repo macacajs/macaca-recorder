@@ -1,12 +1,14 @@
-import { autowired, IPlugin, IServiceManager, serviceManagerID } from '@/core';
-import icodeGenID from '@/node/services/code-gen';
-import CodeGen from './coder';
+import { autowired, IPlugin, IServiceManager } from "@/core";
+import { ICodeGen } from "@/node/services/code-gen";
+import { IWebServiceManager } from "@/node/services/coder-web-service";
+import CodeGen from "./coder";
 
 export default class GeneratorPlugin implements IPlugin {
-  @autowired(serviceManagerID)
+  @autowired(IServiceManager)
   serviceManager: IServiceManager;
 
-  public registerSrv() {
-    this.serviceManager.registerService(icodeGenID, CodeGen);
+  public async registerSrv() {
+    this.serviceManager.registerService(ICodeGen, CodeGen);
+    this.serviceManager.registerService(IWebServiceManager, CodeGen);
   }
 }

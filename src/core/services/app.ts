@@ -1,10 +1,10 @@
-import { genInjectID } from '../ioc';
+import { genInjectID } from "../ioc";
 
 export interface IApp {
   init(): Promise<void>;
   dispose(): Promise<void>;
 }
 
-export const iappID = genInjectID<IApp>();
+export const IApp = genInjectID<IApp>();
 
-export default iappID;
+export default IApp;

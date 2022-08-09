@@ -28,7 +28,7 @@ function getDeps(clz: any): Array<[InjectIDType<object>, string]> {
 function registerDeps(clz: any, id: number, key: string) {
   if (!clz.__deps) {
     clz.__deps = getDeps(
-      Reflect.getPrototypeOf(clz.prototype)?.constructor,
+      Reflect.getPrototypeOf(clz.prototype)?.constructor
     ).slice(0);
   }
   clz.__deps.push([id, key]);
@@ -61,6 +61,8 @@ export default class IOCContext {
 
   static Provide = Provide;
 
+  private clazzInstanceMap: Map<CLAZZ<unknown>, unknown> = new Map();
+
   // 注册的service
   private clazz: { [key: number]: CLAZZ<unknown> } = {};
 
@@ -81,10 +83,19 @@ export default class IOCContext {
     return (this.clazz[idNo] as CLAZZ<T>) || _provides[idNo] || null;
   }
 
+  getBeanByClazz<T>(Clz: CLAZZ<T>): T {
+    if (this.clazzInstanceMap.has(Clz)) {
+      return this.clazzInstanceMap.get(Clz) as never;
+    }
+    const bean = new Clz();
+    this.clazzInstanceMap.set(Clz, bean);
+    return bean;
+  }
+
   newBean<T>(id: InjectIDType<T>): T | null {
     const Clz = this.getBeanClazz(id);
     if (Clz !== null) {
-      const bean = new Clz();
+      const bean = this.getBeanByClazz(Clz);
       this.instances[injectID2No(id)] = [bean];
       this.resolveDeps(bean, Clz);
       return bean;
@@ -113,7 +124,7 @@ export default class IOCContext {
   }
 
   of<T extends object>(Clz: CLAZZ<T>): T {
-    const ins = new Clz();
+    const ins = this.getBeanByClazz(Clz);
     this.resolveDeps(ins, Clz);
     return ins;
   }

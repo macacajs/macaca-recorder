@@ -1,7 +1,7 @@
 /* eslint-disable */
 'use strict';
 
-/*! *****************************************************************************
+/******************************************************************************
 Copyright (c) Microsoft Corporation.
 
 Permission to use, copy, modify, and/or distribute this software for any
@@ -79,6 +79,7 @@ function Provide(id) {
 }
 class IOCContext {
     constructor() {
+        this.clazzInstanceMap = new Map();
         // 注册的service
         this.clazz = {};
         // 已经初始化的实例 每个id可能有多个实例
@@ -95,10 +96,18 @@ class IOCContext {
         const idNo = id;
         return this.clazz[idNo] || _provides[idNo] || null;
     }
+    getBeanByClazz(Clz) {
+        if (this.clazzInstanceMap.has(Clz)) {
+            return this.clazzInstanceMap.get(Clz);
+        }
+        const bean = new Clz();
+        this.clazzInstanceMap.set(Clz, bean);
+        return bean;
+    }
     newBean(id) {
         const Clz = this.getBeanClazz(id);
         if (Clz !== null) {
-            const bean = new Clz();
+            const bean = this.getBeanByClazz(Clz);
             this.instances[injectID2No(id)] = [bean];
             this.resolveDeps(bean, Clz);
             return bean;
@@ -124,7 +133,7 @@ class IOCContext {
         });
     }
     of(Clz) {
-        const ins = new Clz();
+        const ins = this.getBeanByClazz(Clz);
         this.resolveDeps(ins, Clz);
         return ins;
     }
@@ -137,11 +146,11 @@ IOCContext.autowired = autowired;
 IOCContext.genInjectID = genInjectID;
 IOCContext.Provide = Provide;
 
-const pluginManagerID = genInjectID();
+const IPluginManager = genInjectID();
 
-const serviceManagerID = genInjectID();
+const IServiceManager = genInjectID();
 
-const ieventID = genInjectID();
+const IEventManager = genInjectID();
 
 function uniq(arr) {
     return arr.reduce((ret, cur) => {
@@ -152,7 +161,7 @@ function uniq(arr) {
     }, []);
 }
 
-const iappID = genInjectID();
+const IApp = genInjectID();
 
 class App {
     // @internal
@@ -163,7 +172,6 @@ class App {
         this.plugins = [];
         this.pluginInstances = [];
         this.plugins = plugins;
-        this.start();
     }
     /**
      * 创建应用
@@ -172,29 +180,34 @@ class App {
      * @returns 对外接口
      */
     static createApp(plugins, id) {
-        const app = new App(uniq(plugins));
-        const api = app.getService(id);
-        if (!api) {
-            throw new Error('unregister api plugin');
-        }
-        return api;
+        return __awaiter(this, void 0, void 0, function* () {
+            const app = new App(uniq(plugins));
+            yield app.start();
+            const api = app.getService(id);
+            if (!api) {
+                throw new Error("unregister api plugin");
+            }
+            return api;
+        });
     }
     start() {
-        this.context.registerBean(iappID, this);
-        this.context.registerBean(pluginManagerID, this);
-        this.context.registerBean(serviceManagerID, this);
-        this.pluginInstances = this.plugins.map(plugin => {
-            return this.context.of(plugin);
+        return __awaiter(this, void 0, void 0, function* () {
+            this.context.registerBean(IApp, this);
+            this.context.registerBean(IPluginManager, this);
+            this.context.registerBean(IServiceManager, this);
+            this.pluginInstances = this.plugins.map((plugin) => {
+                return this.context.of(plugin);
+            });
+            // 注册服务
+            yield Promise.all(this.pluginInstances.map((plug) => {
+                var _a;
+                return (_a = plug.registerSrv) === null || _a === void 0 ? void 0 : _a.call(plug);
+            }));
+            this.context.resolveDeps(this, App);
+            if (this.eventManager) {
+                this.eventManager.start.trigger();
+            }
         });
-        // 注册服务
-        this.pluginInstances.forEach(plug => {
-            var _a;
-            (_a = plug.registerSrv) === null || _a === void 0 ? void 0 : _a.call(plug);
-        });
-        this.context.resolveDeps(this, App);
-        if (this.eventManager) {
-            this.eventManager.start.trigger();
-        }
     }
     init() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -205,7 +218,7 @@ class App {
                 return (_a = plug.init) === null || _a === void 0 ? void 0 : _a.call(plug);
             }));
             // 触发插件的afterInit事件
-            this.pluginInstances.forEach(plug => {
+            this.pluginInstances.forEach((plug) => {
                 var _a;
                 (_a = plug.afterInit) === null || _a === void 0 ? void 0 : _a.call(plug);
             });
@@ -220,7 +233,7 @@ class App {
                 this.eventManager.dispose.trigger();
             }
             // 解析依赖并触发dispose事件
-            yield Promise.all(this.pluginInstances.map(plug => {
+            yield Promise.all(this.pluginInstances.map((plug) => {
                 var _a;
                 return (_a = plug.dispose) === null || _a === void 0 ? void 0 : _a.call(plug);
             }));
@@ -233,29 +246,27 @@ class App {
      */
     registerPlugin(plugin) {
         var _a;
-        // 防止重复注册
-        if (this.hasRegisterPlugin(plugin))
-            return;
-        const plugins = this.plugins.slice(0);
-        const pluginInstances = this.pluginInstances.slice(0);
-        try {
-            plugins.push(plugin);
-            const plug = this.context.of(plugin);
-            pluginInstances.push(plug);
-            (_a = plug.registerSrv) === null || _a === void 0 ? void 0 : _a.call(plug);
-            this.plugins = plugins;
-            this.pluginInstances = pluginInstances;
-        }
-        catch (e) {
-            throw new Error(`register plugin ${plugin.name} error`);
-        }
+        return __awaiter(this, void 0, void 0, function* () {
+            // 防止重复注册
+            if (this.hasRegisterPlugin(plugin))
+                return;
+            try {
+                this.plugins.push(plugin);
+                const plug = this.context.of(plugin);
+                this.pluginInstances.push(plug);
+                yield ((_a = plug.registerSrv) === null || _a === void 0 ? void 0 : _a.call(plug));
+            }
+            catch (e) {
+                throw new Error(`register plugin ${plugin.name} error`);
+            }
+        });
     }
     /**
      * 注册插件
      * @param plugins 插件列表
      */
     registerPlugins(plugins) {
-        plugins.forEach(plugin => this.registerPlugin(plugin));
+        plugins.forEach((plugin) => this.registerPlugin(plugin));
     }
     /**
      * 判断是否注册某个插件
@@ -263,7 +274,7 @@ class App {
      * @returns 是否注册
      */
     hasRegisterPlugin(plugin) {
-        return !!this.plugins.find(v => v === plugin);
+        return !!this.plugins.find((v) => v === plugin);
     }
     unregisterPlugin(plugin) {
         var _a, _b;
@@ -285,13 +296,13 @@ class App {
     }
 }
 __decorate([
-    autowired(ieventID),
+    autowired(IEventManager),
     __metadata("design:type", Object)
 ], App.prototype, "eventManager", void 0);
 
-const iapiID = genInjectID();
+const IApi = genInjectID();
 
-const icodeGenID = genInjectID();
+const ICodeGen = genInjectID();
 
 class Api {
     init() {
@@ -309,29 +320,31 @@ class Api {
     }
 }
 __decorate([
-    autowired(iappID),
+    autowired(IApp),
     __metadata("design:type", Object)
 ], Api.prototype, "app", void 0);
 __decorate([
-    autowired(ieventID),
+    autowired(IEventManager),
     __metadata("design:type", Object)
 ], Api.prototype, "eventManger", void 0);
 __decorate([
-    autowired(icodeGenID),
+    autowired(ICodeGen),
     __metadata("design:type", Object)
 ], Api.prototype, "codeGen", void 0);
 __decorate([
-    autowired(serviceManagerID),
+    autowired(IServiceManager),
     __metadata("design:type", Object)
 ], Api.prototype, "serviceManager", void 0);
 
 class ApiPlugin {
     registerSrv() {
-        this.srvManager.registerService(iapiID, Api);
+        return __awaiter(this, void 0, void 0, function* () {
+            this.srvManager.registerService(IApi, Api);
+        });
     }
 }
 __decorate([
-    autowired(serviceManagerID),
+    autowired(IServiceManager),
     __metadata("design:type", Object)
 ], ApiPlugin.prototype, "srvManager", void 0);
 
@@ -347,12 +360,12 @@ class EventBase {
         this.onceCallbacks.push(cb);
     }
     off(cb) {
-        this.callbacks = this.callbacks.filter(mcb => mcb !== cb);
-        this.onceCallbacks = this.onceCallbacks.filter(mcb => mcb !== cb);
+        this.callbacks = this.callbacks.filter((mcb) => mcb !== cb);
+        this.onceCallbacks = this.onceCallbacks.filter((mcb) => mcb !== cb);
     }
     trigger(arg) {
-        this.callbacks.forEach(cb => cb(arg));
-        this.onceCallbacks.forEach(cb => cb(arg));
+        this.callbacks.forEach((cb) => cb(arg));
+        this.onceCallbacks.forEach((cb) => cb(arg));
         this.onceCallbacks = [];
     }
 }
@@ -368,11 +381,13 @@ class EventImpl {
 
 class EventPlugin {
     registerSrv() {
-        this.srvManager.registerService(ieventID, EventImpl);
+        return __awaiter(this, void 0, void 0, function* () {
+            this.srvManager.registerService(IEventManager, EventImpl);
+        });
     }
 }
 __decorate([
-    autowired(serviceManagerID),
+    autowired(IServiceManager),
     __metadata("design:type", Object)
 ], EventPlugin.prototype, "srvManager", void 0);
 
@@ -381,8 +396,8 @@ __decorate([
  */
 function start() {
     return __awaiter(this, void 0, void 0, function* () {
-        const app = App.createApp([ApiPlugin, EventPlugin], iapiID);
+        const app = yield App.createApp([ApiPlugin, EventPlugin], IApi);
         yield app.init();
     });
 }
-start();
+setTimeout(start, 0);

@@ -1,20 +1,20 @@
-import { expect } from 'chai';
-import IOCContext, { Provide } from '@/core/ioc';
+import { expect } from "chai";
+import IOCContext, { Provide } from "@/core/ioc";
 
-describe('test ioc', () => {
-  it('should work create class', () => {
+describe("test ioc", () => {
+  it("should work create class", () => {
     class Car {}
 
     const ctx = new IOCContext();
     expect(ctx.of(Car)).to.instanceOf(Car);
   });
 
-  it('should work create class inject with registerBeanClazz', () => {
+  it("should work create class inject with registerBeanClazz", () => {
     interface IEngine {
       run(): number;
     }
 
-    const iengineID = IOCContext.genInjectID<IEngine>();
+    const IEngine = IOCContext.genInjectID<IEngine>();
 
     class Engine implements IEngine {
       ID = 1;
@@ -25,21 +25,21 @@ describe('test ioc', () => {
     }
 
     class Car {
-      @IOCContext.autowired(iengineID)
+      @IOCContext.autowired(IEngine)
       engine: IEngine;
     }
 
     const ctx = new IOCContext();
-    ctx.registerBeanClazz(iengineID, Engine);
+    ctx.registerBeanClazz(IEngine, Engine);
     expect(ctx.of(Car).engine.run()).to.equal(1);
   });
 
-  it('should work create class inject with registerBean', () => {
+  it("should work create class inject with registerBean", () => {
     interface IEngine {
       run(): number;
     }
 
-    const iengineID = IOCContext.genInjectID<IEngine>();
+    const IEngine = IOCContext.genInjectID<IEngine>();
 
     class Engine implements IEngine {
       ID = 1;
@@ -50,23 +50,23 @@ describe('test ioc', () => {
     }
 
     class Car {
-      @IOCContext.autowired(iengineID)
+      @IOCContext.autowired(IEngine)
       engine: IEngine;
     }
 
     const ctx = new IOCContext();
-    ctx.registerBean(iengineID, ctx.of(Engine));
+    ctx.registerBean(IEngine, ctx.of(Engine));
     expect(ctx.of(Car).engine.run()).to.equal(1);
   });
 
-  it('should work create class inject with Provide', () => {
+  it("should work create class inject with Provide", () => {
     interface IEngine {
       run(): number;
     }
 
-    const iengineID = IOCContext.genInjectID<IEngine>();
+    const IEngine = IOCContext.genInjectID<IEngine>();
 
-    @IOCContext.Provide(iengineID)
+    @IOCContext.Provide(IEngine)
     class Engine implements IEngine {
       ID = 1;
 
@@ -76,7 +76,7 @@ describe('test ioc', () => {
     }
 
     class Car {
-      @IOCContext.autowired(iengineID)
+      @IOCContext.autowired(IEngine)
       engine: IEngine;
     }
 
@@ -85,14 +85,14 @@ describe('test ioc', () => {
     expect(ctx.of(Car).engine).to.instanceOf(Engine);
   });
 
-  it('registerBeanClazz order before then Provide', () => {
+  it("registerBeanClazz order before then Provide", () => {
     interface IEngine {
       run(): number;
     }
 
-    const iengineID = IOCContext.genInjectID<IEngine>();
+    const IEngine = IOCContext.genInjectID<IEngine>();
 
-    @IOCContext.Provide(iengineID)
+    @IOCContext.Provide(IEngine)
     class MEngine implements IEngine {
       ID = 1;
 
@@ -110,25 +110,25 @@ describe('test ioc', () => {
     }
 
     class Car {
-      @IOCContext.autowired(iengineID)
+      @IOCContext.autowired(IEngine)
       engine: IEngine;
     }
 
     const ctx = new IOCContext();
-    ctx.registerBeanClazz(iengineID, Engine);
+    ctx.registerBeanClazz(IEngine, Engine);
     expect(ctx.of(Car).engine.run()).to.equal(2);
     expect(ctx.of(Car).engine).to.instanceOf(Engine);
     expect(ctx.of(Car).engine).not.instanceOf(MEngine);
   });
 
-  it('should be cache', () => {
+  it("should be cache", () => {
     interface IEngine {
       run(): number;
     }
 
-    const iengineID = IOCContext.genInjectID<IEngine>();
+    const IEngine = IOCContext.genInjectID<IEngine>();
 
-    @IOCContext.Provide(iengineID)
+    @IOCContext.Provide(IEngine)
     class NEngine implements IEngine {
       ID = 1;
 
@@ -138,12 +138,12 @@ describe('test ioc', () => {
     }
 
     class Car {
-      @IOCContext.autowired(iengineID)
+      @IOCContext.autowired(IEngine)
       engine: IEngine;
     }
 
     class NCar {
-      @IOCContext.autowired(iengineID)
+      @IOCContext.autowired(IEngine)
       engine: IEngine;
     }
 
@@ -152,15 +152,15 @@ describe('test ioc', () => {
     expect(ctx.of(Car).engine).to.instanceOf(NEngine);
   });
 
-  it('should be null when no provider', () => {
+  it("should be null when no provider", () => {
     interface IEngine {
       run(): number;
     }
 
-    const iengineID = IOCContext.genInjectID<IEngine>();
+    const IEngine = IOCContext.genInjectID<IEngine>();
 
     class Car {
-      @IOCContext.autowired(iengineID)
+      @IOCContext.autowired(IEngine)
       engine: IEngine;
     }
 
@@ -168,7 +168,7 @@ describe('test ioc', () => {
     expect(ctx.of(Car).engine).to.equal(null);
   });
 
-  it('should be work whit circle deps', () => {
+  it("should be work whit circle deps", () => {
     interface IEngine {
       car: ICar;
       run(): number;
@@ -178,14 +178,14 @@ describe('test ioc', () => {
       engine: IEngine;
     }
 
-    const iengineID = IOCContext.genInjectID<IEngine>();
-    const icarID = IOCContext.genInjectID<ICar>();
+    const IEngine = IOCContext.genInjectID<IEngine>();
+    const ICar = IOCContext.genInjectID<ICar>();
 
-    @Provide(iengineID)
+    @Provide(IEngine)
     class Engine implements IEngine {
       ID = 1;
 
-      @IOCContext.autowired(icarID)
+      @IOCContext.autowired(ICar)
       car: ICar;
 
       run() {
@@ -193,17 +193,17 @@ describe('test ioc', () => {
       }
     }
 
-    @Provide(icarID)
+    @Provide(ICar)
     class Car {
-      @IOCContext.autowired(iengineID)
+      @IOCContext.autowired(IEngine)
       engine: IEngine;
     }
 
     class App {
-      @IOCContext.autowired(icarID)
+      @IOCContext.autowired(ICar)
       car: ICar;
 
-      @IOCContext.autowired(iengineID)
+      @IOCContext.autowired(IEngine)
       engine: IEngine;
     }
 
@@ -217,14 +217,14 @@ describe('test ioc', () => {
     expect(app.car).to.instanceOf(Car);
   });
 
-  it('should be work with extends class', () => {
+  it("should be work with extends class", () => {
     interface IEngine {
       run(): number;
     }
 
-    const iengineID = IOCContext.genInjectID<IEngine>();
+    const IEngine = IOCContext.genInjectID<IEngine>();
 
-    @IOCContext.Provide(iengineID)
+    @IOCContext.Provide(IEngine)
     class Engine implements IEngine {
       ID = 1;
 
@@ -234,12 +234,12 @@ describe('test ioc', () => {
     }
 
     class ParentCar {
-      @IOCContext.autowired(iengineID)
+      @IOCContext.autowired(IEngine)
       pengine: IEngine;
     }
 
     class Car extends ParentCar {
-      @IOCContext.autowired(iengineID)
+      @IOCContext.autowired(IEngine)
       cengine: IEngine;
     }
 
