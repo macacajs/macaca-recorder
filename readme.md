@@ -2,7 +2,10 @@
 
 ---
 
-[![NPM version][npm-image]][npm-url] [![CI][ci-image]][ci-url] [![Test coverage][codecov-image]][codecov-url] [![node version][node-image]][node-url]
+[![NPM version][npm-image]][npm-url]
+[![CI][ci-image]][ci-url]
+[![Test coverage][codecov-image]][codecov-url]
+[![node version][node-image]][node-url]
 
 [npm-image]: https://img.shields.io/npm/v/macaca-recorder.svg?logo=npm
 [npm-url]: https://npmjs.org/package/macaca-recorder
@@ -40,17 +43,6 @@ src/
 │   └── services
 └── utils
 ```
-
-<!-- GITCONTRIBUTOR_START -->
-
-## Contributors
-
-| [<img src="https://avatars.githubusercontent.com/u/1011681?v=4" width="100px;"/><br/><sub><b>xudafeng</b></sub>](https://github.com/xudafeng)<br/> | [<img src="https://avatars.githubusercontent.com/u/52845048?v=4" width="100px;"/><br/><sub><b>snapre</b></sub>](https://github.com/snapre)<br/> | [<img src="https://avatars.githubusercontent.com/u/12947068?v=4" width="100px;"/><br/><sub><b>ilimei</b></sub>](https://github.com/ilimei)<br/> | [<img src="https://avatars.githubusercontent.com/u/10104168?v=4" width="100px;"/><br/><sub><b>yihuineng</b></sub>](https://github.com/yihuineng)<br/> |
-| :-: | :-: | :-: | :-: |
-
-This project follows the git-contributor [spec](https://github.com/xudafeng/git-contributor), auto updated at `Tue Aug 02 2022 10:50:00 GMT+0800`.
-
-<!-- GITCONTRIBUTOR_END -->
 
 ## 待完成的任务
 

@@ -2,7 +2,7 @@ name: CI
 
 on:
   workflow_dispatch:
-
+  
   push:
     branches:
       - '**'
@@ -16,8 +16,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macOS-latest]
-        node-version: [16]
+        os: [ ubuntu-latest, macOS-latest ]
+        node-version: [ 16 ]
     steps:
       - name: Checkout Git Source
         uses: actions/checkout@v3
