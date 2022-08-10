@@ -5,6 +5,6 @@ export interface IApp {
   dispose(): Promise<void>;
 }
 
-export const iappID = genInjectID<IApp>();
+export const IApp = genInjectID<IApp>();
 
-export default iappID;
+export default IApp;

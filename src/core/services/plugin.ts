@@ -1,7 +1,7 @@
 import { CLAZZ, genInjectID } from '../ioc';
 
 export interface IPlugin {
-  registerSrv?: () => void;
+  registerSrv?: () => Promise<void>;
   init?: () => Promise<void>;
   afterInit?: () => void;
   onUnregistter?: () => void;
@@ -9,12 +9,12 @@ export interface IPlugin {
 }
 
 export interface IPluginManager {
-  registerPlugin(plugin: CLAZZ<IPlugin>): void;
-  registerPlugins(plugins: CLAZZ<IPlugin>[]): void;
+  registerPlugin(plugin: CLAZZ<IPlugin>): Promise<void>;
+  registerPlugins(plugins: CLAZZ<IPlugin>[]): Promise<void>;
   hasRegisterPlugin(plugin: CLAZZ<IPlugin>): boolean;
   unregisterPlugin(plugin: CLAZZ<IPlugin>): void;
 }
 
-export const pluginManagerID = genInjectID<IPluginManager>();
+export const IPluginManager = genInjectID<IPluginManager>();
 
-export default pluginManagerID;
+export default IPluginManager;

@@ -54,4 +54,12 @@ export default class IPageDelegate implements IPage {
       return playwrightBinding({ page: this }, ...args);
     });
   }
+
+  async extendInjectedScript(source: string) {
+    await this.page.mainFrame().extendInjectedScript(source);
+  }
+
+  async dispose(): Promise<void> {
+    await this.page.close(serverSideCallMetadata());
+  }
 }

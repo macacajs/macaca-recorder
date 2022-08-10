@@ -16,8 +16,11 @@ type HighlightModel = {
 
 declare global {
   interface Window {
+    _pw_getdom_?: (doms: any[]) => Promise<void>;
     CODE_GENER?: boolean;
     injected?: InjectedScript;
+    getWebServices(): string[];
+    getCodeServices(): string[];
   }
 }
 
@@ -40,7 +43,7 @@ function removeEventListeners(listeners: (() => void)[]) {
 }
 
 function deepEventTarget(event: Event): HTMLElement {
-  console.info(event.composedPath());
+  window._pw_getdom_?.(event.composedPath());
   return event.composedPath()[0] as HTMLElement;
 }
 

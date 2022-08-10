@@ -17,6 +17,6 @@ export interface IEventManager {
   dispose: IEvent<void>;
 }
 
-export const ieventID = genInjectID<IEventManager>();
+export const IEventManager = genInjectID<IEventManager>();
 
-export default ieventID;
+export default IEventManager;

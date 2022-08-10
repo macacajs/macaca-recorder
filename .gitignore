@@ -1,1 +1,4 @@
 node_modules/
+src/node/plugins/generator/
+src/node/plugins/page/index.js
+

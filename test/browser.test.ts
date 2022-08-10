@@ -4,10 +4,10 @@ import { expect } from 'chai';
 import { App } from '@/core';
 import ApiPlugin from '@/node/plugins/api';
 import BrowserPlugin from '@/node/plugins/browser';
-import iapiID, { IApi } from '@/node/services/api';
-import { ibrowserFactoryID } from '@/node/services/browser';
+import { IApi } from '@/node/services/api';
+import { IBrowserFactory } from '@/node/services/browser';
 import AssetsServerPlugin from '@/node/plugins/assets-server';
-import iassetsServerID from '@/node/services/assets-server';
+import IAssetsServer from '@/node/services/assets-server';
 
 describe('test browser', () => {
   let app: IApi;
@@ -17,10 +17,10 @@ describe('test browser', () => {
   });
 
   it('launch should be ok', async () => {
-    app = App.createApp([ApiPlugin, BrowserPlugin], iapiID);
+    app = await App.createApp([ApiPlugin, BrowserPlugin], IApi);
     await app.init();
 
-    const factory = app.getService(ibrowserFactoryID);
+    const factory = app.getService(IBrowserFactory);
     expect(factory).not.equal(null);
 
     const browser = factory?.createAppBrowser();
@@ -38,10 +38,10 @@ describe('test browser', () => {
   });
 
   it('addInitScript should be work', async () => {
-    app = App.createApp([ApiPlugin, BrowserPlugin], iapiID);
+    app = await App.createApp([ApiPlugin, BrowserPlugin], IApi);
     await app.init();
 
-    const factory = app.getService(ibrowserFactoryID);
+    const factory = app.getService(IBrowserFactory);
     expect(factory).not.equal(null);
 
     const browser = factory?.createAppBrowser();
@@ -60,10 +60,10 @@ describe('test browser', () => {
   });
 
   it('extendInjectedScript should be work', async () => {
-    app = App.createApp([ApiPlugin, BrowserPlugin], iapiID);
+    app = await App.createApp([ApiPlugin, BrowserPlugin], IApi);
     await app.init();
 
-    const factory = app.getService(ibrowserFactoryID);
+    const factory = app.getService(IBrowserFactory);
     expect(factory).not.equal(null);
 
     const browser = factory?.createAppBrowser();
@@ -87,10 +87,13 @@ describe('test browser', () => {
   }).timeout(5000);
 
   it('open should be work', async () => {
-    app = App.createApp([ApiPlugin, BrowserPlugin, AssetsServerPlugin], iapiID);
+    app = await App.createApp(
+      [ApiPlugin, BrowserPlugin, AssetsServerPlugin],
+      IApi,
+    );
     await app.init();
 
-    const server = app.getService(iassetsServerID);
+    const server = app.getService(IAssetsServer);
     expect(server).not.equal(null);
     try {
       await server?.start(
@@ -99,7 +102,7 @@ describe('test browser', () => {
         path.dirname(require.resolve('./assets/index.html')),
       );
 
-      const factory = app.getService(ibrowserFactoryID);
+      const factory = app.getService(IBrowserFactory);
       expect(factory).not.equal(null);
 
       const browser = factory?.createAppBrowser();

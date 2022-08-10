@@ -21,14 +21,14 @@ import { InvalidSelectorError, parseCSS } from './cssParser';
 export { InvalidSelectorError, isInvalidSelectorError } from './cssParser';
 
 export type ParsedSelectorPart = {
-  name: string,
-  body: string | CSSComplexSelectorList | NestedSelectorBody,
-  source: string,
+  name: string;
+  body: string | CSSComplexSelectorList | NestedSelectorBody;
+  source: string;
 };
 
 export type ParsedSelector = {
-  parts: ParsedSelectorPart[],
-  capture?: number,
+  parts: ParsedSelectorPart[];
+  capture?: number;
 };
 
 export type NestedSelectorBody = { parsed: ParsedSelector; distance?: number };

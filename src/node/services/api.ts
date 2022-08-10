@@ -10,6 +10,6 @@ export interface IApi {
   dispose(): Promise<void>;
 }
 
-export const iapiID = genInjectID<IApi>();
+export const IApi = genInjectID<IApi>();
 
-export default iapiID;
+export default IApi;

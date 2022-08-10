@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { genInjectID } from '@/core';
 
 export type FunctionWithSource = (
   // eslint-disable-next-line no-use-before-define
   source: { page: IPage },
-  ...args: unknown[]
-) => unknown;
+  ...args: any[]
+) => any;
 
 export interface ILaunchOption {
   args?: string[];
@@ -85,25 +86,33 @@ export interface IPage {
     isFunction?: boolean,
     arg?: unknown,
   ): Promise<unknown>;
+  extendInjectedScript(source: string): Promise<void>;
   setWindowBounds(bounds: Bounds): Promise<void>;
   exposeBinding(
     name: string,
     needsHandle: boolean,
     playwrightBinding: FunctionWithSource,
   ): Promise<void>;
+  dispose(): Promise<void>;
 }
 
 export interface IBrowser {
   launch(option?: ILaunchOption): Promise<void>;
+  exposeBinding(
+    name: string,
+    needsHandle: boolean,
+    playwrightBinding: FunctionWithSource,
+  ): Promise<void>;
   addInitScript(source: string): Promise<void>;
   extendInjectedScript(source: string): Promise<void>;
   start(uriResolver: (uri: string) => string): Promise<void>;
   open(url: string, bounds?: Bounds): Promise<IPage>;
   getAppPage(): IPage | null;
+  dispose(): Promise<void>;
 }
 
 export interface IBrowserFactory {
   createAppBrowser(): IBrowser;
 }
 
-export const ibrowserFactoryID = genInjectID<IBrowserFactory>();
+export const IBrowserFactory = genInjectID<IBrowserFactory>();

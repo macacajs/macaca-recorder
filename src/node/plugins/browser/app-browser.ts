@@ -2,12 +2,11 @@ import * as fs from 'fs';
 import * as path from 'path';
 import mime from 'mime';
 import { createPlaywright } from 'playwright-core/lib/server';
-import { IBrowser, IPage } from '@/node/services/browser';
+import { FunctionWithSource, IBrowser, IPage } from '@/node/services/browser';
 import {
   BrowserContext,
   BrowserTypeLaunchPersistentContextParams,
   FrameSession,
-  FunctionWithSource,
   mainFrameSession,
   Page,
   Route,
@@ -73,13 +72,18 @@ export default class AppBrowser implements IBrowser {
     }
   }
 
-  async expandBinding(
+  async exposeBinding(
     name: string,
     needsHandle: boolean,
     playwrightBinding: FunctionWithSource,
   ) {
     if (this.context) {
-      this.context.exposeBinding(name, needsHandle, playwrightBinding);
+      this.context.exposeBinding(name, needsHandle, (source, ...args) => {
+        return playwrightBinding(
+          { page: new IPageDelegate(source.page) },
+          ...args,
+        );
+      });
     }
   }
 

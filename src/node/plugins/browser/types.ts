@@ -309,7 +309,8 @@ type DocumentInfo = {
 // https://github.com/microsoft/playwright/blob/4bec6309df2c45ecbbb2767201a98f89f1cf8f5e/packages/playwright-core/src/server/frames.ts#L467
 export interface Frame {
   isDetached(): boolean;
-  setPendingDocument(documentInfo: DocumentInfo | undefined);
+  setPendingDocument(documentInfo: DocumentInfo | undefined): void;
+  extendInjectedScript(source: string, arg?: any): Promise<void>;
   pendingDocument(): DocumentInfo | undefined;
   goto(
     metadata: MetaData,

@@ -5,6 +5,6 @@ export interface IAssetsServer {
   stop(): Promise<void>;
 }
 
-export const iassetsServerID = genInjectID<IAssetsServer>();
+export const IAssetsServer = genInjectID<IAssetsServer>();
 
-export default iassetsServerID;
+export default IAssetsServer;

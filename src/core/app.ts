@@ -21,8 +21,12 @@ export default class App implements IPluginManager, IServiceManager {
    * @param id 对外报漏的服务id
    * @returns 对外接口
    */
-  static createApp<T>(plugins: CLAZZ<IPlugin>[], id: InjectIDType<T>): T {
+  static async createApp<T>(
+    plugins: CLAZZ<IPlugin>[],
+    id: InjectIDType<T>,
+  ): Promise<T> {
     const app = new App(uniq(plugins));
+    await app.start();
     const api = app.getService(id);
     if (!api) {
       throw new Error('unregister api plugin');
@@ -35,10 +39,9 @@ export default class App implements IPluginManager, IServiceManager {
   // 应该采用creatApp创建
   private constructor(plugins: CLAZZ<IPlugin>[]) {
     this.plugins = plugins;
-    this.start();
   }
 
-  private start() {
+  private async start() {
     this.context.registerBean(iappID, this);
     this.context.registerBean(pluginManagerID, this);
     this.context.registerBean(serviceManagerID, this);
@@ -48,9 +51,12 @@ export default class App implements IPluginManager, IServiceManager {
     });
 
     // 注册服务
-    this.pluginInstances.forEach(plug => {
-      plug.registerSrv?.();
-    });
+    await Promise.all(
+      this.pluginInstances.map(plug => {
+        return plug.registerSrv?.();
+      }),
+    );
+
     this.context.resolveDeps(this, App as unknown as CLAZZ<App>);
     if (this.eventManager) {
       this.eventManager.start.trigger();
@@ -91,18 +97,14 @@ export default class App implements IPluginManager, IServiceManager {
    * 注册插件
    * @param plugin 插件
    */
-  registerPlugin(plugin: CLAZZ<IPlugin>): void {
+  async registerPlugin(plugin: CLAZZ<IPlugin>): Promise<void> {
     // 防止重复注册
     if (this.hasRegisterPlugin(plugin)) return;
-    const plugins = this.plugins.slice(0);
-    const pluginInstances = this.pluginInstances.slice(0);
     try {
-      plugins.push(plugin);
+      this.plugins.push(plugin);
       const plug = this.context.of(plugin);
-      pluginInstances.push(plug);
-      plug.registerSrv?.();
-      this.plugins = plugins;
-      this.pluginInstances = pluginInstances;
+      this.pluginInstances.push(plug);
+      await plug.registerSrv?.();
     } catch (e) {
       throw new Error(`register plugin ${plugin.name} error`);
     }
@@ -112,8 +114,8 @@ export default class App implements IPluginManager, IServiceManager {
    * 注册插件
    * @param plugins 插件列表
    */
-  registerPlugins(plugins: CLAZZ<IPlugin>[]): void {
-    plugins.forEach(plugin => this.registerPlugin(plugin));
+  async registerPlugins(plugins: CLAZZ<IPlugin>[]): Promise<void> {
+    await Promise.all(plugins.map(plugin => this.registerPlugin(plugin)));
   }
 
   /**

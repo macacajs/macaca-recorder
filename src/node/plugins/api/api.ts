@@ -1,27 +1,24 @@
 import {
   autowired,
   IApp,
-  iappID,
-  ieventID,
   IEventManager,
   InjectIDType,
   IServiceManager,
-  serviceManagerID,
 } from '@/core';
-import { IApi } from '@/node/services/api';
-import icodeGenID, { ICodeGen } from '@/node/services/code-gen';
+import IApi from '@/node/services/api';
+import ICodeGen from '@/node/services/code-gen';
 
 export default class Api implements IApi {
-  @autowired(iappID)
+  @autowired(IApp)
   app: IApp;
 
-  @autowired(ieventID)
+  @autowired(IEventManager)
   eventManger: IEventManager;
 
-  @autowired(icodeGenID)
+  @autowired(ICodeGen)
   codeGen: ICodeGen;
 
-  @autowired(serviceManagerID)
+  @autowired(IServiceManager)
   serviceManager: IServiceManager;
 
   async init() {

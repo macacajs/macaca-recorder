@@ -1,19 +1,15 @@
-import { autowired, IPlugin, IServiceManager, serviceManagerID } from '@/core';
-import {
-  IBrowser,
-  IBrowserFactory,
-  ibrowserFactoryID,
-} from '@/node/services/browser';
+import { autowired, IPlugin, IServiceManager } from '@/core';
+import { IBrowser, IBrowserFactory } from '@/node/services/browser';
 import AppBrowser from './app-browser';
 
 export default class BrowserPlugin implements IPlugin, IBrowserFactory {
-  @autowired(serviceManagerID)
+  @autowired(IServiceManager)
   serviceManager: IServiceManager;
 
   apps: AppBrowser[] = [];
 
-  registerSrv() {
-    this.serviceManager.registerServiceBean(ibrowserFactoryID, this);
+  async registerSrv() {
+    this.serviceManager.registerServiceBean(IBrowserFactory, this);
   }
 
   // eslint-disable-next-line class-methods-use-this
