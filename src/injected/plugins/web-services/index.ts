@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { autowired, IPlugin, IPluginManager } from '@/core';
 import * as core from '@/core';
+import * as injectedServices from '@/injected/services';
 
 declare global {
   interface Window {
@@ -13,8 +14,14 @@ declare global {
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 window.require = (path: string) => {
+  console.info('require path', path);
   if (['@/core', 'macaca-recorder'].includes(path)) {
     return core as never;
+  }
+  if (
+    ['@/injected/services', 'macaca-recorder/injected/services'].includes(path)
+  ) {
+    return injectedServices as never;
   }
   return window.requireSource(path).then(source => {
     // eslint-disable-next-line no-new-func
