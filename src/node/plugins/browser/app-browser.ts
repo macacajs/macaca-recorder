@@ -51,7 +51,7 @@ export default class AppBrowser implements IBrowser {
       serverSideCallMetadata(),
       '',
       {
-        headless: false,
+        headless: process.env.TEST ? true : false,
         args,
         ignoreDefaultArgs: ['--enable-automation'],
         noDefaultViewport: true,

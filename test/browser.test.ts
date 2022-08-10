@@ -35,7 +35,7 @@ describe('test browser', () => {
     expect(await appPage?.evaluateExpression('document.title')).to.equal(
       'test app page name',
     );
-  });
+  }).timeout(5000);
 
   it('addInitScript should be work', async () => {
     app = await App.createApp([ApiPlugin, BrowserPlugin], IApi);
@@ -57,7 +57,7 @@ describe('test browser', () => {
     expect(await appPage?.evaluateExpression('window.someValue')).to.equal(
       '123',
     );
-  });
+  }).timeout(5000);
 
   it('extendInjectedScript should be work', async () => {
     app = await App.createApp([ApiPlugin, BrowserPlugin], IApi);
@@ -81,7 +81,7 @@ describe('test browser', () => {
     // evaluateExpression execute before then extendsInjectedScript
     expect(
       await appPage?.evaluateExpression(
-        'new Promise(resolve=>setTimeout(resolve, 0)).then(() => window.extends.hello())',
+        'new Promise(resolve=>setTimeout(resolve, 100)).then(() => window.extends.hello())',
       ),
     ).to.equal('hello world');
   }).timeout(5000);
