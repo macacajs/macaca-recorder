@@ -9,6 +9,7 @@ import ApiPlugin from '@/node/plugins/api';
 import EventPlugin from '@/node/plugins/event';
 import IApi from '@/node/services/api';
 import { InjectedScript } from './lib/type';
+import HighlightPlugin from './plugins/highlight';
 import WebServicesPlugin from './plugins/web-services';
 
 declare global {
@@ -29,7 +30,7 @@ class ConsoleExtends {
 
   async startApp() {
     const app = await App.createApp(
-      [ApiPlugin, EventPlugin, WebServicesPlugin],
+      [ApiPlugin, EventPlugin, HighlightPlugin, WebServicesPlugin],
       IApi,
     );
     await app.init();

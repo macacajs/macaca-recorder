@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "buildweb": "rollup -c",
-    "test": "mocha --reporter spec --require ts-node/register test/**/*.test.ts",
+    "test": "npm run buildweb && mocha --reporter spec --require ts-node/register test/**/*.test.ts",
     "dev": "npm run buildweb && ts-node src/index.ts",
     "contributor": "git-contributor"
   },
