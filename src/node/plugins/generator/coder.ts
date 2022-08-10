@@ -35,9 +35,9 @@ export default class CodeGen implements ICodeGen, IWebServiceManager {
       return Require(path);
     });
 
-    await browser.extendInjectedScript(extendSource);
-
     await browser.start((uri) => require.resolve(`./page/${uri}`));
+
+    await browser.extendInjectedScript(extendSource);
 
     const page = await browser.open(url, { left: 600, width: 1000 });
 

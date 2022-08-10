@@ -70,7 +70,7 @@ describe("web service", () => {
       const serviceManager = app.getService(IWebServiceManager);
       expect(serviceManager).not.equal(null);
 
-      serviceManager?.addWebPlugin(
+      serviceManager?.addCoderPlugin(
         require.resolve("./assets/plugins/webPlugin.ts")
       );
 

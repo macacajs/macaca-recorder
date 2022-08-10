@@ -1,19 +1,42 @@
+/* eslint-disable import/no-import-module-exports */
 /**
- *  recorder 前端代码
+ *  injected 前端代码
+ *  主要用来注入要录制的前端界面
  */
 
 import { App } from "@/core";
 import ApiPlugin from "@/node/plugins/api";
 import EventPlugin from "@/node/plugins/event";
-import iapiID from "@/node/services/api";
+import IApi from "@/node/services/api";
+import { InjectedScript } from "./lib/type";
 import WebServicesPlugin from "./plugins/web-services";
 
-async function start() {
-  const app = await App.createApp(
-    [ApiPlugin, EventPlugin, WebServicesPlugin],
-    iapiID
-  );
-  await app.init();
+declare global {
+  interface Window {
+    CODE_GENER?: boolean;
+    injected?: InjectedScript;
+  }
 }
 
-start();
+class ConsoleExtends {
+  app: IApi;
+
+  constructor(injected: InjectedScript) {
+    // 防止多次执行
+    if (window.injected || window.CODE_GENER) return;
+    window.injected = injected;
+    this.startApp();
+  }
+
+  async startApp() {
+    const app = await App.createApp(
+      [ApiPlugin, EventPlugin, WebServicesPlugin],
+      IApi
+    );
+    await app.init();
+    this.app = app;
+  }
+}
+
+// 注入console需要明确导出的类
+module.exports = ConsoleExtends;

@@ -11,6 +11,20 @@ export default function Require(tsPath: string) {
       target: ts.ScriptTarget.ES5,
       module: ts.ModuleKind.CommonJS,
     },
+    transformers: {
+      before: [
+        (): ts.Transformer<ts.SourceFile> => {
+          return (source: ts.SourceFile) => {
+            ts.forEachChild(source, (node) => {
+              if (ts.isImportDeclaration(node)) {
+                // todo ast change
+              }
+            });
+            return source;
+          };
+        },
+      ],
+    },
   });
   return result.outputText;
 }
