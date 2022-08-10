@@ -2,6 +2,7 @@ import { autowired } from "@/core";
 import { IBrowser, IBrowserFactory, IPage } from "@/node/services/browser";
 import { ICodeGen } from "@/node/services/code-gen";
 import { IWebServiceManager } from "@/node/services/coder-web-service";
+// eslint-disable-next-line import/no-unresolved
 import extendSource from "./generated/injected";
 import Require from "./require";
 
@@ -37,9 +38,8 @@ export default class CodeGen implements ICodeGen, IWebServiceManager {
 
     await browser.start((uri) => require.resolve(`./page/${uri}`));
 
-    await browser.extendInjectedScript(extendSource);
-
     const page = await browser.open(url, { left: 600, width: 1000 });
+    await page.extendInjectedScript(extendSource);
 
     page.exposeBinding("_pw_getdom_", false, (source, doms) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment

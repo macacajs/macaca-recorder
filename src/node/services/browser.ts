@@ -86,6 +86,7 @@ export interface IPage {
     isFunction?: boolean,
     arg?: unknown
   ): Promise<unknown>;
+  extendInjectedScript(source: string): Promise<void>;
   setWindowBounds(bounds: Bounds): Promise<void>;
   exposeBinding(
     name: string,

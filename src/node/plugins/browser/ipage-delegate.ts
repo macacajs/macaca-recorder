@@ -55,6 +55,10 @@ export default class IPageDelegate implements IPage {
     });
   }
 
+  async extendInjectedScript(source: string) {
+    await this.page.mainFrame().extendInjectedScript(source);
+  }
+
   async dispose(): Promise<void> {
     await this.page.close(serverSideCallMetadata());
   }

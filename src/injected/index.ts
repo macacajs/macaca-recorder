@@ -13,7 +13,6 @@ import WebServicesPlugin from "./plugins/web-services";
 
 declare global {
   interface Window {
-    CODE_GENER?: boolean;
     injected?: InjectedScript;
   }
 }
@@ -23,7 +22,7 @@ class ConsoleExtends {
 
   constructor(injected: InjectedScript) {
     // 防止多次执行
-    if (window.injected || window.CODE_GENER) return;
+    if (window.injected) return;
     window.injected = injected;
     this.startApp();
   }
