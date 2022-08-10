@@ -28,7 +28,7 @@ function getDeps(clz: any): Array<[InjectIDType<object>, string]> {
 function registerDeps(clz: any, id: number, key: string) {
   if (!clz.__deps) {
     clz.__deps = getDeps(
-      Reflect.getPrototypeOf(clz.prototype)?.constructor
+      Reflect.getPrototypeOf(clz.prototype)?.constructor,
     ).slice(0);
   }
   clz.__deps.push([id, key]);

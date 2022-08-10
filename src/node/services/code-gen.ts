@@ -1,5 +1,5 @@
-import { genInjectID } from "@/core";
-import { IBrowser, IPage } from "./browser";
+import { genInjectID } from '@/core';
+import { IBrowser, IPage } from './browser';
 
 export interface ICodeGen {
   start(url: string): Promise<void>;

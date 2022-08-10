@@ -5,37 +5,37 @@ module.exports = {
     es2021: true,
   },
   extends: [
-    "airbnb-base",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended",
+    'airbnb-base',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:prettier/recommended',
   ],
   settings: {
-    "import/resolver": {
+    'import/resolver': {
       typescript: {
-        project: "./tsconfig.json",
+        project: './tsconfig.json',
       },
       node: {
-        extensions: [".js", ".jsx", ".ts", ".tsx"],
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
       },
     },
   },
-  parser: "@typescript-eslint/parser",
+  parser: '@typescript-eslint/parser',
   parserOptions: {
-    ecmaVersion: "latest",
-    sourceType: "module",
+    ecmaVersion: 'latest',
+    sourceType: 'module',
   },
-  plugins: ["@typescript-eslint", "import", "prettier"],
+  plugins: ['@typescript-eslint', 'import', 'prettier'],
   rules: {
-    "import/extensions": 0,
-    "import/no-extraneous-dependencies": 0,
-    "no-useless-constructor": 0,
+    'import/extensions': 0,
+    'import/no-extraneous-dependencies': 0,
+    'no-useless-constructor': 0,
   },
   overrides: [
     {
-      files: ["test/*.ts"],
+      files: ['test/*.ts'],
       rules: {
-        "max-classes-per-file": 0,
-        "no-use-before-define": 0,
+        'max-classes-per-file': 0,
+        'no-use-before-define': 0,
       },
     },
   ],

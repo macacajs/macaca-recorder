@@ -1,7 +1,7 @@
-import { autowired, IPlugin, IServiceManager } from "@/core";
-import { ICodeGen } from "@/node/services/code-gen";
-import { IWebServiceManager } from "@/node/services/coder-web-service";
-import CodeGen from "./coder";
+import { autowired, IPlugin, IServiceManager } from '@/core';
+import { ICodeGen } from '@/node/services/code-gen';
+import { IWebServiceManager } from '@/node/services/coder-web-service';
+import CodeGen from './coder';
 
 export default class GeneratorPlugin implements IPlugin {
   @autowired(IServiceManager)

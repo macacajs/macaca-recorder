@@ -1,4 +1,4 @@
-import { genInjectID } from "../ioc";
+import { genInjectID } from '../ioc';
 
 export interface IApp {
   init(): Promise<void>;

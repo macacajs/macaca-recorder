@@ -2,7 +2,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-use-before-define */
-import { JSHandle } from "playwright-core";
+import { JSHandle } from 'playwright-core';
 
 export type Size = { width: number; height: number };
 export type Point = { x: number; y: number };
@@ -22,12 +22,12 @@ export type BrowserContextPauseResult = void;
 export type QueryOnSelectorOptions = StrictOptions & TimeoutOptions;
 
 export type WaitForElementOptions = TimeoutOptions &
-  StrictOptions & { state?: "attached" | "detached" | "visible" | "hidden" };
+  StrictOptions & { state?: 'attached' | 'detached' | 'visible' | 'hidden' };
 
 export type RecordHarOptions = {
   path: string;
-  content?: "embed" | "attach" | "omit";
-  mode?: "full" | "minimal";
+  content?: 'embed' | 'attach' | 'omit';
+  mode?: 'full' | 'minimal';
   urlGlob?: string;
   urlRegexSource?: string;
   urlRegexFlags?: string;
@@ -42,7 +42,7 @@ export type SetNetworkCookie = {
   expires?: number;
   httpOnly?: boolean;
   secure?: boolean;
-  sameSite?: "Strict" | "Lax" | "None";
+  sameSite?: 'Strict' | 'Lax' | 'None';
 };
 
 export type NetworkCookie = {
@@ -53,7 +53,7 @@ export type NetworkCookie = {
   expires: number;
   httpOnly: boolean;
   secure: boolean;
-  sameSite: "Strict" | "Lax" | "None";
+  sameSite: 'Strict' | 'Lax' | 'None';
 };
 
 export type BrowserTypeLaunchPersistentContextParams = {
@@ -108,9 +108,9 @@ export type BrowserTypeLaunchPersistentContextParams = {
   deviceScaleFactor?: number;
   isMobile?: boolean;
   hasTouch?: boolean;
-  colorScheme?: "dark" | "light" | "no-preference";
-  reducedMotion?: "reduce" | "no-preference";
-  forcedColors?: "active" | "none";
+  colorScheme?: 'dark' | 'light' | 'no-preference';
+  reducedMotion?: 'reduce' | 'no-preference';
+  forcedColors?: 'active' | 'none';
   acceptDownloads?: boolean;
   baseURL?: string;
   recordVideo?: {
@@ -122,7 +122,7 @@ export type BrowserTypeLaunchPersistentContextParams = {
   };
   recordHar?: RecordHarOptions;
   strictSelectors?: boolean;
-  serviceWorkers?: "allow" | "block";
+  serviceWorkers?: 'allow' | 'block';
   userDataDir: string;
   slowMo?: number;
 };
@@ -165,13 +165,13 @@ export type FilePayload = {
   buffer: string;
 };
 
-export type World = "main" | "utility";
+export type World = 'main' | 'utility';
 
 export type LifecycleEvent =
-  | "load"
-  | "domcontentloaded"
-  | "networkidle"
-  | "commit";
+  | 'load'
+  | 'domcontentloaded'
+  | 'networkidle'
+  | 'commit';
 
 export type NavigateOptions = TimeoutOptions & {
   waitUntil?: LifecycleEvent;
@@ -286,7 +286,7 @@ export interface Response {
   body(): Promise<Buffer>;
   request(): Request;
   frame(): Frame;
-  httpVersion(): "HTTP/1.1" | "HTTP/2.0" | string;
+  httpVersion(): 'HTTP/1.1' | 'HTTP/2.0' | string;
   sizes(): Promise<ResourceSizes>;
 }
 
@@ -315,19 +315,19 @@ export interface Frame {
   goto(
     metadata: MetaData,
     url: string,
-    options?: GotoOptions
+    options?: GotoOptions,
   ): Promise<Response | null>;
   evaluateExpression(
     expression: string,
     isFunction: boolean | undefined,
     arg: any,
-    world?: World
+    world?: World,
   ): Promise<any>;
   waitForSelector(
     metadata: MetaData,
     selector: string,
     options: WaitForElementOptions & { omitReturnValue?: boolean },
-    scope?: ElementHandle
+    scope?: ElementHandle,
   ): Promise<ElementHandle<Element> | null>;
   name(): string;
   url(): string;
@@ -336,8 +336,8 @@ export interface Frame {
   title(): Promise<string>;
 }
 
-export type KeyboardModifier = "Alt" | "Control" | "Meta" | "Shift";
-export type MouseButton = "left" | "right" | "middle";
+export type KeyboardModifier = 'Alt' | 'Control' | 'Meta' | 'Shift';
+export type MouseButton = 'left' | 'right' | 'middle';
 
 export interface RawKeyboard {
   keydown(
@@ -348,7 +348,7 @@ export interface RawKeyboard {
     key: string,
     location: number,
     autoRepeat: boolean,
-    text: string | undefined
+    text: string | undefined,
   ): Promise<void>;
   keyup(
     modifiers: Set<KeyboardModifier>,
@@ -356,7 +356,7 @@ export interface RawKeyboard {
     keyCode: number,
     keyCodeWithoutLocation: number,
     key: string,
-    location: number
+    location: number,
   ): Promise<void>;
   sendText(text: string): Promise<void>;
 }
@@ -365,10 +365,10 @@ export interface RawMouse {
   move(
     x: number,
     y: number,
-    button: MouseButton | "none",
+    button: MouseButton | 'none',
     buttons: Set<MouseButton>,
     modifiers: Set<KeyboardModifier>,
-    forClick: boolean
+    forClick: boolean,
   ): Promise<void>;
   down(
     x: number,
@@ -376,7 +376,7 @@ export interface RawMouse {
     button: MouseButton,
     buttons: Set<MouseButton>,
     modifiers: Set<KeyboardModifier>,
-    clickCount: number
+    clickCount: number,
   ): Promise<void>;
   up(
     x: number,
@@ -384,7 +384,7 @@ export interface RawMouse {
     button: MouseButton,
     buttons: Set<MouseButton>,
     modifiers: Set<KeyboardModifier>,
-    clickCount: number
+    clickCount: number,
   ): Promise<void>;
   wheel(
     x: number,
@@ -392,7 +392,7 @@ export interface RawMouse {
     buttons: Set<MouseButton>,
     modifiers: Set<KeyboardModifier>,
     deltaX: number,
-    deltaY: number
+    deltaY: number,
   ): Promise<void>;
 }
 
@@ -402,7 +402,7 @@ export interface RawTouchscreen {
 
 // https://github.com/microsoft/playwright/blob/5ae2017a5be9d465c7777170b8c62b1a71a504bc/packages/playwright-core/src/server/dom.ts
 export interface ElementHandle<T extends Node = Node>
-  extends Omit<JSHandle<T>, "asElement"> {
+  extends Omit<JSHandle<T>, 'asElement'> {
   asElement(): ElementHandle<T> | null;
   ownerFrame(): Promise<Frame | null>;
 }
@@ -426,7 +426,7 @@ export interface PageDelegate {
   navigateFrame(
     frame: Frame,
     url: string,
-    referrer: string | undefined
+    referrer: string | undefined,
   ): Promise<GotoResult>;
 
   updateExtraHTTPHeaders(): Promise<void>;
@@ -449,33 +449,33 @@ export interface PageDelegate {
     viewportRect: Rect | undefined,
     quality: number | undefined,
     fitsViewport: boolean,
-    scale: "css" | "device"
+    scale: 'css' | 'device',
   ): Promise<Buffer>;
 
   isElementHandle(remoteObject: any): boolean;
   adoptElementHandle<T extends Node>(
     handle: ElementHandle<T>,
-    to: any
+    to: any,
   ): Promise<ElementHandle<T>>;
   getContentFrame(handle: ElementHandle): Promise<Frame | null>; // Only called for frame owner elements.
   getOwnerFrame(handle: ElementHandle): Promise<string | null>; // Returns frameId.
   getContentQuads(handle: ElementHandle): Promise<Quad[] | null>;
   setInputFiles(
     handle: ElementHandle<HTMLInputElement>,
-    files: FilePayload[]
+    files: FilePayload[],
   ): Promise<void>;
   setInputFilePaths(
     handle: ElementHandle<HTMLInputElement>,
-    files: string[]
+    files: string[],
   ): Promise<void>;
   getBoundingBox(handle: ElementHandle): Promise<Rect | null>;
   getFrameElement(frame: Frame): Promise<ElementHandle>;
   scrollRectIntoViewIfNeeded(
     handle: ElementHandle,
-    rect?: Rect
-  ): Promise<"error:notvisible" | "error:notconnected" | "done">;
+    rect?: Rect,
+  ): Promise<'error:notvisible' | 'error:notconnected' | 'done'>;
   setScreencastOptions(
-    options: { width: number; height: number; quality: number } | null
+    options: { width: number; height: number; quality: number } | null,
   ): Promise<void>;
 
   getAccessibilityTree(needle?: ElementHandle): Promise<{
@@ -502,7 +502,7 @@ export interface Page {
   exposeBinding(
     name: string,
     needsHandle: boolean,
-    playwrightBinding: FunctionWithSource
+    playwrightBinding: FunctionWithSource,
   ): Promise<void>;
   removeExposedBindings(): Promise<void>;
   setExtraHTTPHeaders(headers: HeadersArray): void;
@@ -515,7 +515,7 @@ export interface Page {
   _setServerRequestInterceptor(handler: RouteHandler): Promise<void>;
   close(
     metadata: MetaData,
-    options?: { runBeforeUnload?: boolean }
+    options?: { runBeforeUnload?: boolean },
   ): Promise<void>;
   isClosed(): boolean;
   setFileChooserIntercepted(enabled: boolean): Promise<void>;
@@ -532,7 +532,7 @@ export interface BrowserContext {
   exposeBinding(
     name: string,
     needsHandle: boolean,
-    playwrightBinding: FunctionWithSource
+    playwrightBinding: FunctionWithSource,
   ): Promise<void>;
   addCookies(cookies: SetNetworkCookie[]): Promise<void>;
   clearCookies(): Promise<void>;
@@ -555,7 +555,7 @@ export interface BrowserContext {
   on(eventName: string, callback: (...args: any[]) => void): void;
   pause(
     params?: BrowserContextPauseParams,
-    metadata?: MetaData
+    metadata?: MetaData,
   ): Promise<BrowserContextPauseResult>;
 }
 
@@ -577,13 +577,13 @@ export class FrameSession {
 
   async init() {
     if (this._windowId) return;
-    const { windowId } = await this._client.send("Browser.getWindowForTarget");
+    const { windowId } = await this._client.send('Browser.getWindowForTarget');
     this._windowId = windowId;
   }
 
   async setWindowBounds(bounds: WindowBounds) {
     if (!this._windowId) return;
-    await this._client.send("Browser.setWindowBounds", {
+    await this._client.send('Browser.setWindowBounds', {
       windowId: this._windowId,
       bounds,
     });
@@ -592,12 +592,12 @@ export class FrameSession {
 
 export function serverSideCallMetadata() {
   return {
-    id: "",
+    id: '',
     wallTime: 0,
     startTime: 0,
     endTime: 0,
-    type: "Internal",
-    method: "",
+    type: 'Internal',
+    method: '',
     params: {},
     log: [],
     snapshots: [],

@@ -1,23 +1,23 @@
-import typescript from "@rollup/plugin-typescript";
+import typescript from '@rollup/plugin-typescript';
 // import { terser } from 'rollup-plugin-terser';
 
-const output = (path) => `src/node/plugins/generator/${path}`;
+const output = path => `src/node/plugins/generator/${path}`;
 
 export default [
   {
-    input: "src/recorder/index.ts",
+    input: 'src/recorder/index.ts',
     output: {
-      dir: output("page"),
-      format: "cjs",
+      dir: output('page'),
+      format: 'cjs',
     },
     plugins: [
       typescript({
         compilerOptions: {
-          module: "esnext",
+          module: 'esnext',
         },
       }),
       {
-        name: "banner",
+        name: 'banner',
         renderChunk: function renderChunk(code) {
           return `/* eslint-disable */\n${code}`;
         },
@@ -25,23 +25,23 @@ export default [
     ],
   },
   {
-    input: "src/injected/index.ts",
+    input: 'src/injected/index.ts',
     output: {
-      file: output("/generated/injected.ts"),
-      format: "cjs",
+      file: output('/generated/injected.ts'),
+      format: 'cjs',
     },
     plugins: [
       typescript({
         compilerOptions: {
-          module: "esnext",
+          module: 'esnext',
         },
       }),
       // terser(),
       {
-        name: "banner",
+        name: 'banner',
         renderChunk: function renderChunk(code) {
           return `/* eslint-disable */\n"use strict";\nexport const source = ${JSON.stringify(
-            code
+            code,
           )};\nexport default source;\n`;
         },
       },

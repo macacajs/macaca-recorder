@@ -1,4 +1,4 @@
-import { genInjectID } from "@/core";
+import { genInjectID } from '@/core';
 
 export interface IAssetsServer {
   start(host: string, port: number, assetsDir: string): Promise<void>;

@@ -1,15 +1,15 @@
-import { expect } from "chai";
-import IOCContext, { Provide } from "@/core/ioc";
+import { expect } from 'chai';
+import IOCContext, { Provide } from '@/core/ioc';
 
-describe("test ioc", () => {
-  it("should work create class", () => {
+describe('test ioc', () => {
+  it('should work create class', () => {
     class Car {}
 
     const ctx = new IOCContext();
     expect(ctx.of(Car)).to.instanceOf(Car);
   });
 
-  it("should work create class inject with registerBeanClazz", () => {
+  it('should work create class inject with registerBeanClazz', () => {
     interface IEngine {
       run(): number;
     }
@@ -34,7 +34,7 @@ describe("test ioc", () => {
     expect(ctx.of(Car).engine.run()).to.equal(1);
   });
 
-  it("should work create class inject with registerBean", () => {
+  it('should work create class inject with registerBean', () => {
     interface IEngine {
       run(): number;
     }
@@ -59,7 +59,7 @@ describe("test ioc", () => {
     expect(ctx.of(Car).engine.run()).to.equal(1);
   });
 
-  it("should work create class inject with Provide", () => {
+  it('should work create class inject with Provide', () => {
     interface IEngine {
       run(): number;
     }
@@ -85,7 +85,7 @@ describe("test ioc", () => {
     expect(ctx.of(Car).engine).to.instanceOf(Engine);
   });
 
-  it("registerBeanClazz order before then Provide", () => {
+  it('registerBeanClazz order before then Provide', () => {
     interface IEngine {
       run(): number;
     }
@@ -121,7 +121,7 @@ describe("test ioc", () => {
     expect(ctx.of(Car).engine).not.instanceOf(MEngine);
   });
 
-  it("should be cache", () => {
+  it('should be cache', () => {
     interface IEngine {
       run(): number;
     }
@@ -152,7 +152,7 @@ describe("test ioc", () => {
     expect(ctx.of(Car).engine).to.instanceOf(NEngine);
   });
 
-  it("should be null when no provider", () => {
+  it('should be null when no provider', () => {
     interface IEngine {
       run(): number;
     }
@@ -168,7 +168,7 @@ describe("test ioc", () => {
     expect(ctx.of(Car).engine).to.equal(null);
   });
 
-  it("should be work whit circle deps", () => {
+  it('should be work whit circle deps', () => {
     interface IEngine {
       car: ICar;
       run(): number;
@@ -217,7 +217,7 @@ describe("test ioc", () => {
     expect(app.car).to.instanceOf(Car);
   });
 
-  it("should be work with extends class", () => {
+  it('should be work with extends class', () => {
     interface IEngine {
       run(): number;
     }

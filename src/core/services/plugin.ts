@@ -1,4 +1,4 @@
-import { CLAZZ, genInjectID } from "../ioc";
+import { CLAZZ, genInjectID } from '../ioc';
 
 export interface IPlugin {
   registerSrv?: () => Promise<void>;

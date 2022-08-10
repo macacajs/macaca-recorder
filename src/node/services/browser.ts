@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { genInjectID } from "@/core";
+import { genInjectID } from '@/core';
 
 export type FunctionWithSource = (
   // eslint-disable-next-line no-use-before-define
@@ -52,9 +52,9 @@ export interface ILaunchOption {
   deviceScaleFactor?: number;
   isMobile?: boolean;
   hasTouch?: boolean;
-  colorScheme?: "dark" | "light" | "no-preference";
-  reducedMotion?: "reduce" | "no-preference";
-  forcedColors?: "active" | "none";
+  colorScheme?: 'dark' | 'light' | 'no-preference';
+  reducedMotion?: 'reduce' | 'no-preference';
+  forcedColors?: 'active' | 'none';
   acceptDownloads?: boolean;
   baseURL?: string;
   recordVideo?: {
@@ -65,7 +65,7 @@ export interface ILaunchOption {
     };
   };
   strictSelectors?: boolean;
-  serviceWorkers?: "allow" | "block";
+  serviceWorkers?: 'allow' | 'block';
   userDataDir?: string;
   posX?: number;
   posY?: number;
@@ -84,14 +84,14 @@ export interface IPage {
   evaluateExpression(
     expression: string,
     isFunction?: boolean,
-    arg?: unknown
+    arg?: unknown,
   ): Promise<unknown>;
   extendInjectedScript(source: string): Promise<void>;
   setWindowBounds(bounds: Bounds): Promise<void>;
   exposeBinding(
     name: string,
     needsHandle: boolean,
-    playwrightBinding: FunctionWithSource
+    playwrightBinding: FunctionWithSource,
   ): Promise<void>;
   dispose(): Promise<void>;
 }
@@ -101,7 +101,7 @@ export interface IBrowser {
   exposeBinding(
     name: string,
     needsHandle: boolean,
-    playwrightBinding: FunctionWithSource
+    playwrightBinding: FunctionWithSource,
   ): Promise<void>;
   addInitScript(source: string): Promise<void>;
   extendInjectedScript(source: string): Promise<void>;

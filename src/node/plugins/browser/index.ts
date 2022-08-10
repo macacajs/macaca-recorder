@@ -1,6 +1,6 @@
-import { autowired, IPlugin, IServiceManager } from "@/core";
-import { IBrowser, IBrowserFactory } from "@/node/services/browser";
-import AppBrowser from "./app-browser";
+import { autowired, IPlugin, IServiceManager } from '@/core';
+import { IBrowser, IBrowserFactory } from '@/node/services/browser';
+import AppBrowser from './app-browser';
 
 export default class BrowserPlugin implements IPlugin, IBrowserFactory {
   @autowired(IServiceManager)
@@ -20,6 +20,6 @@ export default class BrowserPlugin implements IPlugin, IBrowserFactory {
   }
 
   async dispose() {
-    await Promise.all(this.apps.map((app) => app.dispose()));
+    await Promise.all(this.apps.map(app => app.dispose()));
   }
 }

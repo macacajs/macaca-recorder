@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { expect } from "chai";
+import { expect } from 'chai';
 import {
   App,
   autowired,
@@ -7,21 +7,21 @@ import {
   IPlugin,
   IPluginManager,
   IServiceManager,
-} from "@/core";
-import ApiPlugin from "@/node/plugins/api";
-import iapiID from "@/node/services/api";
+} from '@/core';
+import ApiPlugin from '@/node/plugins/api';
+import iapiID from '@/node/services/api';
 
-describe("test app", () => {
-  it("should api plugin register error throw", (done) => {
-    App.createApp([], iapiID).catch((err) => {
+describe('test app', () => {
+  it('should api plugin register error throw', done => {
+    App.createApp([], iapiID).catch(err => {
       expect(() => {
         throw err;
-      }).to.throw("unregister api plugin");
+      }).to.throw('unregister api plugin');
       done();
     });
   });
 
-  it("create app should work", async () => {
+  it('create app should work', async () => {
     const app = await App.createApp([ApiPlugin], iapiID);
     await app.init();
 
@@ -29,7 +29,7 @@ describe("test app", () => {
     expect(app.eventManger).to.equals(null);
   });
 
-  it("should plugin works", async () => {
+  it('should plugin works', async () => {
     interface IService {
       show(): string;
     }
@@ -44,12 +44,12 @@ describe("test app", () => {
         this.serviceManager.registerService(
           IService,
           class implements IService {
-            name = "test";
+            name = 'test';
 
             show(): string {
               return this.name;
             }
-          }
+          },
         );
       }
     }
@@ -62,20 +62,20 @@ describe("test app", () => {
 
       async init() {
         expect(this.service).not.equal(null);
-        expect(this.service.show()).to.equal("test");
+        expect(this.service.show()).to.equal('test');
         success = true;
       }
     }
 
     const app = await App.createApp(
       [ApiPlugin, TestPlugin, Test2Plugin],
-      iapiID
+      iapiID,
     );
     await app.init();
     expect(success).to.equal(true);
   });
 
-  it("should register plugin work", async () => {
+  it('should register plugin work', async () => {
     interface IService {
       show(): string;
     }
@@ -90,12 +90,12 @@ describe("test app", () => {
         this.serviceManager.registerService(
           IService,
           class implements IService {
-            name = "test";
+            name = 'test';
 
             show(): string {
               return this.name;
             }
-          }
+          },
         );
       }
     }
@@ -108,7 +108,7 @@ describe("test app", () => {
 
       async init() {
         expect(this.service).not.equal(null);
-        expect(this.service.show()).to.equal("test");
+        expect(this.service.show()).to.equal('test');
         success = true;
       }
     }
@@ -131,7 +131,7 @@ describe("test app", () => {
     expect(success).to.equal(true);
   });
 
-  it("service should not equal between apps", async () => {
+  it('service should not equal between apps', async () => {
     interface IService {
       show(): string;
     }
@@ -139,7 +139,7 @@ describe("test app", () => {
     const IService = genInjectID<IService>();
 
     class ServiceImpl implements IService {
-      name = "test";
+      name = 'test';
 
       show(): string {
         return this.name;
@@ -173,7 +173,7 @@ describe("test app", () => {
     expect(app1.getService(IService)).not.equal(app2.getService(IService));
   });
 
-  it("should register service bean work", async () => {
+  it('should register service bean work', async () => {
     interface IService {
       show(): string;
     }
@@ -181,7 +181,7 @@ describe("test app", () => {
     const IService = genInjectID<IService>();
 
     class TestPlugin implements IPlugin, IService {
-      name = "123";
+      name = '123';
 
       @autowired(IServiceManager)
       serviceManager: IServiceManager;
@@ -208,6 +208,6 @@ describe("test app", () => {
     await app.init();
 
     expect(app.getService(IService)).to.instanceOf(TestPlugin);
-    expect(app.getService(IService)?.show()).to.equal("123");
+    expect(app.getService(IService)?.show()).to.equal('123');
   });
 });

@@ -4,12 +4,12 @@
  *  主要用来注入要录制的前端界面
  */
 
-import { App } from "@/core";
-import ApiPlugin from "@/node/plugins/api";
-import EventPlugin from "@/node/plugins/event";
-import IApi from "@/node/services/api";
-import { InjectedScript } from "./lib/type";
-import WebServicesPlugin from "./plugins/web-services";
+import { App } from '@/core';
+import ApiPlugin from '@/node/plugins/api';
+import EventPlugin from '@/node/plugins/event';
+import IApi from '@/node/services/api';
+import { InjectedScript } from './lib/type';
+import WebServicesPlugin from './plugins/web-services';
 
 declare global {
   interface Window {
@@ -30,7 +30,7 @@ class ConsoleExtends {
   async startApp() {
     const app = await App.createApp(
       [ApiPlugin, EventPlugin, WebServicesPlugin],
-      IApi
+      IApi,
     );
     await app.init();
     this.app = app;

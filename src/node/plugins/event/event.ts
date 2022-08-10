@@ -1,5 +1,5 @@
-import { IEvent, IEventManager } from "@/core";
-import EventBase from "./event-base";
+import { IEvent, IEventManager } from '@/core';
+import EventBase from './event-base';
 
 export default class EventImpl implements IEventManager {
   start: IEvent<void> = new EventBase<void>();

@@ -1,9 +1,9 @@
-import IOCContext, { autowired, CLAZZ, InjectIDType } from "./ioc";
-import pluginManagerID, { IPlugin, IPluginManager } from "./services/plugin";
-import serviceManagerID, { IServiceManager } from "./services/service";
-import ieventID, { IEventManager } from "./services/event";
-import { uniq } from "../utils/array";
-import iappID from "./services/app";
+import IOCContext, { autowired, CLAZZ, InjectIDType } from './ioc';
+import pluginManagerID, { IPlugin, IPluginManager } from './services/plugin';
+import serviceManagerID, { IServiceManager } from './services/service';
+import ieventID, { IEventManager } from './services/event';
+import { uniq } from '../utils/array';
+import iappID from './services/app';
 
 export default class App implements IPluginManager, IServiceManager {
   context: IOCContext = new IOCContext();
@@ -23,13 +23,13 @@ export default class App implements IPluginManager, IServiceManager {
    */
   static async createApp<T>(
     plugins: CLAZZ<IPlugin>[],
-    id: InjectIDType<T>
+    id: InjectIDType<T>,
   ): Promise<T> {
     const app = new App(uniq(plugins));
     await app.start();
     const api = app.getService(id);
     if (!api) {
-      throw new Error("unregister api plugin");
+      throw new Error('unregister api plugin');
     }
     return api;
   }
@@ -46,15 +46,15 @@ export default class App implements IPluginManager, IServiceManager {
     this.context.registerBean(pluginManagerID, this);
     this.context.registerBean(serviceManagerID, this);
 
-    this.pluginInstances = this.plugins.map((plugin) => {
+    this.pluginInstances = this.plugins.map(plugin => {
       return this.context.of(plugin);
     });
 
     // 注册服务
     await Promise.all(
-      this.pluginInstances.map((plug) => {
+      this.pluginInstances.map(plug => {
         return plug.registerSrv?.();
-      })
+      }),
     );
 
     this.context.resolveDeps(this, App as unknown as CLAZZ<App>);
@@ -69,10 +69,10 @@ export default class App implements IPluginManager, IServiceManager {
       this.pluginInstances.map((plug, index) => {
         this.context.resolveDeps(plug, this.plugins[index]);
         return plug.init?.();
-      })
+      }),
     );
     // 触发插件的afterInit事件
-    this.pluginInstances.forEach((plug) => {
+    this.pluginInstances.forEach(plug => {
       plug.afterInit?.();
     });
     if (this.eventManager) {
@@ -86,9 +86,9 @@ export default class App implements IPluginManager, IServiceManager {
     }
     // 解析依赖并触发dispose事件
     await Promise.all(
-      this.pluginInstances.map((plug) => {
+      this.pluginInstances.map(plug => {
         return plug.dispose?.();
-      })
+      }),
     );
     this.context.dispose();
   }
@@ -115,7 +115,7 @@ export default class App implements IPluginManager, IServiceManager {
    * @param plugins 插件列表
    */
   async registerPlugins(plugins: CLAZZ<IPlugin>[]): Promise<void> {
-    await Promise.all(plugins.map((plugin) => this.registerPlugin(plugin)));
+    await Promise.all(plugins.map(plugin => this.registerPlugin(plugin)));
   }
 
   /**
@@ -124,7 +124,7 @@ export default class App implements IPluginManager, IServiceManager {
    * @returns 是否注册
    */
   hasRegisterPlugin(plugin: CLAZZ<IPlugin>): boolean {
-    return !!this.plugins.find((v) => v === plugin);
+    return !!this.plugins.find(v => v === plugin);
   }
 
   unregisterPlugin(plugin: CLAZZ<IPlugin>): void {

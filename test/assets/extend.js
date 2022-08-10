@@ -4,7 +4,7 @@ class Extends {
     if (!window.extends) {
       window.extends = {
         hello() {
-          return "hello world";
+          return 'hello world';
         },
       };
     }

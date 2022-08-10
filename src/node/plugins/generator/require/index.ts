@@ -1,8 +1,8 @@
-import * as ts from "typescript";
-import fs from "fs";
+import * as ts from 'typescript';
+import fs from 'fs';
 
 export default function Require(tsPath: string) {
-  const result = ts.transpileModule(fs.readFileSync(tsPath).toString("utf-8"), {
+  const result = ts.transpileModule(fs.readFileSync(tsPath).toString('utf-8'), {
     compilerOptions: {
       allowJs: true,
       noEmitOnError: true,
@@ -15,7 +15,7 @@ export default function Require(tsPath: string) {
       before: [
         (): ts.Transformer<ts.SourceFile> => {
           return (source: ts.SourceFile) => {
-            ts.forEachChild(source, (node) => {
+            ts.forEachChild(source, node => {
               if (ts.isImportDeclaration(node)) {
                 // todo ast change
               }

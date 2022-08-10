@@ -1,8 +1,8 @@
-import * as fs from "fs";
-import * as path from "path";
-import mime from "mime";
-import { createPlaywright } from "playwright-core/lib/server";
-import { FunctionWithSource, IBrowser, IPage } from "@/node/services/browser";
+import * as fs from 'fs';
+import * as path from 'path';
+import mime from 'mime';
+import { createPlaywright } from 'playwright-core/lib/server';
+import { FunctionWithSource, IBrowser, IPage } from '@/node/services/browser';
 import {
   BrowserContext,
   BrowserTypeLaunchPersistentContextParams,
@@ -12,8 +12,8 @@ import {
   Route,
   serverSideCallMetadata,
   WindowBounds,
-} from "./types";
-import IPageDelegate from "./ipage-delegate";
+} from './types';
+import IPageDelegate from './ipage-delegate';
 
 function getNumber(value: unknown, defValue: number) {
   if (Number.isNaN(Number(value))) return defValue;
@@ -21,7 +21,7 @@ function getNumber(value: unknown, defValue: number) {
 }
 
 export default class AppBrowser implements IBrowser {
-  playwright = createPlaywright("javascript", true);
+  playwright = createPlaywright('javascript', true);
 
   context: BrowserContext;
 
@@ -33,30 +33,30 @@ export default class AppBrowser implements IBrowser {
     option?: BrowserTypeLaunchPersistentContextParams & {
       posX?: number;
       posY?: number;
-    }
+    },
   ) {
     const args = [
-      "--app=data:text/html,",
+      '--app=data:text/html,',
       `--window-size=${getNumber(option?.viewport?.width, 600)},${getNumber(
         option?.viewport?.height,
-        600
+        600,
       )}`,
       `--window-position=${getNumber(option?.posX, 0)},${getNumber(
         option?.posY,
-        0
+        0,
       )}`,
-      "--test-type=",
+      '--test-type=',
     ];
     this.context = await this.playwright.chromium.launchPersistentContext(
       serverSideCallMetadata(),
-      "",
+      '',
       {
         headless: false,
         args,
-        ignoreDefaultArgs: ["--enable-automation"],
+        ignoreDefaultArgs: ['--enable-automation'],
         noDefaultViewport: true,
         ...option,
-      }
+      },
     );
   }
 
@@ -75,13 +75,13 @@ export default class AppBrowser implements IBrowser {
   async exposeBinding(
     name: string,
     needsHandle: boolean,
-    playwrightBinding: FunctionWithSource
+    playwrightBinding: FunctionWithSource,
   ) {
     if (this.context) {
       this.context.exposeBinding(name, needsHandle, (source, ...args) => {
         return playwrightBinding(
           { page: new IPageDelegate(source.page) },
-          ...args
+          ...args,
         );
       });
     }
@@ -102,20 +102,20 @@ export default class AppBrowser implements IBrowser {
 
     // eslint-disable-next-line no-underscore-dangle
     await page._setServerRequestInterceptor(async (route: Route) => {
-      if (route.request().url().startsWith("https://e2egen/")) {
-        const uri = route.request().url().substring("https://e2egen/".length);
+      if (route.request().url().startsWith('https://e2egen/')) {
+        const uri = route.request().url().substring('https://e2egen/'.length);
         const file = uriResolver(uri);
         const buffer = fs.readFileSync(file);
         await route.fulfill({
           status: 200,
           headers: [
             {
-              name: "Content-Type",
+              name: 'Content-Type',
               value:
-                mime.getType(path.extname(file)) || "application/octet-stream",
+                mime.getType(path.extname(file)) || 'application/octet-stream',
             },
           ],
-          body: buffer.toString("base64"),
+          body: buffer.toString('base64'),
           isBase64: true,
         });
         return;
@@ -124,12 +124,12 @@ export default class AppBrowser implements IBrowser {
     });
 
     const mainFrame = page.mainFrame();
-    await mainFrame.goto(serverSideCallMetadata(), "https://e2egen/index.html");
+    await mainFrame.goto(serverSideCallMetadata(), 'https://e2egen/index.html');
   }
 
   async open(url: string, bounds?: WindowBounds): Promise<IPage> {
     const page = await this.context.newPage(serverSideCallMetadata());
-    this.context.emit("page", page);
+    this.context.emit('page', page);
     const ipage = new IPageDelegate(page);
     if (bounds) await ipage.setWindowBounds(bounds);
     await page.mainFrame().goto(serverSideCallMetadata(), url);

@@ -1,4 +1,4 @@
-import { genInjectID } from "@/core";
+import { genInjectID } from '@/core';
 
 export interface IWebServiceManager {
   addCoderPlugin(tsPath: string): void;

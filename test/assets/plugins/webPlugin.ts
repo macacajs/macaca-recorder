@@ -1,4 +1,4 @@
-import { autowired, IPlugin, IPluginManager } from "@/core";
+import { autowired, IPlugin, IPluginManager } from '@/core';
 
 declare global {
   interface Window {

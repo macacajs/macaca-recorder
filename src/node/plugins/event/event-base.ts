@@ -1,4 +1,4 @@
-import { IEvent } from "@/core";
+import { IEvent } from '@/core';
 
 type Callback<T> = (arg: T) => void;
 
@@ -16,13 +16,13 @@ export default class EventBase<T> implements IEvent<T> {
   }
 
   off(cb: Callback<T>) {
-    this.callbacks = this.callbacks.filter((mcb) => mcb !== cb);
-    this.onceCallbacks = this.onceCallbacks.filter((mcb) => mcb !== cb);
+    this.callbacks = this.callbacks.filter(mcb => mcb !== cb);
+    this.onceCallbacks = this.onceCallbacks.filter(mcb => mcb !== cb);
   }
 
   trigger(arg: T) {
-    this.callbacks.forEach((cb) => cb(arg));
-    this.onceCallbacks.forEach((cb) => cb(arg));
+    this.callbacks.forEach(cb => cb(arg));
+    this.onceCallbacks.forEach(cb => cb(arg));
     this.onceCallbacks = [];
   }
 }

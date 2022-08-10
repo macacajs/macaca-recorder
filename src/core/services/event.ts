@@ -1,4 +1,4 @@
-import { genInjectID } from "../ioc";
+import { genInjectID } from '../ioc';
 
 export type RegisterCallback<T> = (cb: (arg: T) => void) => void;
 

@@ -1,4 +1,4 @@
-import { CLAZZ, genInjectID, InjectIDType } from "../ioc";
+import { CLAZZ, genInjectID, InjectIDType } from '../ioc';
 
 export interface IServiceManager {
   registerServiceBean<T>(id: InjectIDType<T>, srv: T): void;
