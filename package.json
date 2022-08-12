@@ -4,9 +4,9 @@
   "description": "auto create e2e test",
   "main": "index.js",
   "scripts": {
-    "buildweb": "rollup -c",
-    "test": "npm run buildweb && mocha --reporter spec --require ts-node/register test/**/*.test.ts",
-    "dev": "npm run buildweb && ts-node src/index.ts",
+    "build:web": "rollup -c",
+    "test": "npm run build:web && c8 --reporter=lcov --reporter=text mocha --reporter spec --require ts-node/register test/**/*.test.ts",
+    "dev": "npm run build:web && ts-node src/index.ts",
     "contributor": "git-contributor"
   },
   "dependencies": {
@@ -23,6 +23,7 @@
     "@types/node": "^18.6.5",
     "@typescript-eslint/eslint-plugin": "^5.30.6",
     "@typescript-eslint/parser": "^5.30.6",
+    "c8": "^7.12.0",
     "chai": "^4.3.6",
     "eslint": "^8.19.0",
     "eslint-config-airbnb-base": "^15.0.0",
