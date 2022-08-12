@@ -9,6 +9,9 @@ on:
     paths-ignore:
       - '**.md'
 
+env:
+  TEST: true
+
 jobs:
   Runner:
     timeout-minutes: 10
