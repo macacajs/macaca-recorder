@@ -9,4 +9,9 @@ export default class EventImpl implements IEventManager {
   afterInit: IEvent<void> = new EventBase<void>();
 
   dispose: IEvent<void> = new EventBase<void>();
+
+  // eslint-disable-next-line class-methods-use-this
+  createIEvent<T>(): IEvent<T> {
+    return new EventBase<T>();
+  }
 }

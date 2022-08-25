@@ -7,8 +7,15 @@ export default class GeneratorPlugin implements IPlugin {
   @autowired(IServiceManager)
   serviceManager: IServiceManager;
 
+  @autowired(ICodeGen)
+  codeGen: CodeGen;
+
   public async registerSrv() {
     this.serviceManager.registerService(ICodeGen, CodeGen);
     this.serviceManager.registerService(IWebServiceManager, CodeGen);
+  }
+
+  async afterInit() {
+    this.codeGen.init();
   }
 }

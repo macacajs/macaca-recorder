@@ -1,28 +1,5 @@
-/* eslint-disable import/no-import-module-exports */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable no-use-before-define, no-underscore-dangle */
-/**
- * 注入代码
- */
-
-import Highlight from './lib/highlight';
-import { generateSelector } from './lib/selectGenerator';
-import { InjectedScript } from './lib/type';
-
-type HighlightModel = {
-  selector: string;
-  elements: Element[];
-};
-
-declare global {
-  interface Window {
-    _pw_getdom_?: (doms: any[]) => Promise<void>;
-    CODE_GENER?: boolean;
-    injected?: InjectedScript;
-    getWebServices(): string[];
-    getCodeServices(): string[];
-  }
-}
+import { autowired, IPlugin } from '@/core';
+import { IHighlight, ISelector } from '@/injected/services';
 
 function addEventListener(
   target: EventTarget,
@@ -31,63 +8,47 @@ function addEventListener(
   useCapture?: boolean,
 ): () => void {
   target.addEventListener(eventName, listener, useCapture);
-  const remove = () => {
+  return () => {
     target.removeEventListener(eventName, listener, useCapture);
   };
-  return remove;
-}
-
-function removeEventListeners(listeners: (() => void)[]) {
-  listeners.forEach(listen => listen());
-  listeners.splice(0, listeners.length);
 }
 
 function deepEventTarget(event: Event): HTMLElement {
-  window._pw_getdom_?.(event.composedPath());
   return event.composedPath()[0] as HTMLElement;
 }
 
-class ConsoleExtends {
-  private highlight: Highlight;
+type HighlightModel = {
+  selector: string;
+  elements: Element[];
+};
+
+export default class RecordEventsPlugin implements IPlugin {
+  listeners: (() => void)[];
 
   private hoveredModel: HighlightModel | null = null;
 
-  private isRecording = true;
-
-  private listeners: (() => void)[] = [];
-
   private hoveredElement: any;
 
-  injected: InjectedScript;
+  @autowired(IHighlight)
+  highlight: IHighlight;
 
-  constructor(injected: InjectedScript) {
-    if (window.CODE_GENER) return;
-    if (window.injected) return;
-    window.injected = injected;
-    this.injected = injected;
-    this.highlight = new Highlight(false);
-    this.install();
-  }
+  @autowired(ISelector)
+  selector: ISelector;
 
-  install() {
-    // Ensure we are attached to the current document, and we are on top (last element);
-    if (this.highlight.isInstalled()) {
-      return;
-    }
-    removeEventListeners(this.listeners);
+  async afterInit() {
     this.listeners = [
-      // addEventListener(
-      //   document,
-      //   'click',
-      //   event => this._onClick(event as MouseEvent),
-      //   true,
-      // ),
-      // addEventListener(
-      //   document,
-      //   'auxclick',
-      //   event => this._onClick(event as MouseEvent),
-      //   true,
-      // ),
+      addEventListener(
+        document,
+        'click',
+        event => this.onClick(event as MouseEvent),
+        true,
+      ),
+      addEventListener(
+        document,
+        'auxclick',
+        event => this.onClick(event as MouseEvent),
+        true,
+      ),
       // addEventListener(document, 'input', event => this._onInput(event), true),
       // addEventListener(
       //   document,
@@ -125,19 +86,37 @@ class ConsoleExtends {
       //   event => this._onMouseLeave(event as MouseEvent),
       //   true,
       // ),
-      // addEventListener(document, 'focus', () => this._onFocus(), true),
+      addEventListener(document, 'focus', () => this.onFocus('focus'), true),
+      addEventListener(
+        document,
+        'selectionchange',
+        () => this.onFocus('selection'),
+        true,
+      ),
       addEventListener(
         document,
         'scroll',
         () => {
           this.hoveredModel = null;
-          this.highlight.hideActionPoint();
+          this.highlight.clearHighlight();
           this.updateHighlight();
         },
         true,
       ),
     ];
-    this.highlight.install();
+  }
+
+  onFocus(type: 'focus' | 'selection'): void {
+    if (!document.activeElement) return;
+    const target = document.activeElement;
+    const { selector } = this.selector.generateSelector(target);
+    console.info(type, selector, window.getSelection());
+  }
+
+  onClick(evt: MouseEvent): void {
+    const target = deepEventTarget(evt);
+    const { selector } = this.selector.generateSelector(target);
+    console.info(evt, selector);
   }
 
   onMouseMove(evt: MouseEvent): void {
@@ -148,17 +127,14 @@ class ConsoleExtends {
   }
 
   private updateModelForHoveredElement() {
-    if (!this.hoveredElement) {
+    if (!this.hoveredElement || !window.injected) {
       this.hoveredModel = null;
       this.updateHighlight();
       return;
     }
     const { hoveredElement } = this;
-    const { selector, elements } = generateSelector(
-      this.injected,
-      hoveredElement,
-      true,
-    );
+    const { selector, elements } =
+      this.selector.generateSelector(hoveredElement);
     if (
       (this.hoveredModel && this.hoveredModel.selector === selector) ||
       this.hoveredElement !== hoveredElement
@@ -171,8 +147,13 @@ class ConsoleExtends {
   private updateHighlight() {
     const elements = this.hoveredModel ? this.hoveredModel.elements : [];
     const selector = this.hoveredModel ? this.hoveredModel.selector : '';
-    this.highlight.updateHighlight(elements, selector, false);
+    this.highlight.updateHighlight(elements, selector);
+  }
+
+  async dispose() {
+    this.listeners.forEach(v => v());
+    this.highlight.clearHighlight();
+    this.hoveredModel = null;
+    this.hoveredElement = null;
   }
 }
-
-module.exports = ConsoleExtends;
