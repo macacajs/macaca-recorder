@@ -15,6 +15,8 @@ export interface IEventManager {
   stop: IEvent<void>;
   afterInit: IEvent<void>;
   dispose: IEvent<void>;
+
+  createIEvent<T>(): IEvent<T>;
 }
 
 export const IEventManager = genInjectID<IEventManager>();

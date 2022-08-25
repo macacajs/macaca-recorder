@@ -1,4 +1,4 @@
-import { genInjectID } from '@/core';
+import { genInjectID, IEvent } from '@/core';
 import { IBrowser, IPage } from './browser';
 
 export interface ICodeGen {
@@ -7,6 +7,13 @@ export interface ICodeGen {
   getBrowser(): IBrowser | null;
   getPage(): IPage | null;
   getAppPage(): IPage | null;
+
+  // events
+  afterBrowerLaunch: IEvent<IBrowser>;
+  afterAppPageLaunch: IEvent<IPage>;
+  afterPageLaunch: IEvent<IPage>;
+  afterStart: IEvent<void>;
+  beforeDispose: IEvent<void>;
 }
 
 export const ICodeGen = genInjectID<ICodeGen>();

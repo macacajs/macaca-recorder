@@ -1,4 +1,5 @@
-import { autowired } from '@/core';
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { autowired, IEvent, IEventManager } from '@/core';
 import { IBrowser, IBrowserFactory, IPage } from '@/node/services/browser';
 import { ICodeGen } from '@/node/services/code-gen';
 import { IWebServiceManager } from '@/node/services/coder-web-service';
@@ -7,8 +8,15 @@ import extendSource from './generated/injected';
 import Require from './require';
 
 export default class CodeGen implements ICodeGen, IWebServiceManager {
-  @autowired(IBrowserFactory)
-  factory: IBrowserFactory;
+  beforeDispose: IEvent<void>;
+
+  afterStart: IEvent<void>;
+
+  afterBrowerLaunch: IEvent<IBrowser>;
+
+  afterAppPageLaunch: IEvent<IPage>;
+
+  afterPageLaunch: IEvent<IPage>;
 
   browser: IBrowser | null = null;
 
@@ -21,6 +29,20 @@ export default class CodeGen implements ICodeGen, IWebServiceManager {
   webServices: string[] = [];
 
   coderServices: string[] = [];
+
+  @autowired(IBrowserFactory)
+  factory: IBrowserFactory;
+
+  @autowired(IEventManager)
+  eventManager: IEventManager;
+
+  init() {
+    this.afterStart = this.eventManager.createIEvent();
+    this.beforeDispose = this.eventManager.createIEvent();
+    this.afterBrowerLaunch = this.eventManager.createIEvent<IBrowser>();
+    this.afterAppPageLaunch = this.eventManager.createIEvent<IPage>();
+    this.afterPageLaunch = this.eventManager.createIEvent<IPage>();
+  }
 
   async start(url: string): Promise<void> {
     const browser = this.factory.createAppBrowser();
@@ -36,24 +58,30 @@ export default class CodeGen implements ICodeGen, IWebServiceManager {
       return Require(path);
     });
 
+    // 触发事件， 方便外部插件在此时机进行函数暴漏
+    this.afterBrowerLaunch.trigger(browser);
+
     await browser.start(uri => require.resolve(`./page/${uri}`));
+
+    // 触发事件， 方便外部插件在此时机进行函数暴漏
+    this.afterAppPageLaunch.trigger(browser.getAppPage()!);
 
     const page = await browser.open(url, { left: 600, width: 1000 });
     await page.extendInjectedScript(extendSource);
 
-    page.exposeBinding('_pw_getdom_', false, (source, doms) => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      console.info(doms[0].getAttribute('test-id'));
-    });
+    // 触发事件， 方便外部插件在此时机进行函数暴漏
+    this.afterPageLaunch.trigger(page);
 
     this.appPage = browser.getAppPage();
     this.browser = browser;
     this.page = page;
     this.hasStart = true;
+
+    this.afterStart.trigger();
   }
 
   async dispose() {
+    this.beforeDispose.trigger();
     await Promise.all([
       this.page?.dispose(),
       this.appPage?.dispose(),
