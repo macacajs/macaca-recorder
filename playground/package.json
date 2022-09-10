@@ -1,0 +1,18 @@
+{
+  "name": "playground",
+  "pirvate": true,
+  "devDependencies": {
+    "eslint": "8",
+    "eslint-config-egg": "^7.1.0",
+    "eslint-config-prettier": "^4.1.0",
+    "macaca-cli": "2",
+    "macaca-playwright": "1",
+    "macaca-reporter": "1",
+    "macaca-wd": "3",
+    "power-assert": "^1.6.1"
+  },
+  "scripts": {
+    "test": "macaca run -d ./test --verbose",
+    "lint": "eslint . --fix"
+  }
+}
