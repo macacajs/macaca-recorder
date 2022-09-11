@@ -1,2 +1,2 @@
---reporter spec
 --timeout 12000
+--reporter macaca-reporter

@@ -3,6 +3,12 @@
 const wd = require('macaca-wd');
 const assert = require('power-assert');
 
+const remoteConfig = {
+  host: 'localhost',
+  port: 3456
+};
+const driver = wd.promiseChainRemote(remoteConfig);
+
 const TARGET_URL = 'https://www.baidu.com';
 
 // more API: https://macacajs.github.io/macaca-wd/
@@ -10,12 +16,6 @@ const TARGET_URL = 'https://www.baidu.com';
 describe('playground/test/demo1.test.js', () => {
   describe('page func testing', () => {
     before(() => {
-      const remoteConfig = {
-        host: 'localhost',
-        port: 3456
-      };
-      const driver = wd.promiseChainRemote(remoteConfig);
-    
       return driver
         .initWindow({
           platformName: 'playwright',
@@ -38,7 +38,23 @@ describe('playground/test/demo1.test.js', () => {
         .saveScreenshots(this);
     });
 
-    it('#1 should', function() {
+    it('#1 should be ok', () => {
+      return driver
+        .elementByCss('#head_wrapper')
+        .then(ele => {
+          assert(ele);
+        });
+    });
+
+    it('#2 should be ok', () => {
+      return driver
+        .elementByCss('#head_wrapper')
+        .then(ele => {
+          assert(ele);
+        });
+    });
+
+    it('#3 should be ok', () => {
       return driver
         .elementByCss('#head_wrapper')
         .then(ele => {
