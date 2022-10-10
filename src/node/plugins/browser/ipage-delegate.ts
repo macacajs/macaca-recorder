@@ -1,4 +1,8 @@
-import { FunctionWithSource, IPage } from '@/node/services/browser';
+import {
+  FunctionWithSource,
+  IPage,
+  PageFunction,
+} from '@/node/services/browser';
 import {
   FrameSession,
   mainFrameSession,
@@ -22,12 +26,28 @@ export default class IPageDelegate implements IPage {
     this.session.init();
   }
 
+  get id() {
+    // eslint-disable-next-line no-underscore-dangle
+    return this.page.mainFrame()._id;
+  }
+
   async close() {
     await this.page.close(serverSideCallMetadata());
   }
 
   url() {
     return this.page.mainFrame().url();
+  }
+
+  async evaluate<Arg, R>(
+    pageFunction: PageFunction<Arg, R>,
+    arg: Arg,
+  ): Promise<R> {
+    return this.evaluateExpression(
+      String(pageFunction),
+      typeof pageFunction === 'function',
+      arg,
+    );
   }
 
   async evaluateExpression(
@@ -61,5 +81,17 @@ export default class IPageDelegate implements IPage {
 
   async dispose(): Promise<void> {
     await this.page.close(serverSideCallMetadata());
+  }
+
+  async invoke(cmd: string, msg: any): Promise<any> {
+    return this.session.invoke(cmd, msg);
+  }
+
+  on(eventName: string, callback: (arg: any) => void) {
+    return this.session.on(eventName, callback);
+  }
+
+  off(eventName: string, callback: (arg: any) => void) {
+    return this.session.off(eventName, callback);
   }
 }

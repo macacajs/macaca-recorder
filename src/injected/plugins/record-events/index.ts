@@ -1,10 +1,18 @@
 import { autowired, IPlugin } from '@/core';
 import { IHighlight, ISelector } from '@/injected/services';
+import { Action } from '@/types/actions';
+import { buttonForEvent, modifiersForEvent, positionForEvent } from './helper';
 
-function addEventListener(
-  target: EventTarget,
-  eventName: string,
-  listener: EventListener,
+declare global {
+  interface Window {
+    __handle_action: (action: Action) => Promise<void>;
+  }
+}
+
+function addEventListener<K extends keyof DocumentEventMap>(
+  target: Document,
+  eventName: K,
+  listener: (event: DocumentEventMap[K]) => void,
   useCapture?: boolean,
 ): () => void {
   target.addEventListener(eventName, listener, useCapture);
@@ -35,6 +43,12 @@ export default class RecordEventsPlugin implements IPlugin {
   @autowired(ISelector)
   selector: ISelector;
 
+  // eslint-disable-next-line class-methods-use-this
+  dispatchAction(action: Action) {
+    // eslint-disable-next-line no-underscore-dangle
+    window.__handle_action(action);
+  }
+
   async afterInit() {
     this.listeners = [
       addEventListener(
@@ -49,7 +63,7 @@ export default class RecordEventsPlugin implements IPlugin {
         event => this.onClick(event as MouseEvent),
         true,
       ),
-      // addEventListener(document, 'input', event => this._onInput(event), true),
+      addEventListener(document, 'input', event => this.onInput(event), true),
       // addEventListener(
       //   document,
       //   'keydown',
@@ -113,10 +127,32 @@ export default class RecordEventsPlugin implements IPlugin {
     console.info(type, selector, window.getSelection());
   }
 
+  onInput(evt: Event): void {
+    if (evt instanceof InputEvent) {
+      const target = deepEventTarget(evt);
+      const { selector } = this.selector.generateSelector(target);
+      this.dispatchAction({
+        name: 'fill',
+        selector,
+        signals: [],
+        text: evt.data || '',
+      });
+    }
+  }
+
   onClick(evt: MouseEvent): void {
     const target = deepEventTarget(evt);
     const { selector } = this.selector.generateSelector(target);
-    console.info(evt, selector);
+
+    this.dispatchAction({
+      name: 'click',
+      selector,
+      position: positionForEvent(evt),
+      signals: [],
+      button: buttonForEvent(evt),
+      modifiers: modifiersForEvent(evt),
+      clickCount: evt.detail,
+    });
   }
 
   onMouseMove(evt: MouseEvent): void {

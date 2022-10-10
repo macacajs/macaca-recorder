@@ -3,6 +3,7 @@ import { autowired, IEvent, IEventManager } from '@/core';
 import { IBrowser, IBrowserFactory, IPage } from '@/node/services/browser';
 import { ICodeGen } from '@/node/services/code-gen';
 import { IWebServiceManager } from '@/node/services/coder-web-service';
+import { Action } from '@/types/actions';
 // eslint-disable-next-line import/no-unresolved
 import extendSource from './generated/injected';
 import Require from './require';
@@ -45,23 +46,18 @@ export default class CodeGen implements ICodeGen, IWebServiceManager {
   }
 
   async start(url: string): Promise<void> {
+    const uri = new URL(url);
     const browser = this.factory.createAppBrowser();
     await browser.launch();
-    await browser.exposeBinding('getWebServices', false, () => {
-      return this.webServices;
-    });
-    await browser.exposeBinding('getCodeServices', false, () => {
-      return this.coderServices;
-    });
 
-    await browser.exposeBinding('requireSource', false, (_, path: string) => {
-      return Require(path);
-    });
+    await this.injectToBrowser(browser);
 
     // 触发事件， 方便外部插件在此时机进行函数暴漏
     this.afterBrowerLaunch.trigger(browser);
 
-    await browser.start(uri => require.resolve(`./page/${uri}`));
+    await browser.start(`http://e2egen/`, path =>
+      require.resolve(`./page/${path}`),
+    );
 
     // 触发事件， 方便外部插件在此时机进行函数暴漏
     this.afterAppPageLaunch.trigger(browser.getAppPage()!);
@@ -78,6 +74,50 @@ export default class CodeGen implements ICodeGen, IWebServiceManager {
     this.hasStart = true;
 
     this.afterStart.trigger();
+  }
+
+  async injectToBrowser(browser: IBrowser) {
+    await browser.exposeBinding('getWebServices', false, () => {
+      return this.webServices;
+    });
+    await browser.exposeBinding('getCodeServices', false, () => {
+      return this.coderServices;
+    });
+    await browser.exposeBinding('requireSource', false, (_, path: string) => {
+      return Require(path);
+    });
+
+    await browser.exposeBinding(
+      '__handle_action',
+      false,
+      (_, action: Action) => {
+        if (this.appPage) {
+          this.appPage.evaluate(function (_action: Action) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            window.addAction(_action);
+          }, action);
+        }
+      },
+    );
+
+    await browser.exposeBinding(
+      '__invoke_cmd',
+      false,
+      (_, cmd: string, arg: any) => {
+        if (this.page) {
+          return this.page.invoke(cmd, arg);
+        }
+        return null;
+      },
+    );
+
+    await browser.exposeBinding('__get_frame_id', false, _ => {
+      if (this.page) {
+        return this.page.id;
+      }
+      return null;
+    });
   }
 
   async dispose() {
