@@ -308,6 +308,7 @@ type DocumentInfo = {
 
 // https://github.com/microsoft/playwright/blob/4bec6309df2c45ecbbb2767201a98f89f1cf8f5e/packages/playwright-core/src/server/frames.ts#L467
 export interface Frame {
+  _id: string;
   isDetached(): boolean;
   setPendingDocument(documentInfo: DocumentInfo | undefined): void;
   extendInjectedScript(source: string, arg?: any): Promise<void>;
@@ -587,6 +588,18 @@ export class FrameSession {
       windowId: this._windowId,
       bounds,
     });
+  }
+
+  async invoke(cmd: string, msg: any): Promise<any> {
+    return this._client.send(cmd, msg);
+  }
+
+  on(eventName: string, callback: (arg: any) => void) {
+    return this._client.on(eventName, callback);
+  }
+
+  off(eventName: string, callback: (arg: any) => void) {
+    return this._client.removeListener(eventName, callback);
   }
 }
 

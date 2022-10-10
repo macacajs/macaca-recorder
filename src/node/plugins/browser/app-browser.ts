@@ -51,7 +51,7 @@ export default class AppBrowser implements IBrowser {
       serverSideCallMetadata(),
       '',
       {
-        headless: process.env.TEST ? true : false,
+        headless: !!process.env.TEST,
         args,
         ignoreDefaultArgs: ['--enable-automation'],
         noDefaultViewport: true,
@@ -87,7 +87,7 @@ export default class AppBrowser implements IBrowser {
     }
   }
 
-  async start(uriResolver: (uri: string) => string) {
+  async start(baseURL: string, uriResolver: (uri: string) => string) {
     if (!this.context) return;
     const [page] = this.context.pages();
 
@@ -102,8 +102,8 @@ export default class AppBrowser implements IBrowser {
 
     // eslint-disable-next-line no-underscore-dangle
     await page._setServerRequestInterceptor(async (route: Route) => {
-      if (route.request().url().startsWith('https://e2egen/')) {
-        const uri = route.request().url().substring('https://e2egen/'.length);
+      if (route.request().url().startsWith(baseURL)) {
+        const uri = route.request().url().substring(baseURL.length);
         const file = uriResolver(uri);
         const buffer = fs.readFileSync(file);
         await route.fulfill({
@@ -124,7 +124,7 @@ export default class AppBrowser implements IBrowser {
     });
 
     const mainFrame = page.mainFrame();
-    await mainFrame.goto(serverSideCallMetadata(), 'https://e2egen/index.html');
+    await mainFrame.goto(serverSideCallMetadata(), `${baseURL}index.html`);
   }
 
   async open(url: string, bounds?: WindowBounds): Promise<IPage> {

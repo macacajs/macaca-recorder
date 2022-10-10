@@ -1,5 +1,9 @@
 import typescript from '@rollup/plugin-typescript';
-// import { terser } from 'rollup-plugin-terser';
+import resolve from '@rollup/plugin-node-resolve';
+import replace from '@rollup/plugin-replace';
+import commonjs from '@rollup/plugin-commonjs';
+import less from 'rollup-plugin-less';
+import { terser } from 'rollup-plugin-terser';
 
 const output = path => `src/node/plugins/generator/${path}`;
 
@@ -16,6 +20,16 @@ export default [
           module: 'esnext',
         },
       }),
+      less({
+        insert: true,
+      }),
+      replace({
+        'process.env.NODE_ENV': JSON.stringify('development'),
+      }),
+      commonjs({
+        defaultIsModuleExports: true,
+      }),
+      resolve(),
       {
         name: 'banner',
         renderChunk: function renderChunk(code) {
@@ -36,7 +50,7 @@ export default [
           module: 'esnext',
         },
       }),
-      // terser(),
+      terser(),
       {
         name: 'banner',
         renderChunk: function renderChunk(code) {
