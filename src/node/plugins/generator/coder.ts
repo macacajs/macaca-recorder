@@ -63,7 +63,7 @@ export default class CodeGen implements ICodeGen, IWebServiceManager {
     this.afterAppPageLaunch.trigger(browser.getAppPage()!);
 
     const page = await browser.open(url, { left: 600, width: 1000 });
-    await page.extendInjectedScript(extendSource);
+    await browser.extendInjectedScript(extendSource);
 
     // 触发事件， 方便外部插件在此时机进行函数暴漏
     this.afterPageLaunch.trigger(page);
