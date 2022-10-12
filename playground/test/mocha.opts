@@ -1,0 +1,2 @@
+--timeout 12000
+--reporter macaca-reporter
