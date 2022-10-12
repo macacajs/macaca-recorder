@@ -9,6 +9,7 @@ import ApiPlugin from '@/node/plugins/api';
 import EventPlugin from '@/node/plugins/event';
 import IApi from '@/node/services/api';
 import { InjectedScript } from './lib/type';
+import EditorTestPlugin from './plugins/editor-test';
 import HighlightPlugin from './plugins/highlight';
 import RecordEventsPlugin from './plugins/record-events';
 import SelectorPlugin from './plugins/selector';
@@ -39,6 +40,7 @@ class ConsoleExtends {
         HighlightPlugin,
         WebServicesPlugin,
         RecordEventsPlugin,
+        EditorTestPlugin,
       ],
       IApi,
     );

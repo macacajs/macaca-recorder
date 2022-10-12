@@ -1,26 +1,26 @@
-import IActions from '@/recorder/services/action';
+import ICode from '@/recorder/services/code';
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import Code from '../components/code';
 import './app.less';
 
 export interface AppProps {
-  actions: IActions;
+  icode: ICode;
 }
 
-export default function App({ actions }: AppProps) {
-  const [code, setCode] = useState(actions.getCode());
+export default function App({ icode }: AppProps) {
+  const [code, setCode] = useState(icode.getCode());
   useEffect(() => {
     const cb = () => {
-      setCode(actions.getCode());
+      setCode(icode.getCode());
     };
-    actions.onActionChange.on(cb);
-    return () => actions.onActionChange.off(cb);
-  }, [actions]);
+    icode.onCodeChange.on(cb);
+    return () => icode.onCodeChange.off(cb);
+  }, [icode]);
 
   return <Code code={code} />;
 }
 
-export function init(container: HTMLElement, actions: IActions) {
-  ReactDOM.render(<App actions={actions} />, container);
+export function init(container: HTMLElement, code: ICode) {
+  ReactDOM.render(<App icode={code} />, container);
 }

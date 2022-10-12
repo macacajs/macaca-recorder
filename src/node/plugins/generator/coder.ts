@@ -31,10 +31,10 @@ export default class CodeGen implements ICodeGen, IWebServiceManager {
 
   coderServices: string[] = [];
 
-  @autowired(IBrowserFactory)
+  @autowired(IBrowserFactory, true)
   factory: IBrowserFactory;
 
-  @autowired(IEventManager)
+  @autowired(IEventManager, true)
   eventManager: IEventManager;
 
   init() {
