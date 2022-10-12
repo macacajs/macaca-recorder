@@ -2,6 +2,7 @@ import { App } from '@/core';
 import ApiPlugin from '@/node/plugins/api';
 import AssetsServerPlugin from '@/node/plugins/assets-server';
 import BrowserPlugin from '@/node/plugins/browser';
+import EventPlugin from '@/node/plugins/event';
 import GeneratorPlugin from '@/node/plugins/generator';
 import { IApi } from '@/node/services/api';
 import IAssetsServer from '@/node/services/assets-server';
@@ -18,7 +19,13 @@ describe('injected test', () => {
 
   it('highlight should be ok', async () => {
     app = await App.createApp(
-      [ApiPlugin, BrowserPlugin, AssetsServerPlugin, GeneratorPlugin],
+      [
+        ApiPlugin,
+        BrowserPlugin,
+        AssetsServerPlugin,
+        GeneratorPlugin,
+        EventPlugin,
+      ],
       IApi,
     );
     await app.init();

@@ -1,12 +1,12 @@
 import { autowired, IPlugin } from '@/core';
-import IActions from '@/recorder/services/action';
+import ICode from '@/recorder/services/code';
 import { init } from './app';
 
 export default class UIPlugin implements IPlugin {
   container: HTMLDivElement;
 
-  @autowired(IActions)
-  actions: IActions;
+  @autowired(ICode)
+  code: ICode;
 
   async init() {
     this.container = document.createElement('div');
@@ -14,6 +14,6 @@ export default class UIPlugin implements IPlugin {
   }
 
   async afterInit() {
-    init(this.container, this.actions);
+    init(this.container, this.code);
   }
 }

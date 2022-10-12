@@ -1,24 +1,20 @@
-import { autowired, IPlugin } from '@/core';
-import { IHighlight, ISelector } from '@/injected/services';
+import { autowired, IPlugin, IServiceManager } from '@/core';
+import Disposable from '@/core/disposable';
+import {
+  IHighlight,
+  IRecorder,
+  IRecorderContext,
+  ISelector,
+  RecorderSlot,
+} from '@/injected/services';
 import { Action } from '@/types/actions';
+import { addEventListener } from '@/utils/dom';
 import { buttonForEvent, modifiersForEvent, positionForEvent } from './helper';
 
 declare global {
   interface Window {
     __handle_action: (action: Action) => Promise<void>;
   }
-}
-
-function addEventListener<K extends keyof DocumentEventMap>(
-  target: Document,
-  eventName: K,
-  listener: (event: DocumentEventMap[K]) => void,
-  useCapture?: boolean,
-): () => void {
-  target.addEventListener(eventName, listener, useCapture);
-  return () => {
-    target.removeEventListener(eventName, listener, useCapture);
-  };
 }
 
 function deepEventTarget(event: Event): HTMLElement {
@@ -30,9 +26,10 @@ type HighlightModel = {
   elements: Element[];
 };
 
-export default class RecordEventsPlugin implements IPlugin {
-  listeners: (() => void)[];
-
+export default class RecordEventsPlugin
+  extends Disposable
+  implements IPlugin, IRecorder
+{
   private hoveredModel: HighlightModel | null = null;
 
   private hoveredElement: any;
@@ -43,116 +40,109 @@ export default class RecordEventsPlugin implements IPlugin {
   @autowired(ISelector)
   selector: ISelector;
 
+  @autowired(IServiceManager)
+  serviceManager: IServiceManager;
+
+  slots: RecorderSlot[] = [];
+
+  private oldAddEventListener: {
+    <K extends keyof HTMLElementEventMap>(
+      type: K,
+      listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any,
+      options?: boolean | AddEventListenerOptions | undefined,
+    ): void;
+    (
+      type: string,
+      listener: EventListenerOrEventListenerObject,
+      options?: boolean | AddEventListenerOptions | undefined,
+    ): void;
+  };
+
   // eslint-disable-next-line class-methods-use-this
   dispatchAction(action: Action) {
     // eslint-disable-next-line no-underscore-dangle
     window.__handle_action(action);
   }
 
+  async registerSrv() {
+    this.serviceManager.registerServiceBean(IRecorder, this);
+  }
+
+  async init() {
+    // 对事件进行拦截
+    this.oldAddEventListener = HTMLElement.prototype.addEventListener;
+    const { oldAddEventListener, slots, selector, dispatchAction } = this;
+    HTMLElement.prototype.addEventListener = function wrapAddEventListener(
+      type: string,
+      handler: (e: Event) => void,
+      options?: boolean | AddEventListenerOptions | undefined,
+    ) {
+      const context: IRecorderContext = {
+        dom: this,
+        selector,
+        modifiersForEvent,
+        buttonForEvent,
+        positionForEvent,
+        addAction: dispatchAction,
+      };
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      oldAddEventListener.call(
+        this,
+        type,
+        (evt: any) => {
+          for (let i = 0; i < slots.length; i += 1) {
+            slots[i](type, evt, context);
+          }
+          handler.call(this, evt);
+        },
+        options,
+      );
+    };
+  }
+
   async afterInit() {
-    this.listeners = [
-      addEventListener(
-        document,
-        'click',
-        event => this.onClick(event as MouseEvent),
-        true,
-      ),
-      addEventListener(
-        document,
-        'auxclick',
-        event => this.onClick(event as MouseEvent),
-        true,
-      ),
-      addEventListener(document, 'input', event => this.onInput(event), true),
-      // addEventListener(
-      //   document,
-      //   'keydown',
-      //   event => this._onKeyDown(event as KeyboardEvent),
-      //   true,
-      // ),
-      // addEventListener(
-      //   document,
-      //   'keyup',
-      //   event => this._onKeyUp(event as KeyboardEvent),
-      //   true,
-      // ),
-      // addEventListener(
-      //   document,
-      //   'mousedown',
-      //   event => this._onMouseDown(event as MouseEvent),
-      //   true,
-      // ),
-      // addEventListener(
-      //   document,
-      //   'mouseup',
-      //   event => this._onMouseUp(event as MouseEvent),
-      //   true,
-      // ),
+    this.registerDispose(
       addEventListener(
         document,
         'mousemove',
-        event => this.onMouseMove(event as MouseEvent),
+        evt => this.onMouseMove(evt),
         true,
       ),
-      // addEventListener(
-      //   document,
-      //   'mouseleave',
-      //   event => this._onMouseLeave(event as MouseEvent),
-      //   true,
-      // ),
-      addEventListener(document, 'focus', () => this.onFocus('focus'), true),
-      addEventListener(
-        document,
-        'selectionchange',
-        () => this.onFocus('selection'),
-        true,
-      ),
-      addEventListener(
-        document,
-        'scroll',
-        () => {
-          this.hoveredModel = null;
-          this.highlight.clearHighlight();
-          this.updateHighlight();
-        },
-        true,
-      ),
-    ];
+    );
+    this.registerDispose(
+      addEventListener(document, 'click', evt => this.onKeydown(evt), true),
+    );
+    this.registerDispose(
+      addEventListener(document, 'keydown', evt => this.onKeydown(evt), true),
+    );
+    this.registerDispose(
+      addEventListener(document, 'input', evt => this.onKeydown(evt), true),
+    );
   }
 
-  onFocus(type: 'focus' | 'selection'): void {
-    if (!document.activeElement) return;
-    const target = document.activeElement;
-    const { selector } = this.selector.generateSelector(target);
-    console.info(type, selector, window.getSelection());
-  }
-
-  onInput(evt: Event): void {
-    if (evt instanceof InputEvent) {
-      const target = deepEventTarget(evt);
-      const { selector } = this.selector.generateSelector(target);
-      this.dispatchAction({
-        name: 'fill',
-        selector,
-        signals: [],
-        text: evt.data || '',
-      });
+  registerSlot(slot: RecorderSlot | RecorderSlot[]): void {
+    if (Array.isArray(slot)) {
+      for (let i = 0, l = slot.length; i < l; i += 1) {
+        this.slots.push(slot[i]);
+      }
+    } else {
+      this.slots.push(slot);
     }
   }
 
-  onClick(evt: MouseEvent): void {
-    const target = deepEventTarget(evt);
-    const { selector } = this.selector.generateSelector(target);
-
-    this.dispatchAction({
-      name: 'click',
-      selector,
-      position: positionForEvent(evt),
-      signals: [],
-      button: buttonForEvent(evt),
-      modifiers: modifiersForEvent(evt),
-      clickCount: evt.detail,
-    });
+  onKeydown(evt: Event) {
+    const context: IRecorderContext = {
+      dom: deepEventTarget(evt),
+      selector: this.selector,
+      modifiersForEvent,
+      buttonForEvent,
+      positionForEvent,
+      addAction: this.dispatchAction,
+    };
+    for (let i = 0; i < this.slots.length; i += 1) {
+      this.slots[i](evt.type, evt, context);
+    }
   }
 
   onMouseMove(evt: MouseEvent): void {
@@ -187,7 +177,8 @@ export default class RecordEventsPlugin implements IPlugin {
   }
 
   async dispose() {
-    this.listeners.forEach(v => v());
+    super.dispose();
+    HTMLElement.prototype.addEventListener = this.oldAddEventListener;
     this.highlight.clearHighlight();
     this.hoveredModel = null;
     this.hoveredElement = null;
