@@ -21,27 +21,27 @@ export function injectID2No(id: InjectIDType<unknown>): number {
   return id as unknown as number;
 }
 
-function getDeps(clz: any): Array<[InjectIDType<object>, string]> {
+function getDeps(clz: any): Array<[InjectIDType<object>, string, boolean]> {
   return clz?.__deps || [];
 }
 
-function registerDeps(clz: any, id: number, key: string) {
+function registerDeps(clz: any, id: number, key: string, required: boolean) {
   if (!clz.__deps) {
     clz.__deps = getDeps(
       Reflect.getPrototypeOf(clz.prototype)?.constructor,
     ).slice(0);
   }
-  clz.__deps.push([id, key]);
+  clz.__deps.push([id, key, required]);
 }
 
 /**
  * 自动注入对应的Interface实现如果注入失败则会设置为null
  * @param id service的id
  */
-export function autowired<Type>(id: InjectIDType<Type>) {
+export function autowired<Type>(id: InjectIDType<Type>, required = false) {
   return <K extends string, T extends Record<K, Type>>(target: T, key: K) => {
     // 注册依赖
-    registerDeps(target.constructor, injectID2No(id), key);
+    registerDeps(target.constructor, injectID2No(id), key, required);
   };
 }
 
@@ -116,9 +116,15 @@ export default class IOCContext {
 
   resolveDeps<T>(ins: T, Clz: CLAZZ<T>) {
     const deps = getDeps(Clz);
-    deps.forEach(([id, key]) => {
+    deps.forEach(([id, key, required]) => {
       Reflect.defineProperty(ins as unknown as object, key, {
-        get: () => this.getBean(id),
+        get: () => {
+          const bean = this.getBean(id);
+          if (required && bean === null) {
+            throw new Error(`${key} is required but not injected`);
+          }
+          return bean;
+        },
       });
     });
   }

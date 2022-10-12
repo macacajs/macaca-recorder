@@ -1,5 +1,5 @@
 node_modules/
 coverage/
+package-lock.json
 src/node/plugins/generator/
 src/node/plugins/page/index.js
-

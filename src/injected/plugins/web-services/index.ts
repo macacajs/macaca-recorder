@@ -14,7 +14,6 @@ declare global {
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 window.require = (path: string) => {
-  console.info('require path', path);
   if (['@/core', 'macaca-recorder'].includes(path)) {
     return core as never;
   }

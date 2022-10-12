@@ -8,56 +8,8 @@
   </script>
 </head>
 <body>
-  <textarea data-type="typescript">
-class Test {
-  name: any;
-
-  getName() {
-    return this.name;
-  }
-
-  get age(): string {
-    return this.age;
-  }
-
-  showMsg(msg: string) {
-    console.info(msg);
-  }
-}
-
-interface ITest {
-  name: any;
-}
-
-function test(age: number) {
-  return age;
-}
-
-namespace STD {
-  class Test {
-
-  }
-}
-  </textarea>
-  <button>1231</button>
-  <button>1231</button>
   <script src="https://gw.alipayobjects.com/as/g/larkgroup/lake-codemirror/7.0.3/CodeMirror.js"></script>
   <script src="index.js"></script>
-  <script>
-    document.querySelectorAll('textarea').forEach(txt => {
-      const mode = txt.dataset.type || 'javascript';
-      const theme = txt.dataset.theme || 'default';
-      const readOnly = txt.dataset.readonly === 'true';
-      const cm = (CodeMirror.default || CodeMirror).fromTextArea(txt, {
-        lineNumbers: true,
-        matchBrackets: true,
-        mode: mode,
-        useDefaultKeyMap: true,
-        theme: theme,
-        readOnly,
-      });
-    });
-  </script>
 </body>
 
 </html>

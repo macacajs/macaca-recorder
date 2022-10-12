@@ -27,7 +27,9 @@ describe('test browser', () => {
     expect(browser).not.equal(null);
 
     await browser?.launch({ headless: true });
-    await browser?.start(uri => require.resolve(`./assets/${uri}`));
+    await browser?.start('http://e2egen/', uri =>
+      require.resolve(`./assets/${uri}`),
+    );
 
     const appPage = browser?.getAppPage();
     expect(appPage).not.equal(null);
@@ -49,7 +51,9 @@ describe('test browser', () => {
 
     await browser?.launch({ headless: true });
     await browser?.addInitScript('window.someValue = "123"');
-    await browser?.start(uri => require.resolve(`./assets/${uri}`));
+    await browser?.start('http://e2egen/', uri =>
+      require.resolve(`./assets/${uri}`),
+    );
 
     const appPage = browser?.getAppPage();
     expect(appPage).not.equal(null);
@@ -73,7 +77,9 @@ describe('test browser', () => {
     await browser?.extendInjectedScript(
       fs.readFileSync(require.resolve('./assets/extend.js')).toString(),
     );
-    await browser?.start(uri => require.resolve(`./assets/${uri}`));
+    await browser?.start('http://e2egen/', uri =>
+      require.resolve(`./assets/${uri}`),
+    );
 
     const appPage = browser?.getAppPage();
     expect(appPage).not.equal(null);

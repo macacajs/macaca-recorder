@@ -6,11 +6,23 @@ import { App } from '@/core';
 import ApiPlugin from '@/node/plugins/api';
 import EventPlugin from '@/node/plugins/event';
 import { IApi } from '@/node/services/api';
+import ActionsPlugin from './plugins/actions';
+import EditorCodeGen from './plugins/editor-code-gen';
+import ProtocolPlugin from './plugins/protocol';
+import UIPlugin from './plugins/ui';
 import WebServicesPlugin from './plugins/web-services';
 
 async function start() {
   const app = await App.createApp(
-    [ApiPlugin, EventPlugin, WebServicesPlugin],
+    [
+      ApiPlugin,
+      EventPlugin,
+      WebServicesPlugin,
+      ActionsPlugin,
+      ProtocolPlugin,
+      UIPlugin,
+      EditorCodeGen,
+    ],
     IApi,
   );
   await app.init();
