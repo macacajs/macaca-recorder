@@ -5,11 +5,7 @@ import { ISelector, SelectorSlot } from '@/injected/services';
 import classSlot from './slots/class-slot';
 import idSlot from './slots/id-slot';
 import testidSlot from './slots/testid-slot';
-
-function isOwnSelector(target: Element, selector: string) {
-  const rets = target.ownerDocument.querySelectorAll(selector);
-  return rets.length === 1 && rets[0] === target;
-}
+import xpathSlot from './slots/xpath-slot';
 
 export default class SelectorPlugin implements IPlugin, ISelector {
   injected: InjectedScript;
@@ -21,6 +17,7 @@ export default class SelectorPlugin implements IPlugin, ISelector {
     idSlot,
     classSlot,
     testidSlot,
+    xpathSlot,
   } as const;
 
   // 扩展插槽

@@ -7,6 +7,9 @@ export default function clickTrans(
 ) {
   if (action.name === 'click') {
     context.actions.push(action);
-    context.codeList.push(`  .click(${JSON.stringify(action.selector)})`);
+    context.codeList.push(
+      `  .elementByXPath(${JSON.stringify(action.selector)})`,
+    );
+    context.codeList.push(`  .click()`);
   }
 }

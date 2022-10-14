@@ -29,6 +29,7 @@ module.exports = {
     'import/extensions': 0,
     'import/no-extraneous-dependencies': 0,
     'no-useless-constructor': 0,
+    'no-plusplus': 0,
   },
   overrides: [
     {

@@ -16,6 +16,7 @@ export default class EditorTestPlugin implements IPlugin {
       this.selector.defaultSlots.testidSlot,
       this.selector.defaultSlots.classSlot,
       this.selector.defaultSlots.idSlot,
+      this.selector.defaultSlots.xpathSlot,
     ]);
 
     this.recorder.registerSlot([inputSlot, keydownSlot, clickSlot]);
