@@ -37,6 +37,7 @@ function registerDeps(clz: any, id: number, key: string, required: boolean) {
 /**
  * 自动注入对应的Interface实现如果注入失败则会设置为null
  * @param id service的id
+ * @param required
  */
 export function autowired<Type>(id: InjectIDType<Type>, required = false) {
   return <K extends string, T extends Record<K, Type>>(target: T, key: K) => {

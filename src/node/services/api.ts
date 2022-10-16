@@ -1,7 +1,7 @@
 import { genInjectID, IEventManager, InjectIDType } from '@/core';
 import { ICodeGen } from './code-gen';
 
-// 对外报漏api
+// 对外暴露api
 export interface IApi {
   eventManger: IEventManager;
   codeGen: ICodeGen;

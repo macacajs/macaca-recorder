@@ -9,6 +9,7 @@ export interface ISelector {
     readonly idSlot: SelectorSlot;
     readonly classSlot: SelectorSlot;
     readonly testidSlot: SelectorSlot;
+    readonly xpathSlot: SelectorSlot;
   };
 
   generateSelector(

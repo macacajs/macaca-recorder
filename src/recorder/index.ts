@@ -7,7 +7,8 @@ import ApiPlugin from '@/node/plugins/api';
 import EventPlugin from '@/node/plugins/event';
 import { IApi } from '@/node/services/api';
 import ActionsPlugin from './plugins/actions';
-import EditorCodeGen from './plugins/editor-code-gen';
+// import EditorCodeGen from './plugins/editor-code-gen';
+import MacacaCodeGen from './plugins/macaca-code-gen';
 import ProtocolPlugin from './plugins/protocol';
 import UIPlugin from './plugins/ui';
 import WebServicesPlugin from './plugins/web-services';
@@ -21,7 +22,8 @@ async function start() {
       ActionsPlugin,
       ProtocolPlugin,
       UIPlugin,
-      EditorCodeGen,
+      // EditorCodeGen,
+      MacacaCodeGen,
     ],
     IApi,
   );
