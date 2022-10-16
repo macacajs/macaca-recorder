@@ -19,6 +19,6 @@ export interface IEventManager {
   createIEvent<T>(): IEvent<T>;
 }
 
-export const IEventManager = genInjectID<IEventManager>();
+export const IEventManager = genInjectID<IEventManager>('IEventManager');
 
 export default IEventManager;

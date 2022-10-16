@@ -9,11 +9,11 @@ export interface CLAZZ<T> extends Function {
 /**
  * 生成对应接口的注入id
  */
-export const genInjectID: <T>() => InjectIDType<T> = (() => {
+export const genInjectID: <T>(name?: string) => InjectIDType<T> = (() => {
   let number = 0;
-  return () => {
+  return (name?: string) => {
     number += 1;
-    return number as never;
+    return (name ? name + number : number) as never;
   };
 })();
 

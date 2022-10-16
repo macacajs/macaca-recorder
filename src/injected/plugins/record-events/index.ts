@@ -7,9 +7,11 @@ import {
   ISelector,
   RecorderSlot,
 } from '@/injected/services';
+import { IUIState, UIRecordState } from '@/isomorphic/services';
 import { Action } from '@/types/actions';
 import { addEventListener } from '@/utils/dom';
 import { buttonForEvent, modifiersForEvent, positionForEvent } from './helper';
+import UIState from './ui-state';
 
 declare global {
   interface Window {
@@ -43,6 +45,9 @@ export default class RecordEventsPlugin
   @autowired(IServiceManager)
   serviceManager: IServiceManager;
 
+  @autowired(IUIState)
+  uiState: IUIState;
+
   slots: RecorderSlot[] = [];
 
   private oldAddEventListener: {
@@ -59,16 +64,20 @@ export default class RecordEventsPlugin
   };
 
   // eslint-disable-next-line class-methods-use-this
-  dispatchAction(action: Action) {
+  dispatchAction = (action: Action) => {
+    // 判断状态是否 继续录制
+    if (this.uiState.state !== UIRecordState.recording) return;
     // eslint-disable-next-line no-underscore-dangle
     window.__handle_action(action);
-  }
+  };
 
   async registerSrv() {
+    this.serviceManager.registerService(IUIState, UIState);
     this.serviceManager.registerServiceBean(IRecorder, this);
   }
 
   async init() {
+    await this.uiState.init();
     // 对事件进行拦截
     this.oldAddEventListener = HTMLElement.prototype.addEventListener;
     const { oldAddEventListener, slots, selector, dispatchAction } = this;

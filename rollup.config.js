@@ -51,7 +51,6 @@ export default [
           module: 'esnext',
         },
       }),
-      terser(),
       {
         name: 'banner',
         renderChunk: function renderChunk(code) {
