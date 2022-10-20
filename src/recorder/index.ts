@@ -6,9 +6,9 @@ import { App } from '@/core';
 import ApiPlugin from '@/node/plugins/api';
 import EventPlugin from '@/node/plugins/event';
 import { IApi } from '@/node/services/api';
+import IOptionPlugin from '@/isomorphic/plugins/options';
 import ActionsPlugin from './plugins/actions';
-// import EditorCodeGen from './plugins/editor-code-gen';
-import MacacaCodeGen from './plugins/macaca-code-gen';
+import RecorderPlugin from './plugins/recorder';
 import ProtocolPlugin from './plugins/protocol';
 import UIPlugin from './plugins/ui';
 import WebServicesPlugin from './plugins/web-services';
@@ -18,12 +18,12 @@ async function start() {
     [
       ApiPlugin,
       EventPlugin,
+      IOptionPlugin,
+      RecorderPlugin,
       WebServicesPlugin,
       ActionsPlugin,
       ProtocolPlugin,
       UIPlugin,
-      // EditorCodeGen,
-      MacacaCodeGen,
     ],
     IApi,
   );

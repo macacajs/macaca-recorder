@@ -64,10 +64,16 @@ export default class App implements IPluginManager, IServiceManager {
   }
 
   async init() {
-    // 解析依赖并触发init事件
+    // 解析依赖并触发beforeInit事件
     await Promise.all(
       this.pluginInstances.map((plug, index) => {
         this.context.resolveDeps(plug, this.plugins[index]);
+        return plug.beforeInit?.();
+      }),
+    );
+    // 触发插件init事件
+    await Promise.all(
+      this.pluginInstances.map((plug, index) => {
         return plug.init?.();
       }),
     );

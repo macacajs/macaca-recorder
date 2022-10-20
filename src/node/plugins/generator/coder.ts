@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { autowired, IEvent, IEventManager } from '@/core';
+import IOptions from '@/isomorphic/services/options';
 import { IBrowser, IBrowserFactory, IPage } from '@/node/services/browser';
 import { ICodeGen } from '@/node/services/code-gen';
 import { IWebServiceManager } from '@/node/services/coder-web-service';
@@ -36,6 +37,9 @@ export default class CodeGen implements ICodeGen, IWebServiceManager {
 
   @autowired(IEventManager, true)
   eventManager: IEventManager;
+
+  @autowired(IOptions)
+  options: IOptions;
 
   init() {
     this.afterStart = this.eventManager.createIEvent();
@@ -85,6 +89,14 @@ export default class CodeGen implements ICodeGen, IWebServiceManager {
     });
     await browser.exposeBinding('requireSource', false, (_, path: string) => {
       return Require(path);
+    });
+    // 暴露配置给所有页面
+    await browser.exposeBinding('__GetOptions', false, () => {
+      return Object.keys(this.options).reduce((ret, key) => {
+        // eslint-disable-next-line no-param-reassign
+        ret[key] = this.options[key];
+        return ret;
+      }, {} as Record<string, any>);
     });
 
     await browser.exposeBinding(
