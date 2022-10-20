@@ -44,10 +44,14 @@ export default class EditorCodeGen implements IPlugin, ICode {
   }
 
   handleAction = (action: Action) => {
-    const newCode = this.transContext.appendAction(action);
-    if (this.code !== newCode) {
-      this.code = newCode;
-      this.onCodeChange.trigger();
+    try {
+      const newCode = this.transContext.appendAction(action);
+      if (this.code !== newCode) {
+        this.code = newCode;
+        this.onCodeChange.trigger();
+      }
+    } catch (e) {
+      console.error(e);
     }
   };
 

@@ -8,6 +8,7 @@ import {
   RecorderSlot,
 } from '@/injected/services';
 import { IUIState, UIRecordState } from '@/isomorphic/services';
+import IOptions from '@/isomorphic/services/options';
 import { Action } from '@/types/actions';
 import { addEventListener } from '@/utils/dom';
 import { buttonForEvent, modifiersForEvent, positionForEvent } from './helper';
@@ -48,6 +49,9 @@ export default class RecordEventsPlugin
   @autowired(IUIState)
   uiState: IUIState;
 
+  @autowired(IOptions)
+  options: IOptions;
+
   slots: RecorderSlot[] = [];
 
   private oldAddEventListener: {
@@ -78,55 +82,42 @@ export default class RecordEventsPlugin
 
   async init() {
     await this.uiState.init();
-    // 对事件进行拦截
-    this.oldAddEventListener = HTMLElement.prototype.addEventListener;
-    const { oldAddEventListener, slots, selector, dispatchAction } = this;
-    HTMLElement.prototype.addEventListener = function wrapAddEventListener(
-      type: string,
-      handler: (e: Event) => void,
-      options?: boolean | AddEventListenerOptions | undefined,
-    ) {
-      const context: IRecorderContext = {
-        dom: this,
-        selector,
-        modifiersForEvent,
-        buttonForEvent,
-        positionForEvent,
-        addAction: dispatchAction,
-      };
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      oldAddEventListener.call(
-        this,
-        type,
-        (evt: any) => {
-          for (let i = 0; i < slots.length; i += 1) {
-            slots[i](type, evt, context);
-          }
-          handler.call(this, evt);
-        },
-        options,
-      );
-    };
   }
 
   async afterInit() {
+    // 只有开启显示高亮的时候才注册
+    if (this.options.showHightlight) {
+      this.registerDispose(
+        addEventListener(
+          document,
+          'mousemove',
+          evt => this.onMouseMove(evt),
+          true,
+        ),
+      );
+    }
+    this.registerDispose(
+      addEventListener(document, 'click', evt => this.onEvent(evt), true),
+    );
+    this.registerDispose(
+      addEventListener(document, 'keydown', evt => this.onEvent(evt), true),
+    );
+    this.registerDispose(
+      addEventListener(document, 'input', evt => this.onEvent(evt), true),
+    );
+    this.registerDispose(
+      addEventListener(document, 'mousedown', evt => this.onEvent(evt), true),
+    );
+    this.registerDispose(
+      addEventListener(document, 'mouseup', evt => this.onEvent(evt), true),
+    );
     this.registerDispose(
       addEventListener(
         document,
-        'mousemove',
-        evt => this.onMouseMove(evt),
+        'selectionchange',
+        evt => this.onEvent(evt),
         true,
       ),
-    );
-    this.registerDispose(
-      addEventListener(document, 'click', evt => this.onKeydown(evt), true),
-    );
-    this.registerDispose(
-      addEventListener(document, 'keydown', evt => this.onKeydown(evt), true),
-    );
-    this.registerDispose(
-      addEventListener(document, 'input', evt => this.onKeydown(evt), true),
     );
   }
 
@@ -140,7 +131,7 @@ export default class RecordEventsPlugin
     }
   }
 
-  onKeydown(evt: Event) {
+  onEvent(evt: Event) {
     const context: IRecorderContext = {
       dom: deepEventTarget(evt),
       selector: this.selector,
@@ -155,6 +146,7 @@ export default class RecordEventsPlugin
   }
 
   onMouseMove(evt: MouseEvent): void {
+    if (!this.options.showHightlight) return;
     const target = deepEventTarget(evt);
     if (this.hoveredElement === target) return;
     this.hoveredElement = target;

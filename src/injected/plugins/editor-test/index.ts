@@ -3,6 +3,7 @@ import { IRecorder, ISelector } from '@/injected/services';
 import clickSlot from './slots/click';
 import inputSlot from './slots/input';
 import keydownSlot from './slots/keydown';
+import selectionSlot from './slots/selectionSlot';
 
 export default class EditorTestPlugin implements IPlugin {
   @autowired(ISelector)
@@ -19,6 +20,11 @@ export default class EditorTestPlugin implements IPlugin {
       this.selector.defaultSlots.xpathSlot,
     ]);
 
-    this.recorder.registerSlot([inputSlot, keydownSlot, clickSlot]);
+    this.recorder.registerSlot([
+      inputSlot,
+      keydownSlot,
+      clickSlot,
+      selectionSlot, // 选区拦截
+    ]);
   }
 }

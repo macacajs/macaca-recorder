@@ -35,16 +35,12 @@ export default function fillTrans(
     };
     context.actions.push(newAction);
     context.codeList.push(
-      `await macacaHelper.fill(${JSON.stringify(
-        newAction.selector,
-      )}, ${JSON.stringify(newAction.text)})`,
+      `await macacaHelper.fill(${JSON.stringify(newAction.text)})`,
     );
   } else {
     context.actions.push(action);
     context.codeList.push(
-      `await macacaHelper.fill(${JSON.stringify(
-        action.selector,
-      )}, ${JSON.stringify(action.text)})`,
+      `await macacaHelper.fill(${JSON.stringify(action.text)})`,
     );
   }
 }

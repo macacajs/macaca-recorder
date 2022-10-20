@@ -2,6 +2,9 @@
 import { autowired, IEvent, IEventManager } from '@/core';
 import { IUIState, UIRecordState } from '../services';
 
+/**
+ * 基础UIEvent实现 由node recorder和injected页面都可以继承该实现
+ */
 export default class BaseUIEvent implements IUIState {
   private _state: UIRecordState;
 
@@ -18,7 +21,8 @@ export default class BaseUIEvent implements IUIState {
     this.stateChange = this.evtManager.createIEvent();
   }
 
-  async setState(state: UIRecordState): Promise<void> {
+  async setState(state: UIRecordState): Promise<boolean> {
     this._state = state;
+    return true;
   }
 }

@@ -2,6 +2,7 @@ import { CLAZZ, genInjectID } from '../ioc';
 
 export interface IPlugin {
   registerSrv?: () => Promise<void>;
+  beforeInit?: () => Promise<void>;
   init?: () => Promise<void>;
   afterInit?: () => void;
   onUnregistter?: () => void;

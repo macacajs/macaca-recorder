@@ -2,7 +2,7 @@ import { genInjectID } from '@/core';
 
 export type SelectorSlot = (
   node: Element,
-) => null | { selector: string; elements: Element[] };
+) => null | { selector: string; elements: Element[]; data?: any };
 
 export interface ISelector {
   defaultSlots: {
@@ -15,7 +15,7 @@ export interface ISelector {
   generateSelector(
     node: Element,
     strict?: boolean,
-  ): { selector: string; elements: Element[] };
+  ): { selector: string; elements: Element[]; data?: any };
 
   registerSlot(slot: SelectorSlot | SelectorSlot[]): void;
 }

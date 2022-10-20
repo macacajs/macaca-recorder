@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import {
   autowired,
   IApp,
@@ -5,6 +6,7 @@ import {
   InjectIDType,
   IServiceManager,
 } from '@/core';
+import IOptions from '@/isomorphic/services/options';
 import IApi from '@/node/services/api';
 import ICodeGen from '@/node/services/code-gen';
 
@@ -20,6 +22,9 @@ export default class Api implements IApi {
 
   @autowired(IServiceManager)
   serviceManager: IServiceManager;
+
+  @autowired(IOptions)
+  options: IOptions;
 
   async init() {
     await this.app.init();

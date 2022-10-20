@@ -23,6 +23,7 @@ export default class UIPlugin implements IPlugin {
   async init() {
     this.state.init();
     this.container = document.createElement('div');
+    this.container.className = 'app-container';
     document.body.appendChild(this.container);
   }
 
