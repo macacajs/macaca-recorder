@@ -4,11 +4,10 @@ import BaseUIEvent from '@/isomorphic/base/ui-state';
 import { IUIState, UIRecordState } from '@/isomorphic/services';
 import ICodeGen from '@/node/services/code-gen';
 
-declare global {
-  interface Window {
-    __setUIState(state: UIRecordState): Promise<void>;
-  }
-}
+/**
+ * UI状态同步，可以在recorder页面和injected页面同步状态
+ * 目前是通过window对象注入实现的比较丑陋 @todo 待优化
+ */
 
 export default class UIStatePlugin
   extends BaseUIEvent
@@ -25,15 +24,25 @@ export default class UIStatePlugin
   }
 
   async afterInit() {
-    this.codeGen.afterAppPageLaunch.on(page => {
-      // 向app页面注册方法
-      page.exposeBinding('__setUIState', true, (_, state: UIRecordState) => {
-        this.setState(state);
-        // 调用监控页面传递state
-        this.codeGen.getPage()?.evaluate(async (_state: UIRecordState) => {
-          await window.__setUIState(_state);
-        }, state);
-      });
+    this.codeGen.afterAppPageLaunch.on(appPage => {
+      // 向recorder页面注册方法window.__setUIState
+      // 如果recorder调用该方法则同步injected页面的该方法
+      appPage.exposeBinding(
+        '__setUIState',
+        true,
+        async (_, state: UIRecordState) => {
+          await this.setState(state);
+
+          // 获取注入页面
+          const page = this.codeGen.getPage();
+          if (!page) return false;
+
+          // 调用injected页面的方法同步State
+          return page.evaluate((_state: UIRecordState) => {
+            return window.__setUIState(_state);
+          }, state);
+        },
+      );
     });
   }
 }
