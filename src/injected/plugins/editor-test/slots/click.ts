@@ -9,7 +9,7 @@ export default function clickSlot(
 ) {
   if (event.type === 'click' && prevEvent !== event) {
     prevEvent = event;
-    const { selector } = context.selector.generateSelector(context.dom);
+    const { selector, data } = context.selector.generateSelector(context.dom);
     context.addAction({
       name: 'click',
       selector,
@@ -18,6 +18,7 @@ export default function clickSlot(
       modifiers: context.modifiersForEvent(event),
       button: context.buttonForEvent(event),
       position: context.positionForEvent(event),
+      data,
     });
   }
   return false;

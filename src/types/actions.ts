@@ -17,6 +17,7 @@ export type ActionBase = {
   name: ActionName;
   // eslint-disable-next-line no-use-before-define
   signals: Signal[];
+  data?: any;
 };
 
 export type ClickAction = ActionBase & {

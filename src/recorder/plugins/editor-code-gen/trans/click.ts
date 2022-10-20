@@ -22,7 +22,15 @@ export default function clickTrans(
   }
 
   context.actions.push(action);
-  context.codeList.push(
-    `await macacaHelper.click(${JSON.stringify(action.selector)})`,
-  );
+  if (typeof action.data === 'number') {
+    context.codeList.push(
+      `await macacaHelper.click(${JSON.stringify(action.selector)}, ${
+        action.data
+      })`,
+    );
+  } else {
+    context.codeList.push(
+      `await macacaHelper.click(${JSON.stringify(action.selector)})`,
+    );
+  }
 }
