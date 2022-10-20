@@ -5,6 +5,7 @@
  */
 
 import { App } from '@/core';
+import IOptionPlugin from '@/isomorphic/plugins/options';
 import ApiPlugin from '@/node/plugins/api';
 import EventPlugin from '@/node/plugins/event';
 import IApi from '@/node/services/api';
@@ -37,6 +38,7 @@ class ConsoleExtends {
       [
         ApiPlugin,
         EventPlugin,
+        IOptionPlugin,
         SelectorPlugin,
         HighlightPlugin,
         WebServicesPlugin,

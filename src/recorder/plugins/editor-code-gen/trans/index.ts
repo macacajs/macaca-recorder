@@ -2,6 +2,7 @@ import { Action } from '@/types/actions';
 import clickTrans from './click';
 import fillTrans from './fill';
 import pressTrans from './press';
+import SelectionChangeTrans from './select';
 
 export interface TransFunc {
   // eslint-disable-next-line no-use-before-define
@@ -13,7 +14,12 @@ export default class EditorTransContext {
 
   codeList: string[] = ['const macacaHelper = new MacacaHelper()'];
 
-  trans: TransFunc[] = [clickTrans, pressTrans, fillTrans];
+  trans: TransFunc[] = [
+    clickTrans,
+    pressTrans,
+    fillTrans,
+    SelectionChangeTrans,
+  ];
 
   appendAction(action: Action) {
     for (let i = 0; i < this.trans.length; i += 1) {

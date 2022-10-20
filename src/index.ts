@@ -22,7 +22,7 @@ async function start() {
 
   await app.init();
   // 设置代码生成引擎
-  app.options.setRecorderEngine('editor');
+  app.options.setRecorderEngine('editor').setShowHighlight(false);
 
   await app.codeGen.start('http://localhost:8180/_examples/note');
 }

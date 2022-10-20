@@ -10,7 +10,8 @@ export type ActionName =
   | 'press'
   | 'select'
   | 'uncheck'
-  | 'setInputFiles';
+  | 'setInputFiles'
+  | 'custom';
 
 export type ActionBase = {
   name: ActionName;
@@ -76,6 +77,11 @@ export type SetInputFilesAction = ActionBase & {
   files: string[];
 };
 
+export type CustomAction = ActionBase & {
+  name: 'custom';
+  data: Record<string, unknown>;
+};
+
 export type Action =
   | ClickAction
   | CheckAction
@@ -86,7 +92,8 @@ export type Action =
   | NavigateAction
   | PressAction
   | SelectAction
-  | SetInputFilesAction;
+  | SetInputFilesAction
+  | CustomAction;
 
 // Signals.
 

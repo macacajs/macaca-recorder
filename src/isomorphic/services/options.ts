@@ -1,4 +1,4 @@
-import { genInjectID, IEvent } from '@/core';
+import { genInjectID } from '@/core';
 
 export type CodeEngineType = 'editor' | 'macaca';
 
@@ -7,8 +7,10 @@ export type CodeEngineType = 'editor' | 'macaca';
  */
 export interface IOptions {
   readonly recorderEngine: CodeEngineType;
+  readonly showHightlight: boolean;
 
   setRecorderEngine(engine: CodeEngineType): IOptions;
+  setShowHighlight(show: boolean): IOptions;
 }
 
 export const IOptions = genInjectID<IOptions>();
