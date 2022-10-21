@@ -5,11 +5,11 @@
  */
 export default function testIDSlot(node: Element) {
   const testNode = node.closest('[data-testid]') as HTMLElement;
-  const selector = `[data-testid="${testNode.dataset.testid}"]`;
-  const index = Array.from(document.querySelectorAll(selector)).findIndex(
-    v => v === testNode,
-  );
   if (testNode) {
+    const selector = `[data-testid="${testNode.dataset.testid}"]`;
+    const index = Array.from(document.querySelectorAll(selector)).findIndex(
+      v => v === testNode,
+    );
     return {
       selector,
       elements: [testNode],
