@@ -1,7 +1,9 @@
 import { autowired, IPlugin, IServiceManager } from '@/core';
 import IUIState from '@/isomorphic/services/ui-state';
+import { IUIActions } from '@/recorder/services';
 import ICode from '@/recorder/services/code';
 import { init } from './app';
+import UIActions from './ui-action';
 import UIState from './ui-state';
 
 export default class UIPlugin implements IPlugin {
@@ -16,8 +18,12 @@ export default class UIPlugin implements IPlugin {
   @autowired(IUIState)
   state: IUIState;
 
+  @autowired(IUIActions)
+  actions: IUIActions;
+
   async registerSrv() {
     this.serviceManager.registerService(IUIState, UIState);
+    this.serviceManager.registerService(IUIActions, UIActions);
   }
 
   async init() {
@@ -31,6 +37,7 @@ export default class UIPlugin implements IPlugin {
     init(this.container, {
       icode: this.code,
       uiState: this.state,
+      uiActions: this.actions,
     });
   }
 }

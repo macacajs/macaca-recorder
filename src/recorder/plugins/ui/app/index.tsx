@@ -1,4 +1,5 @@
 import { IUIState } from '@/isomorphic/services';
+import { IUIActions } from '@/recorder/services';
 import ICode from '@/recorder/services/code';
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
@@ -8,10 +9,11 @@ import './app.less';
 
 export interface AppProps {
   icode: ICode;
+  uiActions: IUIActions;
   uiState: IUIState;
 }
 
-export default function App({ icode, uiState }: AppProps) {
+export default function App({ icode, uiState, uiActions }: AppProps) {
   const [code, setCode] = useState(icode.getCode());
   useEffect(() => {
     const cb = () => {
@@ -23,12 +25,18 @@ export default function App({ icode, uiState }: AppProps) {
 
   return (
     <div className="record-app">
-      <StateBar uiState={uiState} />
+      <StateBar uiState={uiState} uiActions={uiActions} />
       <Code code={code} />
     </div>
   );
 }
 
-export function init(container: HTMLElement, { icode, uiState }: AppProps) {
-  ReactDOM.render(<App icode={icode} uiState={uiState} />, container);
+export function init(
+  container: HTMLElement,
+  { icode, uiState, uiActions }: AppProps,
+) {
+  ReactDOM.render(
+    <App icode={icode} uiState={uiState} uiActions={uiActions} />,
+    container,
+  );
 }

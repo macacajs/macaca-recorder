@@ -5,6 +5,7 @@ import {
   IPlugin,
   IServiceManager,
 } from '@/core';
+import { IUIActions } from '@/recorder/services';
 import IActions from '@/recorder/services/action';
 import ICode from '@/recorder/services/code';
 import { Action } from '@/types/actions';
@@ -24,6 +25,9 @@ export default class EditorCodeGen implements IPlugin, ICode {
   @autowired(IServiceManager)
   serviceManager: IServiceManager;
 
+  @autowired(IUIActions)
+  uiActions: IUIActions;
+
   transContext = new EditorTransContext();
 
   async registerSrv() {
@@ -33,6 +37,12 @@ export default class EditorCodeGen implements IPlugin, ICode {
   async init() {
     this.code = this.transContext.codeList.join('\n');
     this.onCodeChange = this.eventManager.createIEvent();
+
+    this.uiActions.registerAction('清理', async () => {
+      this.transContext = new EditorTransContext();
+      this.code = this.transContext.codeList.join('\n');
+      this.onCodeChange.trigger();
+    });
   }
 
   async afterInit() {
