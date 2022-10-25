@@ -18,6 +18,12 @@ export default class BaseUIEvent implements IUIState {
   evtManager: IEventManager;
 
   async init() {
+    // 初始化时候获取node的状态初始值
+    if (globalThis.__getUIState) {
+      await window.__getUIState().then(state => {
+        this._state = state;
+      });
+    }
     this.stateChange = this.evtManager.createIEvent();
   }
 

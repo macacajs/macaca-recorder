@@ -20,10 +20,14 @@ async function start() {
     iapiID,
   );
 
-  await app.init();
   // 设置代码生成引擎
   // app.options.setRecorderEngine('editor').setShowHighlight(false);
-  app.options.setRecorderEngine('macaca').setShowHighlight(false);
+  app.options
+    .setRecorderEngine('macaca')
+    .setShowHighlight(false)
+    .setStartRecordOnFirst(true);
+
+  await app.init();
 
   await app.codeGen.start('https://test.com');
 }

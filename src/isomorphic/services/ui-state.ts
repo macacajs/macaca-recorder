@@ -14,6 +14,7 @@ export const enum UIRecordState {
 declare global {
   interface Window {
     __setUIState(state: UIRecordState): Promise<boolean>;
+    __getUIState(): Promise<UIRecordState>;
   }
 }
 

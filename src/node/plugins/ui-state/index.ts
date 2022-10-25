@@ -2,6 +2,7 @@
 import { autowired, IPlugin, IServiceManager } from '@/core';
 import BaseUIEvent from '@/isomorphic/base/ui-state';
 import { IUIState, UIRecordState } from '@/isomorphic/services';
+import IOptions from '@/isomorphic/services/options';
 import ICodeGen from '@/node/services/code-gen';
 
 /**
@@ -19,11 +20,27 @@ export default class UIStatePlugin
   @autowired(ICodeGen)
   codeGen: ICodeGen;
 
+  @autowired(IOptions)
+  options: IOptions;
+
   async registerSrv() {
     this.serviceMgr.registerServiceBean(IUIState, this);
   }
 
   async afterInit() {
+    // 初始化设置录制状态
+    await this.setState(
+      this.options.startRecordOnFirst
+        ? UIRecordState.recording
+        : UIRecordState.none,
+    );
+    // 暴露状态同步方法
+    this.codeGen.afterBrowerLaunch.on(browser => {
+      browser.exposeBinding('__getUIState', true, async () => {
+        return this.state;
+      });
+    });
+
     this.codeGen.afterAppPageLaunch.on(appPage => {
       // 向recorder页面注册方法window.__setUIState
       // 如果recorder调用该方法则同步injected页面的该方法
