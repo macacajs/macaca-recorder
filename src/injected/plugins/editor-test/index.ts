@@ -14,10 +14,11 @@ export default class EditorTestPlugin implements IPlugin {
 
   async init() {
     this.selector.registerSlot([
-      this.selector.defaultSlots.testidSlot,
-      this.selector.defaultSlots.classSlot,
-      this.selector.defaultSlots.idSlot,
-      this.selector.defaultSlots.xpathSlot,
+      this.selector.defaultSlots.easySlot,
+      // this.selector.defaultSlots.testidSlot,
+      // this.selector.defaultSlots.classSlot,
+      // this.selector.defaultSlots.idSlot,
+      // this.selector.defaultSlots.xpathSlot,
     ]);
 
     this.recorder.registerSlot([

@@ -30,6 +30,7 @@ module.exports = {
     'import/no-extraneous-dependencies': 0,
     'no-useless-constructor': 0,
     'no-plusplus': 0,
+    'no-console': 0,
   },
   overrides: [
     {

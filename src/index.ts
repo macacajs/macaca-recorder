@@ -22,9 +22,10 @@ async function start() {
 
   await app.init();
   // 设置代码生成引擎
-  app.options.setRecorderEngine('editor').setShowHighlight(false);
+  // app.options.setRecorderEngine('editor').setShowHighlight(false);
+  app.options.setRecorderEngine('macaca').setShowHighlight(false);
 
-  await app.codeGen.start('http://localhost:8180/_examples/note');
+  await app.codeGen.start('https://test.com');
 }
 
 start();

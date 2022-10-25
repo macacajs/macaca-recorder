@@ -7,9 +7,6 @@ export default function keysTrans(
 ): void {
   if (action.name === 'press') {
     context.actions.push(action);
-    context.codeList.push(
-      `  .elementByXPath(${JSON.stringify(action.selector)})`,
-    );
     context.codeList.push(`  .keys(${JSON.stringify(action.key)})`);
   }
 }

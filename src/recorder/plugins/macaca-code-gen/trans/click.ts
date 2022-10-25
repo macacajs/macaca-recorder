@@ -8,8 +8,9 @@ export default function clickTrans(
   if (action.name === 'click') {
     context.actions.push(action);
     context.codeList.push(
-      `  .elementByXPath(${JSON.stringify(action.selector)})`,
+      `  .clickOn(${JSON.stringify(
+        action.selector,
+      )}, { contains: ture, index: ${action.data || 0} })`,
     );
-    context.codeList.push(`  .click()`);
   }
 }

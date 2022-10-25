@@ -34,23 +34,9 @@ export default function sendKeysTrans(
       text: prevAction.text + action.text,
     };
     context.actions.push(newAction);
-    context.codeList.push(
-      `  .elementByXPath(${JSON.stringify(action.selector)})`,
-    );
-    context.codeList.push(
-      `  .sendKeys(${JSON.stringify(newAction.selector)}, ${JSON.stringify(
-        newAction.text,
-      )})`,
-    );
+    context.codeList.push(`  .sendKeys(${JSON.stringify(newAction.text)})`);
   } else {
     context.actions.push(action);
-    context.codeList.push(
-      `  .elementByXPath(${JSON.stringify(action.selector)})`,
-    );
-    context.codeList.push(
-      `  .sendKeys(${JSON.stringify(action.selector)}, ${JSON.stringify(
-        action.text,
-      )})`,
-    );
+    context.codeList.push(`  .sendKeys(${JSON.stringify(action.text)})`);
   }
 }
