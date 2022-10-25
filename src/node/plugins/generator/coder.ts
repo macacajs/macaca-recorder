@@ -32,6 +32,8 @@ export default class CodeGen implements ICodeGen, IWebServiceManager {
 
   coderServices: string[] = [];
 
+  url: string;
+
   @autowired(IBrowserFactory, true)
   factory: IBrowserFactory;
 
@@ -50,7 +52,7 @@ export default class CodeGen implements ICodeGen, IWebServiceManager {
   }
 
   async start(url: string): Promise<void> {
-    const uri = new URL(url);
+    this.url = url;
     const browser = this.factory.createAppBrowser();
     await browser.launch();
 
@@ -62,6 +64,8 @@ export default class CodeGen implements ICodeGen, IWebServiceManager {
     await browser.start(`http://e2egen/`, path =>
       require.resolve(`./page/${path}`),
     );
+
+    await this.injectToAppPage(browser.getAppPage()!);
 
     // 触发事件， 方便外部插件在此时机进行函数暴漏
     this.afterAppPageLaunch.trigger(browser.getAppPage()!);
@@ -78,6 +82,15 @@ export default class CodeGen implements ICodeGen, IWebServiceManager {
     this.hasStart = true;
 
     this.afterStart.trigger();
+  }
+
+  async restartPage() {
+    if (!this.browser) return;
+    const page = await this.browser.open(this.url, { left: 600, width: 1000 });
+    this.page?.close();
+    this.page = page;
+    // 触发事件， 方便外部插件在此时机进行函数暴漏
+    this.afterPageLaunch.trigger(page);
   }
 
   async injectToBrowser(browser: IBrowser) {
@@ -129,6 +142,12 @@ export default class CodeGen implements ICodeGen, IWebServiceManager {
         return this.page.id;
       }
       return null;
+    });
+  }
+
+  async injectToAppPage(appPage: IPage) {
+    appPage.exposeBinding('__RestartPage', true, async () => {
+      await this.restartPage();
     });
   }
 

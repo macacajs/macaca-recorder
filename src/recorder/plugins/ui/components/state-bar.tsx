@@ -2,6 +2,8 @@ import { IUIState, UIRecordState } from '@/isomorphic/services';
 import { IUIActions } from '@/recorder/services';
 import React, { useCallback, useState } from 'react';
 
+import './state-bar.less';
+
 export interface IStateBarProps {
   uiState: IUIState;
   uiActions: IUIActions;
@@ -25,12 +27,16 @@ export default function StateBar({ uiState, uiActions }: IStateBarProps) {
 
   return (
     <div>
-      <button onClick={handleClick}>
+      <button className="action-bar" onClick={handleClick}>
         {state !== UIRecordState.recording ? '开始录制' : '停止录制'}
       </button>
       {actions.map((v, index) => {
         return (
-          <button key={`${v.name}${index}`} onClick={v.action}>
+          <button
+            className="action-bar"
+            key={`${v.name}${index}`}
+            onClick={v.action}
+          >
             {v.name}
           </button>
         );
