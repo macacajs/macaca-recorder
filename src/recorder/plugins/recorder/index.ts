@@ -2,7 +2,7 @@ import { autowired, IPlugin, IPluginManager } from '@/core';
 import IOptions from '@/isomorphic/services/options';
 import { IUIActions } from '@/recorder/services';
 import EditorCodeGen from '../editor-code-gen';
-import MacacaCodeGen from '../macaca-code-gen';
+import SkyCodeGen from '../sky-code-gen';
 
 declare global {
   interface Window {
@@ -28,7 +28,7 @@ export default class RecorderPlugin implements IPlugin {
     if (this.options.recorderEngine === 'editor') {
       this.pluginManager.registerPlugin(EditorCodeGen);
     } else {
-      this.pluginManager.registerPlugin(MacacaCodeGen);
+      this.pluginManager.registerPlugin(SkyCodeGen);
     }
   }
 
