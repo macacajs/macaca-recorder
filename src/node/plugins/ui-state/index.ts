@@ -4,6 +4,7 @@ import BaseUIEvent from '@/isomorphic/base/ui-state';
 import { IUIState, UIRecordState } from '@/isomorphic/services';
 import IOptions from '@/isomorphic/services/options';
 import ICodeGen from '@/node/services/code-gen';
+import dumpFile from './dump';
 
 /**
  * UI状态同步，可以在recorder页面和injected页面同步状态
@@ -48,6 +49,8 @@ export default class UIStatePlugin
         '__setUIState',
         true,
         async (_, state: UIRecordState) => {
+          dumpFile();
+
           await this.setState(state);
 
           // 获取注入页面
