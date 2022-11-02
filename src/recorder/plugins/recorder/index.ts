@@ -3,6 +3,7 @@ import IOptions from '@/isomorphic/services/options';
 import { IUIActions } from '@/recorder/services';
 import EditorCodeGen from '../editor-code-gen';
 import SkyCodeGen from '../sky-code-gen';
+import MacacaWDGen from '../macaca-wd-code-gen';
 
 declare global {
   interface Window {
@@ -24,11 +25,14 @@ export default class RecorderPlugin implements IPlugin {
   actions: IUIActions;
 
   async beforeInit() {
+    const { recorderEngine = 'macaca' } = this.options;
     // 根据配置加载不同的代码生成器
-    if (this.options.recorderEngine === 'editor') {
+    if (recorderEngine === 'editor') {
       this.pluginManager.registerPlugin(EditorCodeGen);
-    } else {
+    } else if (recorderEngine === 'sky') {
       this.pluginManager.registerPlugin(SkyCodeGen);
+    } else {
+      this.pluginManager.registerPlugin(MacacaWDGen);
     }
   }
 

@@ -1,6 +1,6 @@
 import { genInjectID } from '@/core';
 
-export type CodeEngineType = 'editor' | 'macaca';
+export type CodeEngineType = 'macaca' | 'sky' | 'editor';
 
 /**
  * 全局配置

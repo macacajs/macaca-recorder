@@ -552,8 +552,10 @@ export interface IStorage {
   overrideQuotaForOrigin(arg: Protocol.Storage.overrideQuotaForOriginParameters): Promise<Protocol.Storage.overrideQuotaForOriginReturnValue>;
   trackCacheStorageForOrigin(arg: Protocol.Storage.trackCacheStorageForOriginParameters): Promise<Protocol.Storage.trackCacheStorageForOriginReturnValue>;
   trackIndexedDBForOrigin(arg: Protocol.Storage.trackIndexedDBForOriginParameters): Promise<Protocol.Storage.trackIndexedDBForOriginReturnValue>;
+  trackIndexedDBForStorageKey(arg: Protocol.Storage.trackIndexedDBForStorageKeyParameters): Promise<Protocol.Storage.trackIndexedDBForStorageKeyReturnValue>;
   untrackCacheStorageForOrigin(arg: Protocol.Storage.untrackCacheStorageForOriginParameters): Promise<Protocol.Storage.untrackCacheStorageForOriginReturnValue>;
   untrackIndexedDBForOrigin(arg: Protocol.Storage.untrackIndexedDBForOriginParameters): Promise<Protocol.Storage.untrackIndexedDBForOriginReturnValue>;
+  untrackIndexedDBForStorageKey(arg: Protocol.Storage.untrackIndexedDBForStorageKeyParameters): Promise<Protocol.Storage.untrackIndexedDBForStorageKeyReturnValue>;
   getTrustTokens(arg: Protocol.Storage.getTrustTokensParameters): Promise<Protocol.Storage.getTrustTokensReturnValue>;
   clearTrustTokens(arg: Protocol.Storage.clearTrustTokensParameters): Promise<Protocol.Storage.clearTrustTokensReturnValue>;
   getInterestGroupDetails(arg: Protocol.Storage.getInterestGroupDetailsParameters): Promise<Protocol.Storage.getInterestGroupDetailsReturnValue>;
@@ -1210,8 +1212,10 @@ export function registerCmds(backend: {registerCommand: (cmd: any) => void}) {
   backend.registerCommand('Storage.overrideQuotaForOrigin');
   backend.registerCommand('Storage.trackCacheStorageForOrigin');
   backend.registerCommand('Storage.trackIndexedDBForOrigin');
+  backend.registerCommand('Storage.trackIndexedDBForStorageKey');
   backend.registerCommand('Storage.untrackCacheStorageForOrigin');
   backend.registerCommand('Storage.untrackIndexedDBForOrigin');
+  backend.registerCommand('Storage.untrackIndexedDBForStorageKey');
   backend.registerCommand('Storage.getTrustTokens');
   backend.registerCommand('Storage.clearTrustTokens');
   backend.registerCommand('Storage.getInterestGroupDetails');

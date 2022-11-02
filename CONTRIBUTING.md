@@ -31,4 +31,9 @@ src/
 - [x] 支持浏览器动态引入插件
 - [x] 完善注入页面的高亮操作
 - [ ] 记录操作
-- [ ] 回放操作
+
+## 启动开发
+
+```bash
+$ MACACA_RECORDER_TARGET_URL=https://www.github.com npm run dev
+```
