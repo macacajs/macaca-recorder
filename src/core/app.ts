@@ -61,9 +61,6 @@ export default class App implements IPluginManager, IServiceManager {
     if (this.eventManager) {
       this.eventManager.start.trigger();
     }
-  }
-
-  async init() {
     // 解析依赖并触发beforeInit事件
     await Promise.all(
       this.pluginInstances.map((plug, index) => {
@@ -71,6 +68,9 @@ export default class App implements IPluginManager, IServiceManager {
         return plug.beforeInit?.();
       }),
     );
+  }
+
+  async init() {
     // 触发插件init事件
     await Promise.all(
       this.pluginInstances.map((plug, index) => {

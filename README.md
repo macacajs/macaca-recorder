@@ -18,6 +18,16 @@
 
 通过录制的方式生成 E2E 测试的代码，支持插件，降低 E2E 测试的手动书写难度。
 
+## 示例
+
+1. 通过录制生成用例
+2. 执行回放自动化用例
+3. 查看测试报告结果
+
+<div align="center">
+  <img src="./demo.gif" width="100%" />
+</div>
+
 <!-- GITCONTRIBUTOR_START -->
 
 ## Contributors

@@ -1,7 +1,6 @@
 'use strict';
 
 const wd = require('macaca-wd');
-const assert = require('power-assert');
 
 const remoteConfig = {
   host: 'localhost',
@@ -40,26 +39,14 @@ describe('playground/test/demo1.test.js', () => {
 
     it('#1 should be ok', () => {
       return driver
-        .elementByCss('#head_wrapper')
-        .then(ele => {
-          assert(ele);
-        });
-    });
-
-    it('#2 should be ok', () => {
-      return driver
-        .elementByCss('#head_wrapper')
-        .then(ele => {
-          assert(ele);
-        });
-    });
-
-    it('#3 should be ok', () => {
-      return driver
-        .elementByCss('#head_wrapper')
-        .then(ele => {
-          assert(ele);
-        });
+        .elementByCss('#kw')
+        .sleep(3E3)
+        .click()
+        .sendKeys('Macaca Recorder')
+        .sleep(3E3)
+        .elementByCss('#su')
+        .click()
+        .sleep(3E3);
     });
   });
 });

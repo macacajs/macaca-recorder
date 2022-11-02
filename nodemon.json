@@ -1,10 +1,10 @@
 {
-    "ignore": [
-        "src/injected/*",
-        "src/recorder/*"
-    ],
-    "ext": "ts,js,json,html",
-    "watch": [
-        "./src/**"
-    ]
+  "ignore": [
+    "src/injected/*",
+    "src/recorder/*"
+  ],
+  "ext": "ts,js,json,html",
+  "watch": [
+    "./src/**"
+  ]
 }

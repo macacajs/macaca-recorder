@@ -6,6 +6,7 @@ export type SelectorSlot = (
 
 export interface ISelector {
   defaultSlots: {
+    readonly easySlot: SelectorSlot;
     readonly idSlot: SelectorSlot;
     readonly classSlot: SelectorSlot;
     readonly testidSlot: SelectorSlot;

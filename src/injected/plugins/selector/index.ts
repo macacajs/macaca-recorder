@@ -6,6 +6,7 @@ import classSlot from './slots/class-slot';
 import idSlot from './slots/id-slot';
 import testidSlot from './slots/testid-slot';
 import xpathSlot from './slots/xpath-slot';
+import easySlot from './slots/easy-slot';
 
 export default class SelectorPlugin implements IPlugin, ISelector {
   injected: InjectedScript;
@@ -14,6 +15,7 @@ export default class SelectorPlugin implements IPlugin, ISelector {
   serviceManager: IServiceManager;
 
   defaultSlots = {
+    easySlot,
     idSlot,
     classSlot,
     testidSlot,

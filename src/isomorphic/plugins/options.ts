@@ -3,6 +3,8 @@ import { autowired, IPlugin, IServiceManager } from '@/core';
 import IOptions, { CodeEngineType } from '../services/options';
 
 export default class IOptionPlugin implements IPlugin, IOptions {
+  startRecordOnFirst = false;
+
   recorderEngine: CodeEngineType = 'editor';
 
   showHightlight = true;
@@ -34,6 +36,11 @@ export default class IOptionPlugin implements IPlugin, IOptions {
 
   setShowHighlight(show: boolean): IOptions {
     this.showHightlight = show;
+    return this;
+  }
+
+  setStartRecordOnFirst(startRecord: boolean): IOptions {
+    this.startRecordOnFirst = startRecord;
     return this;
   }
 }
