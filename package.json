@@ -1,8 +1,14 @@
 {
   "name": "macaca-recorder",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "auto create e2e test",
   "main": "index.js",
+  "files": [
+    "bin/**/*.ts",
+    "bin/**/*.js",
+    "src/**/*.ts",
+    "src/**/*.js"
+  ],
   "scripts": {
     "build:web": "rollup -c -w",
     "dev:node": "nodemon src/index.ts",
@@ -12,10 +18,15 @@
     "lint": "eslint . --fix && stylelint --fix ./**/*.less -s less",
     "contributor": "git-contributor"
   },
+  "bin": {
+    "macaca-recorder": "./bin/macaca-recorder.js"
+  },
+  "types": "./src/index",
   "dependencies": {
     "@rollup/plugin-commonjs": "^22.0.2",
     "@types/mime": "^2.0.3",
     "@types/node": "^18.0.6",
+    "commander": "^9.4.1",
     "mime": "^3.0.0",
     "playwright": "1",
     "playwright-core": "1"
