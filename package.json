@@ -1,8 +1,14 @@
 {
   "name": "macaca-recorder",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "auto create e2e test",
   "main": "index.js",
+  "files": [
+    "bin/**/*.ts",
+    "bin/**/*.js",
+    "src/**/*.ts",
+    "src/**/*.js"
+  ],
   "scripts": {
     "build:web": "rollup -c -w",
     "dev:node": "nodemon src/index.ts",
