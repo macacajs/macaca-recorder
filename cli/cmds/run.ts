@@ -28,8 +28,8 @@ function getEngineType(engine: string, cmd: Command): CodeEngineType {
 export const runCmd = program
   .createCommand('run')
   .option(
-    '-e, --engine <engine>',
-    'gen code engine, engines: macaca, sky, editor',
+    '-t, --template <template>',
+    'gen code template, template: macaca, sky, editor',
     'macaca',
   )
   .option('-h, --highlight', 'show highlight', false)
@@ -38,7 +38,10 @@ export const runCmd = program
   .action(
     async (
       url: string,
-      options: { engine: string; highlight: boolean },
+      options: {
+        template: string;
+        highlight: boolean,
+      },
       cmd: Command,
     ) => {
       try {
@@ -59,7 +62,7 @@ export const runCmd = program
       );
 
       app.options
-        .setRecorderEngine(getEngineType(options.engine, cmd))
+        .setRecorderEngine(getEngineType(options.template, cmd))
         .setShowHighlight(options.highlight)
         .setStartRecordOnFirst(true);
 
