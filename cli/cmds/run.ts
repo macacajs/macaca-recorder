@@ -1,5 +1,6 @@
 import { program, Command } from 'commander';
 import { EOL } from 'os';
+import npmUpdate from 'npm-update';
 import {
   ApiPlugin,
   App,
@@ -10,6 +11,7 @@ import {
   UIStatePlugin,
   iapiID,
 } from '../../src';
+import pkg from '../../package.json';
 
 export type CodeEngineType = 'macaca' | 'sky' | 'editor';
 
@@ -39,6 +41,11 @@ export const runCmd = program
       options: { engine: string; highlight: boolean },
       cmd: Command,
     ) => {
+      try {
+        await npmUpdate({
+          pkg,
+        });
+      } catch (_) {}
       const app = await App.createApp(
         [
           ApiPlugin,
