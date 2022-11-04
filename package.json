@@ -1,18 +1,21 @@
 {
   "name": "macaca-recorder",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "auto create e2e test",
-  "main": "index.js",
+  "main": "index.ts",
   "files": [
     "bin/**/*.ts",
     "bin/**/*.js",
+    "cli/**/*.ts",
+    "src/**/*.html",
     "src/**/*.ts",
     "src/**/*.js",
     "tsconfig.json"
   ],
   "scripts": {
+    "prepublishOnly": "rollup -c",
     "build:web": "rollup -c -w",
-    "dev:node": "nodemon src/index.ts",
+    "dev:node": "nodemon cli/macaca-recorder.ts run $MACACA_RECORDER_TARGET_URL",
     "gen-protocol-api": "ts-node scripts/gen-protocol-api.ts",
     "test": "rollup -c && c8 --reporter=lcov --reporter=text mocha --reporter spec --require ts-node/register test/**/*.test.ts",
     "dev": "concurrently \"npm run build:web\" \"npm run dev:node\"",
