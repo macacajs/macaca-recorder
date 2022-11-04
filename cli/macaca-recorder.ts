@@ -48,12 +48,13 @@ program
   .addCommand(recorderCommand)
   .addHelpText('before', `${EOL}${pkg.description}${EOL}`)
   .usage('run url')
-  .showHelpAfterError(true);
+  .showHelpAfterError(true)
+  .action((options: { version?: boolean; help?: boolean }) => {
+    if (options.version) {
+      console.info('%s  %s%s', EOL, pkg.version, EOL);
+    } else {
+      program.help();
+    }
+  });
 
 program.parse(process.argv);
-
-if (program.getOptionValue('version')) {
-  console.info('%s  %s%s', EOL, pkg.version, EOL);
-} else if (program.getOptionValue('help')) {
-  program.help();
-}
