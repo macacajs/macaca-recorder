@@ -1,5 +1,6 @@
 import { autowired, IPlugin } from '@/core';
 import ICodeGen from '@/node/services/code-gen';
+import dumpFile from './dump-file';
 
 export default class DumpFilePlugin implements IPlugin {
   @autowired(ICodeGen)
@@ -8,7 +9,10 @@ export default class DumpFilePlugin implements IPlugin {
   async afterInit() {
     this.codeGen.afterAppPageLaunch.on(page => {
       page.exposeBinding('__onCodeChange', true, (_, code: string) => {
-        console.info('code: %s', code);
+        dumpFile({
+          code,
+          targetUrl: this.codeGen.url,
+        });
       });
     });
   }

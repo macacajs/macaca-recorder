@@ -9,6 +9,9 @@ export interface ICodeGen {
   getPage(): IPage | null;
   getAppPage(): IPage | null;
 
+  // props
+  url: string;
+
   // events
   afterBrowerLaunch: IEvent<IBrowser>;
   afterAppPageLaunch: IEvent<IPage>;

@@ -22,7 +22,7 @@ function getEngineType(engine: string, cmd: Command): CodeEngineType {
   if (['macaca', 'sky', 'editor'].includes(engine)) {
     return engine as CodeEngineType;
   }
-  cmd.addHelpText('before', `${EOL}unknown engine ${engine}${EOL}`);
+  cmd.addHelpText('before', `${EOL}unknown template ${engine}${EOL}`);
   cmd.help();
 }
 
