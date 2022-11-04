@@ -2,10 +2,12 @@
   "name": "macaca-recorder",
   "version": "0.1.2",
   "description": "auto create e2e test",
-  "main": "index.js",
+  "main": "index.ts",
   "files": [
     "bin/**/*.ts",
     "bin/**/*.js",
+    "cli/**/*.ts",
+    "src/**/*.html",
     "src/**/*.ts",
     "src/**/*.js"
   ],
