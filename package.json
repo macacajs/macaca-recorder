@@ -12,6 +12,7 @@
     "src/**/*.js"
   ],
   "scripts": {
+    "prepublishOnly": "rollup -c",
     "build:web": "rollup -c -w",
     "dev:node": "nodemon cli/macaca-recorder.ts run $MACACA_RECORDER_TARGET_URL",
     "gen-protocol-api": "ts-node scripts/gen-protocol-api.ts",
