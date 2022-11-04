@@ -13,7 +13,7 @@
   ],
   "scripts": {
     "build:web": "rollup -c -w",
-    "dev:node": "nodemon src/index.ts",
+    "dev:node": "nodemon cli/macaca-recorder.ts run $MACACA_RECORDER_TARGET_URL",
     "gen-protocol-api": "ts-node scripts/gen-protocol-api.ts",
     "test": "rollup -c && c8 --reporter=lcov --reporter=text mocha --reporter spec --require ts-node/register test/**/*.test.ts",
     "dev": "concurrently \"npm run build:web\" \"npm run dev:node\"",
