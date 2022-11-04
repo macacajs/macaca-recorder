@@ -1,6 +1,4 @@
-import fs from 'fs';
 import path from 'path';
-import chalk from 'chalk';
 
 const defaultOptions = {
   targetDir: path.resolve(process.cwd(), 'playground', 'test'),
@@ -9,7 +7,7 @@ const defaultOptions = {
 
 function dumpFile(options = defaultOptions) {
   const targetFile = path.resolve(options.targetDir, options.fileName);
-  console.log('file: %s', chalk.cyan(targetFile));
+  console.log('file: %s', targetFile);
   // fs.writeFileSync(targetFile, '');
 }
 
