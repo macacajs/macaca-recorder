@@ -12,6 +12,7 @@ import RecorderPlugin from './plugins/recorder';
 import ProtocolPlugin from './plugins/protocol';
 import UIPlugin from './plugins/ui';
 import WebServicesPlugin from './plugins/web-services';
+import DumpFilePlugin from './plugins/dump-file';
 
 async function start() {
   const app = await App.createApp(
@@ -24,6 +25,7 @@ async function start() {
       ActionsPlugin,
       ProtocolPlugin,
       UIPlugin,
+      DumpFilePlugin,
     ],
     IApi,
   );

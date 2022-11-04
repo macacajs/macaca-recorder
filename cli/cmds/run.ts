@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 import { program, Command } from 'commander';
 import { EOL } from 'os';
 import npmUpdate from 'npm-update';
@@ -10,6 +11,7 @@ import {
   BrowserPlugin,
   UIStatePlugin,
   iapiID,
+  DumpFilePlugin,
 } from '../../src';
 import pkg from '../../package.json';
 
@@ -40,7 +42,7 @@ export const runCmd = program
       url: string,
       options: {
         template: string;
-        highlight: boolean,
+        highlight: boolean;
       },
       cmd: Command,
     ) => {
@@ -57,6 +59,7 @@ export const runCmd = program
           GeneratorPlugin,
           BrowserPlugin,
           UIStatePlugin,
+          DumpFilePlugin,
         ],
         iapiID,
       );

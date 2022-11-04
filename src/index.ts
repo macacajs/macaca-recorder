@@ -5,4 +5,5 @@ export { default as BrowserPlugin } from './node/plugins/browser';
 export { default as EventPlugin } from './node/plugins/event';
 export { default as GeneratorPlugin } from './node/plugins/generator';
 export { default as UIStatePlugin } from './node/plugins/ui-state';
+export { default as DumpFilePlugin } from './node/plugins/dump-file';
 export { default as iapiID } from './node/services/api';
