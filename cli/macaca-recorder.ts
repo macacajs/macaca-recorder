@@ -15,7 +15,7 @@ program
   .action((options: { version?: boolean; help?: boolean }) => {
     if (options.version) {
       console.info('%s  %s%s', EOL, pkg.version, EOL);
-    } else if (options.help) {
+    } else {
       program.help();
     }
   });
