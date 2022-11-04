@@ -1,6 +1,6 @@
 {
   "name": "macaca-recorder",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "auto create e2e test",
   "main": "index.ts",
   "files": [
@@ -31,7 +31,10 @@
     "@types/mime": "^2.0.3",
     "@types/node": "^18.0.6",
     "commander": "^9.4.1",
+    "microtemplate": "^2.0.1",
     "mime": "^3.0.0",
+    "mkdirp": "^1.0.4",
+    "moment": "^2.29.4",
     "npm-update": "3",
     "playwright": "1",
     "playwright-core": "1",
