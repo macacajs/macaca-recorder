@@ -6,4 +6,6 @@ export { default as EventPlugin } from './node/plugins/event';
 export { default as GeneratorPlugin } from './node/plugins/generator';
 export { default as UIStatePlugin } from './node/plugins/ui-state';
 export { default as DumpFilePlugin } from './node/plugins/dump-file';
+export { default as IProxyPlugin } from './node/plugins/proxy';
 export { default as iapiID } from './node/services/api';
+export { ITemplate } from './node/template/template';

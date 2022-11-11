@@ -12,6 +12,7 @@ import {
   UIStatePlugin,
   iapiID,
   DumpFilePlugin,
+  IProxyPlugin,
 } from '../../src';
 import pkg from '../../package.json';
 
@@ -60,6 +61,7 @@ export const runCmd = program
           BrowserPlugin,
           UIStatePlugin,
           DumpFilePlugin,
+          IProxyPlugin,
         ],
         iapiID,
       );

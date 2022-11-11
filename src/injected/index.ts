@@ -6,14 +6,15 @@
 
 import { App } from '@/core';
 import IOptionPlugin from '@/isomorphic/plugins/options';
+import ProxyPlugin from '@/isomorphic/plugins/proxy';
 import ApiPlugin from '@/node/plugins/api';
 import EventPlugin from '@/node/plugins/event';
 import IApi from '@/node/services/api';
 import { InjectedScript } from './lib/type';
-import EditorTestPlugin from './plugins/editor-test';
 import HighlightPlugin from './plugins/highlight';
 import RecordEventsPlugin from './plugins/record-events';
 import SelectorPlugin from './plugins/selector';
+import TemplatePlugin from './plugins/template';
 import WebServicesPlugin from './plugins/web-services';
 
 declare global {
@@ -43,7 +44,8 @@ class ConsoleExtends {
         HighlightPlugin,
         WebServicesPlugin,
         RecordEventsPlugin,
-        EditorTestPlugin,
+        ProxyPlugin,
+        TemplatePlugin,
       ],
       IApi,
     );
