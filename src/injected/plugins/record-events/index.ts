@@ -13,6 +13,10 @@ import { Action } from '@/types/actions';
 import { addEventListener } from '@/utils/dom';
 import { buttonForEvent, modifiersForEvent, positionForEvent } from './helper';
 import UIState from './ui-state';
+import clickSlot from './slots/click';
+import inputSlot from './slots/input';
+import keydownSlot from './slots/keydown';
+import selectionSlot from './slots/selectionSlot';
 
 declare global {
   interface Window {
@@ -51,6 +55,13 @@ export default class RecordEventsPlugin
 
   @autowired(IOptions)
   options: IOptions;
+
+  defaultSlots = {
+    click: clickSlot,
+    input: inputSlot,
+    keydown: keydownSlot,
+    selectonSlot: selectionSlot,
+  } as const;
 
   slots: RecorderSlot[] = [];
 

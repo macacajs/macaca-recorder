@@ -65,8 +65,6 @@ export default class CodeGen implements ICodeGen, IWebServiceManager {
       require.resolve(`./page/${path}`),
     );
 
-    await this.injectToAppPage(browser.getAppPage()!);
-
     // 触发事件， 方便外部插件在此时机进行函数暴漏
     this.afterAppPageLaunch.trigger(browser.getAppPage()!);
 
@@ -103,14 +101,6 @@ export default class CodeGen implements ICodeGen, IWebServiceManager {
     await browser.exposeBinding('requireSource', false, (_, path: string) => {
       return Require(path);
     });
-    // 暴露配置给所有页面
-    await browser.exposeBinding('__GetOptions', false, () => {
-      return Object.keys(this.options).reduce((ret, key) => {
-        // eslint-disable-next-line no-param-reassign
-        ret[key] = this.options[key];
-        return ret;
-      }, {} as Record<string, any>);
-    });
 
     await browser.exposeBinding(
       '__handle_action',
@@ -142,12 +132,6 @@ export default class CodeGen implements ICodeGen, IWebServiceManager {
         return this.page.id;
       }
       return null;
-    });
-  }
-
-  async injectToAppPage(appPage: IPage) {
-    appPage.exposeBinding('__RestartPage', true, async () => {
-      await this.restartPage();
     });
   }
 

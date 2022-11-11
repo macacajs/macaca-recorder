@@ -1,4 +1,4 @@
-import { genInjectID } from '@/core';
+import { genInjectID, IEvent } from '@/core';
 
 export interface IActions {
   name: string;
@@ -12,6 +12,7 @@ export interface IActions {
  */
 
 export interface IUIActions {
+  readonly changeEvent: IEvent<void>;
   readonly uiActions: IActions[];
   registerAction(name: string, action: () => Promise<void>): void;
 }

@@ -1,6 +1,6 @@
 import { IUIState, UIRecordState } from '@/isomorphic/services';
 import { IUIActions } from '@/recorder/services';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import './state-bar.less';
 
@@ -11,7 +11,15 @@ export interface IStateBarProps {
 
 export default function StateBar({ uiState, uiActions }: IStateBarProps) {
   const [state, setState] = useState(uiState.state);
-  const [actions] = useState(uiActions.uiActions);
+  const [actions, setActions] = useState(uiActions.uiActions);
+
+  useEffect(() => {
+    const handleActionChange = () => {
+      setActions(uiActions.uiActions.slice(0));
+    };
+    uiActions.changeEvent.on(handleActionChange);
+    return () => uiActions.changeEvent.off(handleActionChange);
+  }, [uiActions, setActions]);
 
   const handleClick = useCallback(() => {
     if (state !== UIRecordState.recording) {

@@ -2,10 +2,11 @@ import fs from 'fs';
 import path from 'path';
 import moment from 'moment';
 import { sync as mkdirp } from 'mkdirp';
+// eslint-disable-next-line import/no-unresolved
 import { render as Render } from 'microtemplate';
 
 function genTestcase(data = {}) {
-  const template = path.join(__dirname, 'testcase.template.js');
+  const template = path.join(__dirname, 'testcase.template');
   const content = fs.readFileSync(template, 'utf8');
   const output = Render(content, data, {
     tagOpen: '<#',
@@ -22,12 +23,19 @@ const defaultOptions = {
 function dumpFile({ code, targetUrl }, options = defaultOptions) {
   mkdirp(defaultOptions.targetDir);
   const targetFile = path.resolve(options.targetDir, options.fileName);
-  console.log('\n[%s] file: %s\n', moment().format('YYYY-MM-DD HH:mm:ss'), targetFile);
+  console.log(
+    '\n[%s] file: %s\n',
+    moment().format('YYYY-MM-DD HH:mm:ss'),
+    targetFile,
+  );
   mkdirp(path.dirname(targetFile));
-  fs.writeFileSync(targetFile, genTestcase({
-    targetUrl,
-    content: code,
-  }));
+  fs.writeFileSync(
+    targetFile,
+    genTestcase({
+      targetUrl,
+      content: code,
+    }),
+  );
 }
 
 export default dumpFile;
