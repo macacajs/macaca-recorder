@@ -3,7 +3,7 @@ import replace from '@rollup/plugin-replace';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import less from 'rollup-plugin-less';
-import { terser } from 'rollup-plugin-terser';
+// import { terser } from 'rollup-plugin-terser';
 
 const output = path => `src/node/plugins/generator/${path}`;
 

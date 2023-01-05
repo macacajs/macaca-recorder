@@ -1,5 +1,5 @@
 import { autowired, IPlugin } from '@/core';
-import { IRecorder, ISelector } from '@/injected/services';
+import { IHighlight, IRecorder, ISelector } from '@/injected/services';
 import { IProxy } from '@/isomorphic/services';
 
 export default class TemplatePlugin implements IPlugin {
@@ -8,6 +8,9 @@ export default class TemplatePlugin implements IPlugin {
 
   @autowired(IRecorder)
   recorder: IRecorder;
+
+  @autowired(IHighlight)
+  hightlight: IHighlight;
 
   @autowired(IProxy)
   proxy: IProxy;
@@ -24,6 +27,7 @@ export default class TemplatePlugin implements IPlugin {
         await fn({
           selector: this.selector,
           recorder: this.recorder,
+          highlight: this.hightlight,
           proxy: this.proxy,
         });
       }

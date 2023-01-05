@@ -1,6 +1,6 @@
 import { autowired, IPlugin } from '@/core';
 import IOptions from '@/isomorphic/services/options';
-import IProxy, { IInject } from '@/isomorphic/services/proxy';
+import IProxy, { IFS, IInject } from '@/isomorphic/services/proxy';
 import ICodeGen from '@/node/services/code-gen';
 import { EditorTemplate } from '@/node/template';
 import { ITemplate } from '@/node/template/template';
@@ -13,7 +13,7 @@ export default class ProxyPlugin implements IPlugin, IProxy, IInject {
   @autowired(IOptions)
   options: IOptions;
 
-  fs = new FS();
+  fs: IFS = new FS();
 
   inject: IInject = this;
 
@@ -26,8 +26,10 @@ export default class ProxyPlugin implements IPlugin, IProxy, IInject {
         return;
       default:
         if (await this.fs.exists(this.options.recorderEngine)) {
-          // eslint-disable-next-line import/no-dynamic-require, global-require
-          this.template = require(this.options.recorderEngine);
+          // eslint-disable-next-line import/no-dynamic-require, global-require, @typescript-eslint/no-var-requires
+          const module = require(this.options.recorderEngine);
+          this.template = module.default || module;
+          return;
         }
         throw new Error(`unsupport ${this.options.recorderEngine}`);
     }
@@ -65,6 +67,27 @@ export default class ProxyPlugin implements IPlugin, IProxy, IInject {
 
   async restartPage(): Promise<void> {
     return this.codeGen.restartPage();
+  }
+
+  /**
+   * 在注入页面跑一段脚本
+   * @param code 脚本
+   * @returns
+   */
+  async runCodeInInject(code: string) {
+    const page = this.codeGen.getPage();
+    if (page !== null) {
+      return page.evaluateExpression(code);
+    }
+    return null;
+  }
+
+  async injectBringToFront() {
+    const page = this.codeGen.getPage();
+    if (page !== null) {
+      return page.bringToFront();
+    }
+    return null;
   }
 
   async getOptions(): Promise<object> {

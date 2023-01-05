@@ -142,6 +142,13 @@ export default class RecordEventsPlugin
     }
   }
 
+  emitAction(action: Action): void {
+    // 判断状态是否 继续录制
+    if (this.uiState.state !== UIRecordState.recording) return;
+    // eslint-disable-next-line no-underscore-dangle
+    window.__handle_action(action);
+  }
+
   onEvent(evt: Event) {
     const context: IRecorderContext = {
       dom: deepEventTarget(evt),

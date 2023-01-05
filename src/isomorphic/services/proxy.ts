@@ -29,6 +29,16 @@ export interface IInject {
   restartPage(): Promise<void>;
 
   /**
+   * 在注入页面执行一段代码
+   */
+  runCodeInInject(code: string): Promise<unknown>;
+
+  /**
+   * 将注入页面窗口提到最前面
+   */
+  injectBringToFront(): Promise<unknown>;
+
+  /**
    * 获取node层的配置
    */
   getOptions(): Promise<object>;

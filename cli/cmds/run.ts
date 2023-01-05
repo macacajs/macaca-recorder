@@ -1,6 +1,7 @@
 /* eslint-disable no-empty */
 import { program, Command } from 'commander';
 import { EOL } from 'os';
+import fs from 'fs';
 import npmUpdate from 'npm-update';
 import {
   ApiPlugin,
@@ -23,6 +24,9 @@ function getEngineType(engine: string, cmd: Command): CodeEngineType {
   if (['macaca', 'sky', 'editor'].includes(engine)) {
     return engine as CodeEngineType;
   }
+  if (fs.existsSync(engine)) {
+    return fs.realpathSync(engine) as CodeEngineType;
+  }
   cmd.addHelpText('before', `${EOL}unknown template ${engine}${EOL}`);
   cmd.help();
 }
@@ -32,7 +36,7 @@ export const runCmd = program
   .createCommand('run')
   .option(
     '-t, --template <template>',
-    'gen code template, template: macaca, sky, editor',
+    'gen code template, template: macaca, sky, editor or local template file',
     'macaca',
   )
   .option('-h, --highlight', 'show highlight', false)
