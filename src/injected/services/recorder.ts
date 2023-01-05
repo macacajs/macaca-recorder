@@ -52,6 +52,12 @@ export interface IRecorder {
    * @param slot 插件 支持数组 see {@link RecorderSlot}
    */
   registerSlot(slot: RecorderSlot | RecorderSlot[]): void;
+
+  /**
+   * 主动提交事件，交给recorder处理
+   * @param action 事件
+   */
+  emitAction(action: Action): void;
 }
 
 export const IRecorder = genInjectID<IRecorder>();

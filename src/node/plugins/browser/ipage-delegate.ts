@@ -65,6 +65,10 @@ export default class IPageDelegate implements IPage {
     await this.session.setWindowBounds(bounds);
   }
 
+  async bringToFront() {
+    await this.page.bringToFront();
+  }
+
   async exposeBinding(
     name: string,
     needsHandle: boolean,

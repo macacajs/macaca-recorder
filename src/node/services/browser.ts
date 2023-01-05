@@ -98,6 +98,7 @@ export interface IPage extends Session {
   ): Promise<unknown>;
   extendInjectedScript(source: string): Promise<void>;
   setWindowBounds(bounds: Bounds): Promise<void>;
+  bringToFront(): Promise<void>;
   exposeBinding(
     name: string,
     needsHandle: boolean,

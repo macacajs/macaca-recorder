@@ -7,7 +7,7 @@ export default class FS implements IFS {
     return process.cwd();
   }
 
-  async exsits(path: string): Promise<boolean> {
+  async exists(path: string): Promise<boolean> {
     return fs.existsSync(path);
   }
 }

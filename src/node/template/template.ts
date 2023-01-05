@@ -1,4 +1,4 @@
-import { IRecorder, ISelector } from '@/injected/services';
+import { IHighlight, IRecorder, ISelector } from '@/injected/services';
 import { IProxy } from '@/isomorphic/services';
 import { IActions, IUIActions } from '@/recorder/services';
 import ICodeGen from '../services/code-gen';
@@ -15,6 +15,7 @@ export interface ITemplate {
   injected: (api: {
     selector: ISelector;
     recorder: IRecorder;
+    highlight: IHighlight;
     proxy: IProxy;
   }) => Promise<void>;
   /**
