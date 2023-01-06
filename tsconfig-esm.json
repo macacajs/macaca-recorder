@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declaration": true,
+    "module": "ES2020",
+    "outDir": "./lib/esm",
+  },
+  "exclude": [
+    "src/injected",
+    "src/recorder"
+  ]
+}

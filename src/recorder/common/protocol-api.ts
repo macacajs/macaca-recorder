@@ -452,6 +452,7 @@ export interface IPage {
   getInstallabilityErrors(arg: Protocol.Page.getInstallabilityErrorsParameters): Promise<Protocol.Page.getInstallabilityErrorsReturnValue>;
   getManifestIcons(arg: Protocol.Page.getManifestIconsParameters): Promise<Protocol.Page.getManifestIconsReturnValue>;
   getAppId(arg: Protocol.Page.getAppIdParameters): Promise<Protocol.Page.getAppIdReturnValue>;
+  getAdScriptId(arg: Protocol.Page.getAdScriptIdParameters): Promise<Protocol.Page.getAdScriptIdReturnValue>;
   getCookies(arg: Protocol.Page.getCookiesParameters): Promise<Protocol.Page.getCookiesReturnValue>;
   getFrameTree(arg: Protocol.Page.getFrameTreeParameters): Promise<Protocol.Page.getFrameTreeReturnValue>;
   getLayoutMetrics(arg: Protocol.Page.getLayoutMetricsParameters): Promise<Protocol.Page.getLayoutMetricsReturnValue>;
@@ -560,6 +561,12 @@ export interface IStorage {
   clearTrustTokens(arg: Protocol.Storage.clearTrustTokensParameters): Promise<Protocol.Storage.clearTrustTokensReturnValue>;
   getInterestGroupDetails(arg: Protocol.Storage.getInterestGroupDetailsParameters): Promise<Protocol.Storage.getInterestGroupDetailsReturnValue>;
   setInterestGroupTracking(arg: Protocol.Storage.setInterestGroupTrackingParameters): Promise<Protocol.Storage.setInterestGroupTrackingReturnValue>;
+  getSharedStorageMetadata(arg: Protocol.Storage.getSharedStorageMetadataParameters): Promise<Protocol.Storage.getSharedStorageMetadataReturnValue>;
+  getSharedStorageEntries(arg: Protocol.Storage.getSharedStorageEntriesParameters): Promise<Protocol.Storage.getSharedStorageEntriesReturnValue>;
+  setSharedStorageEntry(arg: Protocol.Storage.setSharedStorageEntryParameters): Promise<Protocol.Storage.setSharedStorageEntryReturnValue>;
+  deleteSharedStorageEntry(arg: Protocol.Storage.deleteSharedStorageEntryParameters): Promise<Protocol.Storage.deleteSharedStorageEntryReturnValue>;
+  clearSharedStorageEntries(arg: Protocol.Storage.clearSharedStorageEntriesParameters): Promise<Protocol.Storage.clearSharedStorageEntriesReturnValue>;
+  setSharedStorageTracking(arg: Protocol.Storage.setSharedStorageTrackingParameters): Promise<Protocol.Storage.setSharedStorageTrackingReturnValue>;
 }
 
 export const IStorage = genInjectID<IStorage>()
@@ -636,6 +643,7 @@ export interface IWebAuthn {
   enable(arg: Protocol.WebAuthn.enableParameters): Promise<Protocol.WebAuthn.enableReturnValue>;
   disable(arg: Protocol.WebAuthn.disableParameters): Promise<Protocol.WebAuthn.disableReturnValue>;
   addVirtualAuthenticator(arg: Protocol.WebAuthn.addVirtualAuthenticatorParameters): Promise<Protocol.WebAuthn.addVirtualAuthenticatorReturnValue>;
+  setResponseOverrideBits(arg: Protocol.WebAuthn.setResponseOverrideBitsParameters): Promise<Protocol.WebAuthn.setResponseOverrideBitsReturnValue>;
   removeVirtualAuthenticator(arg: Protocol.WebAuthn.removeVirtualAuthenticatorParameters): Promise<Protocol.WebAuthn.removeVirtualAuthenticatorReturnValue>;
   addCredential(arg: Protocol.WebAuthn.addCredentialParameters): Promise<Protocol.WebAuthn.addCredentialReturnValue>;
   getCredential(arg: Protocol.WebAuthn.getCredentialParameters): Promise<Protocol.WebAuthn.getCredentialReturnValue>;
@@ -724,12 +732,9 @@ export interface IProfiler {
   setSamplingInterval(arg: Protocol.Profiler.setSamplingIntervalParameters): Promise<Protocol.Profiler.setSamplingIntervalReturnValue>;
   start(arg: Protocol.Profiler.startParameters): Promise<Protocol.Profiler.startReturnValue>;
   startPreciseCoverage(arg: Protocol.Profiler.startPreciseCoverageParameters): Promise<Protocol.Profiler.startPreciseCoverageReturnValue>;
-  startTypeProfile(arg: Protocol.Profiler.startTypeProfileParameters): Promise<Protocol.Profiler.startTypeProfileReturnValue>;
   stop(arg: Protocol.Profiler.stopParameters): Promise<Protocol.Profiler.stopReturnValue>;
   stopPreciseCoverage(arg: Protocol.Profiler.stopPreciseCoverageParameters): Promise<Protocol.Profiler.stopPreciseCoverageReturnValue>;
-  stopTypeProfile(arg: Protocol.Profiler.stopTypeProfileParameters): Promise<Protocol.Profiler.stopTypeProfileReturnValue>;
   takePreciseCoverage(arg: Protocol.Profiler.takePreciseCoverageParameters): Promise<Protocol.Profiler.takePreciseCoverageReturnValue>;
-  takeTypeProfile(arg: Protocol.Profiler.takeTypeProfileParameters): Promise<Protocol.Profiler.takeTypeProfileReturnValue>;
 }
 
 export const IProfiler = genInjectID<IProfiler>()
@@ -1137,6 +1142,7 @@ export function registerCmds(backend: {registerCommand: (cmd: any) => void}) {
   backend.registerCommand('Page.getInstallabilityErrors');
   backend.registerCommand('Page.getManifestIcons');
   backend.registerCommand('Page.getAppId');
+  backend.registerCommand('Page.getAdScriptId');
   backend.registerCommand('Page.getCookies');
   backend.registerCommand('Page.getFrameTree');
   backend.registerCommand('Page.getLayoutMetrics');
@@ -1220,6 +1226,12 @@ export function registerCmds(backend: {registerCommand: (cmd: any) => void}) {
   backend.registerCommand('Storage.clearTrustTokens');
   backend.registerCommand('Storage.getInterestGroupDetails');
   backend.registerCommand('Storage.setInterestGroupTracking');
+  backend.registerCommand('Storage.getSharedStorageMetadata');
+  backend.registerCommand('Storage.getSharedStorageEntries');
+  backend.registerCommand('Storage.setSharedStorageEntry');
+  backend.registerCommand('Storage.deleteSharedStorageEntry');
+  backend.registerCommand('Storage.clearSharedStorageEntries');
+  backend.registerCommand('Storage.setSharedStorageTracking');
   backend.registerCommand('SystemInfo.getInfo');
   backend.registerCommand('SystemInfo.getProcessInfo');
   backend.registerCommand('Target.activateTarget');
@@ -1261,6 +1273,7 @@ export function registerCmds(backend: {registerCommand: (cmd: any) => void}) {
   backend.registerCommand('WebAuthn.enable');
   backend.registerCommand('WebAuthn.disable');
   backend.registerCommand('WebAuthn.addVirtualAuthenticator');
+  backend.registerCommand('WebAuthn.setResponseOverrideBits');
   backend.registerCommand('WebAuthn.removeVirtualAuthenticator');
   backend.registerCommand('WebAuthn.addCredential');
   backend.registerCommand('WebAuthn.getCredential');
@@ -1324,12 +1337,9 @@ export function registerCmds(backend: {registerCommand: (cmd: any) => void}) {
   backend.registerCommand('Profiler.setSamplingInterval');
   backend.registerCommand('Profiler.start');
   backend.registerCommand('Profiler.startPreciseCoverage');
-  backend.registerCommand('Profiler.startTypeProfile');
   backend.registerCommand('Profiler.stop');
   backend.registerCommand('Profiler.stopPreciseCoverage');
-  backend.registerCommand('Profiler.stopTypeProfile');
   backend.registerCommand('Profiler.takePreciseCoverage');
-  backend.registerCommand('Profiler.takeTypeProfile');
   backend.registerCommand('Runtime.awaitPromise');
   backend.registerCommand('Runtime.callFunctionOn');
   backend.registerCommand('Runtime.compileScript');

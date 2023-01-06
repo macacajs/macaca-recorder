@@ -43,8 +43,8 @@ export default class TemplatePlugin implements IPlugin, ICode {
   async afterInit() {
     const recorderFuncStr = await this.proxy.inject.getInjected('recorder');
     try {
-      // eslint-disable-next-line no-eval
-      const fn = eval(`(function ${recorderFuncStr})`) as (
+      // eslint-disable-next-line no-eval, no-new-func
+      const fn = new Function(`return (function ${recorderFuncStr})`)() as (
         ...args: unknown[]
       ) => Promise<void>;
       // 调用模版方法

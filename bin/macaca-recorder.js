@@ -1,15 +1,25 @@
 #!/usr/bin/env node
 
-const path = require('path');
-const projectURL = path.resolve(__dirname, '..');
+const { program } = require('commander');
+const { EOL } = require('os');
+const pkg = require('../package.json');
 
-require('ts-node').register({
-  project: projectURL,
-});
+const { runCmd } = require('./cmds/run');
 
-require('tsconfig-paths').register({
-  cwd: projectURL,
-});
+// 主命令
+program
+  .option('-v, --version', 'show version and exit')
+  .option('-h, --help', 'show help')
+  .addCommand(runCmd)
+  .addHelpText('before', `${EOL}${pkg.description}${EOL}`)
+  .usage('run url')
+  .showHelpAfterError(true)
+  .action((options) => {
+    if (options.version) {
+      console.info('%s  %s%s', EOL, pkg.version, EOL);
+    } else {
+      program.help();
+    }
+  });
 
-// 启动
-require('../cli/macaca-recorder');
+program.parse(process.argv);

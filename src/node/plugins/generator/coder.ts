@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import * as fs from 'fs';
 import { autowired, IEvent, IEventManager } from '@/core';
 import IOptions from '@/isomorphic/services/options';
 import { IBrowser, IBrowserFactory, IPage } from '@/node/services/browser';
 import { ICodeGen } from '@/node/services/code-gen';
 import { IWebServiceManager } from '@/node/services/coder-web-service';
 import { Action } from '@/types/actions';
-// eslint-disable-next-line import/no-unresolved
-import extendSource from './generated/injected';
+import { ASSETS_PATH } from '@/utils/assets';
 import Require from './require';
 
 export default class CodeGen implements ICodeGen, IWebServiceManager {
@@ -62,14 +62,16 @@ export default class CodeGen implements ICodeGen, IWebServiceManager {
     this.afterBrowerLaunch.trigger(browser);
 
     await browser.start(`http://e2egen/`, path =>
-      require.resolve(`./page/${path}`),
+      require.resolve(`${ASSETS_PATH}/page/${path}`),
     );
 
     // 触发事件， 方便外部插件在此时机进行函数暴漏
     this.afterAppPageLaunch.trigger(browser.getAppPage()!);
 
     const page = await browser.open(url, { left: 600, width: 1000 });
-    await browser.extendInjectedScript(extendSource);
+    await browser.extendInjectedScript(
+      fs.readFileSync(`${ASSETS_PATH}/generated/injected.js`).toString(),
+    );
 
     // 触发事件， 方便外部插件在此时机进行函数暴漏
     this.afterPageLaunch.trigger(page);

@@ -3,5 +3,5 @@ node_modules/
 coverage/
 package-lock.json
 macaca-recorder-testcase
-src/node/plugins/generator/
-src/node/plugins/page/index.js
+lib/
+assets/
