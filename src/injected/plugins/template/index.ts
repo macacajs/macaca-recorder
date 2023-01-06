@@ -18,8 +18,8 @@ export default class TemplatePlugin implements IPlugin {
   async init() {
     const injectedFuncStr = await this.proxy.inject.getInjected('injected');
     try {
-      // eslint-disable-next-line no-eval
-      const fn = eval(`(function ${injectedFuncStr})`) as (
+      // eslint-disable-next-line no-eval, no-new-func
+      const fn = new Function(`return (function ${injectedFuncStr})`)() as (
         ...args: unknown[]
       ) => Promise<void>;
       // 调用模版方法

@@ -9,3 +9,5 @@ export { default as DumpFilePlugin } from './node/plugins/dump-file';
 export { default as IProxyPlugin } from './node/plugins/proxy';
 export { default as iapiID } from './node/services/api';
 export { ITemplate } from './node/template/template';
+
+export { Action } from './types/actions';
