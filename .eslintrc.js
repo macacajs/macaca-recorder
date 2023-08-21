@@ -3,12 +3,6 @@
 module.exports = {
   root: true,
   extends: 'eslint-config-react-app',
-  globals: {
-    driver: true,
-    isiOS: true,
-    totoro: true,
-    desiredCapabilities: true,
-  },
   rules: {
     'jsdoc/check-tag-names': 0,
     'valid-jsdoc': 0,
