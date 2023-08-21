@@ -1,4 +1,4 @@
-
+'use strict';
 
 module.exports = {
   root: true,
@@ -9,7 +9,6 @@ module.exports = {
     totoro: true,
     desiredCapabilities: true,
   },
-  ignorePatterns: ['archive/**/*'],
   rules: {
     'jsdoc/check-tag-names': 0,
     'valid-jsdoc': 0,
