@@ -1,0 +1,1 @@
+console.log('plug-in has been initialized.');

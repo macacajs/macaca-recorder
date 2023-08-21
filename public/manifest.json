@@ -1,0 +1,59 @@
+{
+  "name": "Macaca Recorder",
+  "version": "0.0.1",
+  "description": "模版化录制器，通过操作生成用例代码",
+  "manifest_version": 3,
+  "devtools_page": "devtools.html",
+  "background": {
+    "service_worker": "static/js/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "css": ["static/css/content.css"],
+      "js": ["static/js/content.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "permissions": [
+    "tabs",
+    "storage",
+    "declarativeContent"
+  ],
+  "host_permissions":[],
+  "web_accessible_resources": [
+    {
+      "resources": [ "/images/app.png" ],
+      "matches": ["<all_urls>"]
+    },
+    {
+      "resources": [ "insert.js" ],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "action": {
+    "default_popup": "",
+    "default_icon": {
+      "16": "/images/app.png",
+      "32": "/images/app.png",
+      "48": "/images/app.png",
+      "128": "/images/app.png"
+    },
+    "default_title": "MacacaRecorder"
+  },
+  "icons": {
+    "16": "/images/app.png",
+    "32": "/images/app.png",
+    "48": "/images/app.png",
+    "128": "/images/app.png"
+  },
+  "commands": {
+    "mousemove_enabled": {
+      "suggested_key": {
+        "default": "Alt+Space",
+        "mac": "Alt+Space"
+      },
+      "description": "mousemove enabled"
+    }
+  }
+}
