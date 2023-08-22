@@ -1,13 +1,13 @@
 /*global chrome*/
 
-import ReactDOM from "react-dom/client"
+import ReactDOM from 'react-dom/client'
 import './content.less'
 import {
   getElementSelector,
   getElementOffset,
   resetStyle,
   setStyle,
-} from "./common/element-utils";
+} from './common/element-utils';
 import constants from '@/common/js/constants';
 
 const {

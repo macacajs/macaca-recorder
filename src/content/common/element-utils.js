@@ -1,4 +1,4 @@
-
+'use strict';
 
 import constants from '@/common/js/constants';
 const { ATTRIBUTE_NAMES } = constants;
