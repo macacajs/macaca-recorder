@@ -31,7 +31,7 @@ const evaluate = (xpath) => {
       currentParagraph = allParagraphs.iterateNext() as HTMLElement;
     }
   } catch (error) {
-    console.error('fastxpath evaluate error: ', error);
+    console.error('xpath evaluate error: ', error);
   }
   return elements;
 };
