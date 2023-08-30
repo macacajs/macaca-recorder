@@ -25,10 +25,10 @@ $ npm install
 $ npm run build
 ```
 
-## 如何安装&使用
+## 安装使用
 
 1. 浏览器输入：`chrome://extensions/` 
-2. 加载 build 后的产物 dist/x.x.x 文件夹
+2. 加载 build 后的产物 dist/* 文件夹
 
 <p align="left">
   <img
@@ -38,9 +38,7 @@ $ npm run build
   />
 </p>
 
-
-
-3. Pin 住插件
+3. 插件常驻
 
 <p align="left">
   <img
@@ -51,5 +49,17 @@ $ npm run build
 </p>
 
 
-4. 通过`Option+Space (MAC) / Alt+Space(WIN)` 可开启、关闭鼠标移动状态监听
+4. 通过`Option+Space (MacOS) / Alt+Space(Windows)` 可开启、关闭鼠标移动状态监听
 5. 点击插件图标可开启(ON)/关闭(OFF)插件
+
+<!-- GITCONTRIBUTOR_START -->
+
+## 贡献者
+
+|[<img src="https://avatars.githubusercontent.com/u/12947068?v=4" width="100px;"/><br/><sub><b>ilimei</b></sub>](https://github.com/ilimei)<br/>|[<img src="https://avatars.githubusercontent.com/u/1011681?v=4" width="100px;"/><br/><sub><b>xudafeng</b></sub>](https://github.com/xudafeng)<br/>|[<img src="https://avatars.githubusercontent.com/u/52845048?v=4" width="100px;"/><br/><sub><b>snapre</b></sub>](https://github.com/snapre)<br/>|[<img src="https://avatars.githubusercontent.com/u/10104168?v=4" width="100px;"/><br/><sub><b>yihuineng</b></sub>](https://github.com/yihuineng)<br/>|[<img src="https://avatars.githubusercontent.com/u/30293087?v=4" width="100px;"/><br/><sub><b>Jodeee</b></sub>](https://github.com/Jodeee)<br/>|
+| :---: | :---: | :---: | :---: | :---: |
+
+
+[git-contributor 说明](https://github.com/xudafeng/git-contributor)，自动生成时间：`Wed Aug 30 2023 15:12:58 GMT+0800`。
+
+<!-- GITCONTRIBUTOR_END -->
