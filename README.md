@@ -32,14 +32,14 @@ $ npm run build
 <img
   alt="logo"
   src="./resources/dev-1.png"
-  width="750"
+  width="350"
 />
 
 3. Pin 住插件
 <img
   alt="logo"
   src="./resources/dev-2.png"
-  width="750"
+  width="350"
 />
 
 4. 通过`Option+Space (MAC) / Alt+Space(WIN)` 可开启、关闭鼠标移动状态监听
