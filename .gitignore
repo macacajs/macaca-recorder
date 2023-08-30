@@ -1,6 +1,7 @@
 .idea
 node_modules/
 coverage/
+dist
 package-lock.json
 macaca-recorder-testcase
 src/node/plugins/generator/

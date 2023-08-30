@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "incremental": true,
+    "target": "es6",
+    "module": "commonjs",
+    "strict": false,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "typeRoots": [ "node_modules/@types" ],
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
+    "noUnusedLocals": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "outDir": "dist/"
+  },
+  "requireConfigFile": false,
+  "include": [
+    "./src",
+  ],
+  "exclude": [
+    "node_modules",
+  ]
+}
