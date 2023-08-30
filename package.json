@@ -1,0 +1,115 @@
+{
+  "name": "macaca-recorder",
+  "version": "0.0.1",
+  "description": "模版化录制器，通过操作生成用例代码",
+  "private": true,
+  "releaseNotes": [],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/macacajs/macaca-recorder.git"
+  },
+  "scripts": {
+    "pack-zip": "sh ./scripts/build-zip.sh",
+    "bundle": "NODE_ENV=production webpack --mode=production",
+    "build": "npm run bundle && npm run pack-zip",
+    "contributor": "git-contributor",
+    "dev": "NODE_ENV=development webpack --mode=development",
+    "docs:dev": "vuepress dev docs",
+    "type:check": "tsc --noEmit",
+    "lint:js": "eslint ./src --fix",
+    "lint:less": "stylelint --fix ./**/*.less -s less",
+    "lint": "npm run lint:js && npm run lint:less",
+    "lint-staged": "lint-staged",
+    "release": "git pull && standard-version",
+    "postrelease": "git push --follow-tags"
+  },
+  "dependencies": {
+    "antd": "^5.7.3",
+    "less": "^4.1.2",
+    "lodash": "^4.17.21",
+    "marked": "^2.0.7",
+    "moment": "^2.29.4",
+    "prop-types": "^15.8.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.14.3",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-decorators": "^7.6.0",
+    "@babel/plugin-proposal-optional-chaining": "^7.12.7",
+    "@babel/plugin-transform-runtime": "^7.7.4",
+    "@babel/preset-env": "^7.9.0",
+    "@babel/preset-react": "7.8.3",
+    "@commitlint/cli": "^17.6.7",
+    "@commitlint/config-conventional": "^17.6.7",
+    "@svgr/webpack": "^8.0.1",
+    "@types/chrome": "^0.0.224",
+    "@types/node": "^18.15.3",
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
+    "@types/semver-compare": "^1.0.1",
+    "@types/webpack": "^5.28.1",
+    "@types/webpack-env": "^1.18.0",
+    "babel-loader": "^8.0.6",
+    "chai": "^4.1.0",
+    "chalk": "4",
+    "clean-webpack-plugin": "3.0.0",
+    "copy-webpack-plugin": "6",
+    "cross-env": "^7.0.3",
+    "crx": "^5.0.1",
+    "css-loader": "^6.6.0",
+    "dotenv": "^10.0.0",
+    "easy-i18n-cli": "^1.0.0",
+    "eslint": "8",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-egg": "^12.2.1",
+    "eslint-import-resolver-alias": "^1.1.2",
+    "eslint-import-resolver-typescript": "^3.5.5",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-react": "^7.33.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "git-contributor": "^2.1.5",
+    "html-webpack-plugin": "^5.5.0",
+    "husky": "^1.3.1",
+    "jsx-loader": "^0.13.2",
+    "less-loader": "^10.2.0",
+    "lint-staged": "^13.2.3",
+    "prettier": "^2.8.4",
+    "standard-version": "^9.5.0",
+    "style-loader": "^3.3.2",
+    "stylelint": "^12.0.1",
+    "svg-sprite-loader": "^4.1.6",
+    "svgo": "^1.3.2",
+    "svgo-loader": "^2.2.1",
+    "terser-webpack-plugin": "^5.3.9",
+    "ts-loader": "^8.4.0",
+    "typescript": "^4.9.5",
+    "url-loader": "^4.1.1",
+    "vuepress": "^1.8.2",
+    "webpack": "5",
+    "webpack-cli": "4",
+    "webpack-dev-server": "4"
+  },
+  "optionalDependencies": {
+    "copy-paste": "^1.3.0"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix"
+    ],
+    "*.less": [
+      "stylelint --fix -s less"
+    ]
+  }
+}
