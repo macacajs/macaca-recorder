@@ -72,10 +72,6 @@ const entry = {
   [entries.contentScript]: path.join(srcPath, 'content', entries.contentScript),
 };
 
-// entries.extensionPage.forEach(item => {
-//   entry[item] = path.join(pagesPath, item);
-// });
-
 const rules = [
   {
     test: /\.tsx?$/,

@@ -7,6 +7,10 @@ import {
   MACACA_RECORDER_TEMPLATE,
   MACACA_RECORDER_ENABLED,
 } from '@/constants';
+import {
+  getStorageLocal,
+  setStorageLocal,
+} from '@/common/storage';
 import templates from './templates';
 
 const actions = {
@@ -29,28 +33,6 @@ const getCurrentTabs = () => {
   });
   return tabId;
 };
-
-/**
- * 获取本地缓存
- */
-const getStorageLocal = (key) => new Promise((resolve, reject) => {
-  chrome.storage.local.get([key], (result) => {
-    if (result) {
-      resolve(result[key]);
-    } else {
-      reject();
-    }
-  });
-});
-
-/**
- * 设置本地缓存
- */
-const setStorageLocal = (opts = {}) => new Promise((resolve) => {
-  chrome.storage.local.set(opts, () => {
-    resolve(true);
-  });
-});
 
 /**
  * 发送消息到 devtools

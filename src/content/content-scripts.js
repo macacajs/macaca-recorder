@@ -18,6 +18,9 @@ import {
   DATA_MACACA_RECORDER_SELECT,
   DEVTOOLS_ACTION,
 } from '@/constants';
+import {
+  getStorageLocal,
+} from '@/common/storage';
 import Tooltip from './tooltip/tooltip';
 
 
@@ -50,6 +53,14 @@ const crxContainer = ReactDOM.createRoot(document.getElementById(app.id));
 crxContainer.render(<Tooltip />);
 /* eslint-enable */
 
+/**
+ * 页面加载时获取开关状态
+ */
+const getEnabled = async () => {
+  enabled = await getStorageLocal(MACACA_RECORDER_ENABLED);
+  return enabled;
+}
+getEnabled();
 
 /**
  * 重置输入事件和鼠标移动事件
