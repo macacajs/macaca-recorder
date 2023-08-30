@@ -19,9 +19,7 @@
     "lint:js": "eslint ./src --fix",
     "lint:less": "stylelint --fix ./**/*.less -s less",
     "lint": "npm run lint:js && npm run lint:less",
-    "lint-staged": "lint-staged",
-    "release": "git pull && standard-version",
-    "postrelease": "git push --follow-tags"
+    "lint-staged": "lint-staged"
   },
   "dependencies": {
     "antd": "^5.7.3",
