@@ -1,18 +1,10 @@
 export const MACACA_RECORDER = 'macaca-recorder';
 
 export const MACACA_RECORDER_TEMPLATE = {
-  TEMPLATES: ['default', 'cypress'],
-  DEFAULT: 'default',
+  TEMPLATES: ['macaca', 'cypress'],
+  MACACA: 'macaca',
   CYPRESS: 'cypress',
   CURRENT_TEMPLATE: 'current-template',
-};
-
-export const DEVTOOLS_ACTION = {
-  ELEMENT_SELECT: 'element-select',
-  ELEMENT_ACTION: 'element-aciton',
-  COPY_CODE: 'copy-code',
-  CLEAN_CODE: 'clean-code',
-  CHANGE_TEMPLATE: 'change-template',
 };
 
 export const COMMON_ACTIONS = {
@@ -25,11 +17,22 @@ export const COMMON_ACTIONS = {
   COPY: 'copy',
   HOVER: 'hover',
   CHANGE: 'change',
+  COPY_CODE: 'copy-code',
+  CLEAN_CODE: 'clean-code',
+  CHANGE_TEMPLATE: 'change-template',
 };
 
 export const KEYBOARD_ACTIONS = {
   ENTER: 'Enter',
-  RESET: 'reset',
+};
+
+export const MACACA_RECORDER_EVENT_ACTIONS = {
+  UPDATE_SELECTORS: 'update-selectors',
+  UPDATE_STEPS: 'update-steps',
+  UPDATE_MAIN_SWITCH: 'update-main-switch',
+  UPDATE_MOUSE_SWITCH: 'update-mouse-switch',
+  COPY_CODE: 'copy-code',
+
 };
 
 export const ATTRIBUTE_NAMES_CONFIG = ['data-testid', 'data-name', 'id', 'title', 'placeholder', 'name', 'value', 'class'];
@@ -42,10 +45,3 @@ export const MACACA_RECORDER_CONTAINER = 'macaca-recorder-container';
 
 // 插件提示组件 id
 export const MACACA_RECORDER_CONTAINER_TOOLTIP = 'macaca-recorder-container-tooltip';
-
-// devtools id
-export const DEVTOOLS_ACTIONS_STEPS = 'devtools-actions-steps';
-export const DEVTOOLS_REALTIME_TABLE = 'devtools-realtime-table';
-
-// 控制台选中元素自定义属性
-export const DATA_MACACA_RECORDER_SELECT = 'data-macaca-recorder-select';

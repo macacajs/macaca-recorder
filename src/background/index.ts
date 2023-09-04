@@ -2,10 +2,9 @@
 
 import {
   COMMON_ACTIONS,
-  KEYBOARD_ACTIONS,
-  DEVTOOLS_ACTION,
   MACACA_RECORDER_TEMPLATE,
   MACACA_RECORDER_ENABLED,
+  MACACA_RECORDER_EVENT_ACTIONS,
 } from '@/constants';
 import {
   getStorageLocal,
@@ -35,21 +34,6 @@ const getCurrentTabs = () => {
 };
 
 /**
- * 发送消息到 devtools
- * @param {number} tabId - tab id
- * @param {Object} opts - opts
- */
-const sendMessageToDevtools = (tabId, opts = {}) => {
-  const port = actions[tabId]?.port;
-  console.log('background sendMessageToDevtools:', tabId, actions, port);
-  if (port) {
-    port.postMessage({
-      ...opts,
-    });
-  }
-};
-
-/**
  * 初始化 tab 相关数据
  */
 const resetTabData = (tabId) => {
@@ -61,7 +45,6 @@ const resetTabData = (tabId) => {
     actions[tabId] = {
       steps,
       data: [],
-      port: null,
     };
   }
 };
@@ -71,7 +54,7 @@ const resetTabData = (tabId) => {
  * @param tabId tabId
  * @param opts 选项
  */
-const updateCaseSteps = (tabId: number, opts: {
+const getCaseSteps = (tabId: number, opts: {
   action?: string,
   selectors?: any,
   actionId?: number
@@ -82,15 +65,15 @@ const updateCaseSteps = (tabId: number, opts: {
     actionId,
   } = opts;
 
-  if (!action) return;
+  if (!action) return {};
 
-  if (!selectors?.length) return;
+  if (!selectors?.length) return {};
 
   // input 防止重复写入
   if (action === COMMON_ACTIONS.INPUT) {
     const lastSteps = actions[tabId].data.slice(-1);
     if (lastSteps.length && lastSteps[0].actionId === actionId) {
-      actions[tabId].steps.default = actions[tabId].steps.default.slice(0, -1);
+      actions[tabId].steps.macaca = actions[tabId].steps.macaca.slice(0, -1);
       actions[tabId].steps.cypress = actions[tabId].steps.cypress.slice(0, -1);
       actions[tabId].data = actions[tabId].data.slice(0, -1);
     }
@@ -103,12 +86,7 @@ const updateCaseSteps = (tabId: number, opts: {
   });
   actions[tabId].data.push(opts);
 
-  // 发送消息
-  sendMessageToDevtools(tabId, {
-    messageType: 'actions',
-    steps: actions[tabId].steps,
-    template: actions.template,
-  });
+  return actions[tabId];
 };
 
 /**
@@ -118,7 +96,7 @@ chrome.runtime.onInstalled.addListener(async () => {
   console.log('plug-in has been initialized.');
 
   const template = await getStorageLocal(MACACA_RECORDER_TEMPLATE.CURRENT_TEMPLATE);
-  actions.template = template || MACACA_RECORDER_TEMPLATE.DEFAULT;
+  actions.template = template || MACACA_RECORDER_TEMPLATE.MACACA;
 
   await setStorageLocal({ [MACACA_RECORDER_ENABLED]: true });
 
@@ -135,70 +113,57 @@ chrome.runtime.onMessage.addListener(async (message) => {
   if (!tabId) return;
   resetTabData(tabId);
 
-  if (message.action === COMMON_ACTIONS.MOUSEMOVE) {
-    sendMessageToDevtools(tabId, {
-      template: actions.template,
-      messageType: 'runtime',
-      ...message,
-    });
-  } else {
-    updateCaseSteps(tabId, message);
-  }
-});
-
-/**
- * 创建长链接，监听来自 devtools 的消息
- */
-chrome.runtime.onConnect.addListener((port) => {
-  port.onMessage.addListener(async (message) => {
-    const tabId = await getCurrentTabs() as number;
-    resetTabData(tabId);
-    actions[tabId].port = port;
-
-    switch (message.devtoolsAction) {
-      case DEVTOOLS_ACTION.ELEMENT_SELECT: {
-        chrome.tabs.sendMessage(tabId, message);
-        break;
-      }
-      case DEVTOOLS_ACTION.ELEMENT_ACTION: {
-        chrome.tabs.sendMessage(tabId, message, () => {
-          updateCaseSteps(tabId, message);
-        });
-        break;
-      }
-      case DEVTOOLS_ACTION.CHANGE_TEMPLATE: {
-        const { template } = message;
-        await setStorageLocal({ [MACACA_RECORDER_TEMPLATE.CURRENT_TEMPLATE]: template });
-        actions.template = template;
-        sendMessageToDevtools(tabId, {
-          messageType: 'actions',
-          steps: actions[tabId].steps,
-          template: actions.template,
-        });
-        break;
-      }
-      case DEVTOOLS_ACTION.CLEAN_CODE: {
-        if (!actions[tabId]) return;
-        const steps = MACACA_RECORDER_TEMPLATE.TEMPLATES.reduce((acc, curr) => {
-          acc[curr] = [];
-          return acc;
-        }, {});
-        actions[tabId].steps = steps;
-        sendMessageToDevtools(tabId, {
-          messageType: 'actions',
-          steps: actions[tabId].steps,
-          template: actions.template,
-        });
-        break;
-      }
-      case DEVTOOLS_ACTION.COPY_CODE: {
-        break;
-      }
-      default: {
-        break;
-      }
+  switch (message.action) {
+    case COMMON_ACTIONS.CHANGE_TEMPLATE: {
+      const { template } = message;
+      await setStorageLocal({ [MACACA_RECORDER_TEMPLATE.CURRENT_TEMPLATE]: template });
+      actions.template = template;
+      const steps = actions[tabId]?.steps[actions.template || MACACA_RECORDER_TEMPLATE.MACACA];
+      chrome.tabs.sendMessage(tabId, {
+        eventAction: MACACA_RECORDER_EVENT_ACTIONS.UPDATE_STEPS,
+        steps,
+        template: actions.template,
+      });
+      break;
     }
-  });
+    case COMMON_ACTIONS.CLEAN_CODE: {
+      const steps = MACACA_RECORDER_TEMPLATE.TEMPLATES.reduce((acc, curr) => {
+        acc[curr] = [];
+        return acc;
+      }, {});
+      actions[tabId].steps = steps;
+      chrome.tabs.sendMessage(tabId, {
+        eventAction: MACACA_RECORDER_EVENT_ACTIONS.UPDATE_STEPS,
+        steps: [],
+        template: actions.template,
+      });
+      break;
+    }
+    case COMMON_ACTIONS.COPY_CODE: {
+      chrome.tabs.sendMessage(tabId, {
+        eventAction: MACACA_RECORDER_EVENT_ACTIONS.COPY_CODE,
+        template: actions.template,
+      });
+      break;
+    }
+    case COMMON_ACTIONS.CLICK:
+    case COMMON_ACTIONS.DBLCLICK:
+    case COMMON_ACTIONS.HOVER:
+    case COMMON_ACTIONS.CHECK:
+    case COMMON_ACTIONS.INPUT:
+    case COMMON_ACTIONS.KEYDOWN: {
+      const data = getCaseSteps(tabId, message);
+      const steps = data?.steps[actions.template || MACACA_RECORDER_TEMPLATE.MACACA];
+      chrome.tabs.sendMessage(tabId, {
+        eventAction: MACACA_RECORDER_EVENT_ACTIONS.UPDATE_STEPS,
+        steps,
+        template: actions.template,
+      });
+      break;
+    }
+    default:
+      break;
+  }
 });
 
 /**
@@ -212,9 +177,17 @@ chrome.action.onClicked.addListener(async () => {
 
   chrome.action.setBadgeText({ text: !enabled ? 'ON' : 'OFF' });
 
+  // 销毁每个页面相关数据
+  Object.keys(actions).forEach((key) => {
+    if (key !== 'template') {
+      delete actions[key];
+    }
+  });
+
+  // 销毁当前相关组件，其它页面刷新即可，不作通知
   const tabId = await getCurrentTabs() as number;
   chrome.tabs.sendMessage(tabId, {
-    popupAction: MACACA_RECORDER_ENABLED,
+    eventAction: MACACA_RECORDER_EVENT_ACTIONS.UPDATE_MAIN_SWITCH,
     enabled: !enabled,
   });
 });
@@ -227,7 +200,7 @@ chrome.commands.onCommand.addListener(async (command) => {
   if (!tabId) return;
   if (command !== MACACA_RECORDER_ENABLED) return;
   chrome.tabs.sendMessage(tabId, {
-    keyboardAction: KEYBOARD_ACTIONS.RESET,
+    eventAction: MACACA_RECORDER_EVENT_ACTIONS.UPDATE_MOUSE_SWITCH,
   });
 });
 

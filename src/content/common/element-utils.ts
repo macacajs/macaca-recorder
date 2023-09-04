@@ -169,8 +169,9 @@ export const getElementSelector = (element) => {
       }
     }
   });
+  // 只取前三有效 selector
   return {
-    selectors,
+    selectors: selectors.slice(0, 3),
   };
 };
 
@@ -233,15 +234,4 @@ export const renderTooltip = (rect, selectors) => {
     }
     tooltip.style.top = `${rect.top + rect.height + 5}px`;
   }
-};
-
-/**
- * 清除 tooltip 样式
- * @param element
- * @param backgroundColor
- */
-export const cleanTooltip = (element, backgroundColor) => {
-  if (element) resetStyle(element, backgroundColor);
-  const tooltip = document.getElementById(MACACA_RECORDER_CONTAINER_TOOLTIP);
-  tooltip.style.display = 'none';
 };
