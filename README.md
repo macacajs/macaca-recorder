@@ -2,6 +2,11 @@
 
 ---
 
+[![CI][ci-image]][ci-url]
+
+[ci-image]: https://github.com/macacajs/macaca-recorder/actions/workflows/ci.yml/badge.svg
+[ci-url]: https://github.com/macacajs/macaca-recorder/actions/workflows/ci.yml
+
 ## 插件说明
 
 - 支持获取指定元素 xpath 路径
