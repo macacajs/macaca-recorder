@@ -158,6 +158,7 @@ chrome.runtime.onMessage.addListener(async (message) => {
         eventAction: MACACA_RECORDER_EVENT_ACTIONS.UPDATE_STEPS,
         steps,
         template: actions.template,
+        action: message.action,
       });
       break;
     }
