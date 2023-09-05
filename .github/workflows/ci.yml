@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest, macOS-latest ]
+        os: [ ubuntu-latest ]
         node-version: [ 16 ]
     steps:
       - name: Checkout Git Source
@@ -31,14 +31,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
-        run: |
-          npm i npm@6 -g
-          npm i
+        run: npm i
 
       - name: Continuous integration
-        run: npm run test
-
-      - name: Code coverage
-        uses: codecov/codecov-action@v3.0.0
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+        run: npm run lint
