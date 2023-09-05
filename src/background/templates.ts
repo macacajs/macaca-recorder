@@ -22,41 +22,41 @@ export default (opts:{
   } = selector;
 
   // 参数拼接
-  const defaultCommonParameter = [];
-  if (key !== 'text') defaultCommonParameter.push('use: \'xpath\'');
-  if (selectorIndex) defaultCommonParameter.push(`index: ${selectorIndex}`);
-  const args = `${defaultCommonParameter.length ? `, { ${defaultCommonParameter.join(', ')} }` : ''}`;
-  // default 模版
-  let defaultTemplate = `'${key === 'text' ? selectorValue : xpath}'${args}`;
+  const macacaCommonParameter = [];
+  if (key !== 'text') macacaCommonParameter.push('use: \'xpath\'');
+  if (selectorIndex) macacaCommonParameter.push(`index: ${selectorIndex}`);
+  const args = `${macacaCommonParameter.length ? `, { ${macacaCommonParameter.join(', ')} }` : ''}`;
+  // macaca 模版
+  let macacaTemplate = `'${key === 'text' ? selectorValue : xpath}'${args}`;
   // cypress 模版
   let cypressTemplate = `cy.xpath('${xpath}')${selectorIndex ? `.eq(${selectorIndex})` : ''}`;
 
   switch (action) {
     case COMMON_ACTIONS.CLICK:
-      defaultTemplate = `await driver.clickOn(${defaultTemplate});`;
+      macacaTemplate = `await driver.clickOn(${macacaTemplate});`;
       cypressTemplate = `${cypressTemplate}.click();`;
       break;
     case COMMON_ACTIONS.DBLCLICK:
-      defaultTemplate = `await driver.dblclick(${defaultTemplate});`;
+      macacaTemplate = `await driver.dblclick(${macacaTemplate});`;
       cypressTemplate = `${cypressTemplate}.dblclick();`;
       break;
     case COMMON_ACTIONS.INPUT:
-      defaultTemplate = `await driver.input('${inputValue}');`;
+      macacaTemplate = `await driver.input('${inputValue}');`;
       cypressTemplate = `${cypressTemplate}.clear().type('${inputValue}');`;
       break;
     case COMMON_ACTIONS.HOVER:
-      defaultTemplate = `await driver.move(${defaultTemplate});`;
+      macacaTemplate = `await driver.move(${macacaTemplate});`;
       cypressTemplate = `${cypressTemplate}.trigger('mouseover', { force: true });`;
       break;
     case COMMON_ACTIONS.CHECK:
-      defaultTemplate = `await driver.check(${defaultTemplate});`;
+      macacaTemplate = `await driver.check(${macacaTemplate});`;
       cypressTemplate = `${cypressTemplate}.should('exist');`;
       break;
     default:
       break;
   }
   return {
-    default: defaultTemplate,
+    macaca: macacaTemplate,
     cypress: cypressTemplate,
   };
 };

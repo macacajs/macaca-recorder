@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "description": "模版化录制器，通过操作生成用例代码",
   "manifest_version": 3,
-  "devtools_page": "devtools.html",
   "background": {
     "service_worker": "background.js"
   },
