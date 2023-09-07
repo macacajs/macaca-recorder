@@ -2,7 +2,6 @@
 
 import {
   ATTRIBUTE_NAMES_CONFIG,
-  MACACA_RECORDER_CONTAINER_TOOLTIP,
 } from '@/constants';
 
 /**
@@ -145,7 +144,7 @@ const getElementXPath = (element) => {
  * 获取元素选择器
  * @param {Object} element - 元素
  */
-export const getElementSelector = (element) => {
+export const getElementSelector = (element): any => {
   if (!element) return {};
   const selectors = [];
   const xpaths = getElementXPath(element);
@@ -210,28 +209,4 @@ export const getElementOffset = (element) => {
   return {
     left, top, width: rect.width, height: rect.height, pageWidth,
   };
-};
-
-/**
- * 渲染 Tooltip 组件
- * @param {Object} rect - 相对坐标
- * @param {Object} selectors - selectors 选择器
- */
-export const renderTooltip = (rect, selectors) => {
-  const tooltip = document.getElementById(MACACA_RECORDER_CONTAINER_TOOLTIP);
-  if (tooltip) {
-    let tooltipHtml = '';
-    selectors.selectors.forEach((item) => {
-      tooltipHtml += `<span id="${MACACA_RECORDER_CONTAINER_TOOLTIP}-selector" style="margin: 5px">[${item.index + 1}/${item.length}] ${item.xpath}</span><br>`;
-    });
-    tooltip.innerHTML = tooltipHtml;
-    tooltip.style.display = 'block';
-    const tooltipRect = tooltip.getBoundingClientRect();
-    if (tooltipRect.width + rect.left > rect.pageWidth) {
-      tooltip.style.left = `${rect.left + rect.width - tooltipRect.width}px`;
-    } else {
-      tooltip.style.left = `${rect.left}px`;
-    }
-    tooltip.style.top = `${rect.top + rect.height + 5}px`;
-  }
 };

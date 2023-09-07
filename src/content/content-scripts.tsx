@@ -1,41 +1,46 @@
-/* global chrome*/
+/* global chrome */
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import {
-  getElementSelector,
-  getElementOffset,
-  resetStyle,
-  setStyle,
-  cleanCenter,
-  renderTooltip,
-} from './common/element-utils';
 import {
   COMMON_ACTIONS,
   KEYBOARD_ACTIONS,
   MACACA_RECORDER,
   MACACA_RECORDER_CONTAINER,
   MACACA_RECORDER_ENABLED,
-  MACACA_RECORDER_EVENT_ACTIONS
+  MACACA_RECORDER_EVENT_ACTIONS,
 } from '@/constants';
 import {
   getStorageLocal,
 } from '@/common/storage';
+import {
+  getElementSelector,
+  getElementOffset,
+  resetStyle,
+  setStyle,
+} from './common/element-utils';
 import MacacaRecorderCenter from './components/MacacaRecorderCenter';
 
-let selectors = [];
+interface Selectors {
+  selectors: any;
+}
+
+let selectors: Selectors;
 
 // 元素信息
-let lastElement = null;
-let lastElementBackgroundColor = null;
+let lastElement: HTMLElement = null;
+let lastElementBackgroundColor: string = null;
+
+// 鼠标事件
+let mouseTimer: any = null;
 
 // 点击事件状态
 let clicked = false;
-let clickTimer = null;
+let clickTimer: any = null;
 
 // 点击事件
-let inputTimer = null;
-let inputActionId = null;
+let inputTimer: any = null;
+let inputActionId: number = null;
 
 // 插件开关
 let enabled = true;
@@ -46,42 +51,40 @@ let mousemoveEnabled = true;
 // 背景样式
 const defaultBackgroundColor = 'rgba(204, 51, 51, 0.1)';
 
-let onRef = React.createRef();
-let parentRef = React.createRef();
+const onWidgetRef = React.createRef();
+const onTooltipRef = React.createRef();
+const parentRef = React.createRef();
 
 /**
  * 监听悬浮面板的操作
- * @param {*} action 
- * @param {*} opts 
+ * @param {*} action
+ * @param {*} opts
  */
 const handleWidgetClick = (action, opts = {}) => {
   chrome.runtime.sendMessage({
     action,
-    ...opts
+    ...opts,
   });
-} 
+};
 
 /**
  * 重置输入事件和鼠标移动事件
  */
-const resetInputAndMouseEvent = (action) => {
+const resetInputAndMouseEvent = (action = null) => {
   if (action !== COMMON_ACTIONS.INPUT) inputActionId = null;
   mousemoveEnabled = true;
 };
 
 /**
  * 监听点击事件
- * @param {*} event
- * @param {*} selectors
  */
 document.addEventListener(COMMON_ACTIONS.CLICK, (event) => {
-
   if (!enabled) return;
 
-  if (event.target.id.includes(MACACA_RECORDER)) {
+  if ((event.target as any).id.includes(MACACA_RECORDER)) {
     event.stopPropagation();
     return;
-  };
+  }
   clicked = true;
 
   // 重置点击状态
@@ -95,22 +98,18 @@ document.addEventListener(COMMON_ACTIONS.CLICK, (event) => {
     });
     clicked = false;
   }, 200);
-})
-
+});
 
 /**
  * 监听双击事件
- * @param {*} event
- * @param {*} selectors
  */
 document.addEventListener(COMMON_ACTIONS.DBLCLICK, (event) => {
-
   if (!enabled) return;
 
-  if (event.target.id.includes(MACACA_RECORDER)) {
+  if ((event.target as any).id.includes(MACACA_RECORDER)) {
     event.stopPropagation();
     return;
-  };
+  }
 
   clearTimeout(clickTimer);
 
@@ -126,30 +125,31 @@ document.addEventListener(COMMON_ACTIONS.DBLCLICK, (event) => {
 /**
  * 监听输入事件
  */
-document.addEventListener(COMMON_ACTIONS.INPUT, event => {
+document.addEventListener(COMMON_ACTIONS.INPUT, (event) => {
   if (!enabled) return;
   // 忽略点击输入框时触发的 input 操作
   if (clicked) return;
   // 忽略插件本身
-  if (event.target.id.includes(MACACA_RECORDER)) return;
+  const target = event.target as any;
+  if (target.id.includes(MACACA_RECORDER)) return;
 
   clearTimeout(inputTimer);
   inputTimer = setTimeout(() => {
-    const value = event.target.value || event.target.innerText;
+    const value = target.value || target.innerText;
     if (!value) return;
 
     mousemoveEnabled = true;
 
     if (!inputActionId) inputActionId = new Date().getTime();
-    const tagName = event.target.tagName.toLowerCase();
-    const selectors = getElementSelector(event.target);
+    const tagName = target.tagName.toLowerCase();
+    const inputSelectors = getElementSelector(target);
     chrome.runtime.sendMessage({
       action: COMMON_ACTIONS.INPUT,
       index: 0,
       value,
       tag: tagName,
       actionId: inputActionId,
-      ...selectors,
+      ...inputSelectors,
     });
   }, 200);
 });
@@ -157,9 +157,10 @@ document.addEventListener(COMMON_ACTIONS.INPUT, event => {
 /**
  * 监听键盘事件
  */
-document.addEventListener(COMMON_ACTIONS.KEYDOWN, event => {
+document.addEventListener(COMMON_ACTIONS.KEYDOWN, (event) => {
   if (!enabled) return;
-  const code = event.code;
+
+  const { code } = (event as any);
   if (code === KEYBOARD_ACTIONS.ENTER) {
     resetInputAndMouseEvent();
     chrome.runtime.sendMessage({
@@ -173,27 +174,26 @@ document.addEventListener(COMMON_ACTIONS.KEYDOWN, event => {
  * 监听事件消息
  */
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-
   // 整体开关
   if (message.eventAction === MACACA_RECORDER_EVENT_ACTIONS.UPDATE_MAIN_SWITCH) {
     enabled = message.enabled;
 
-    resetInputAndMouseEvent()
+    resetInputAndMouseEvent();
 
     if (lastElement) resetStyle(lastElement, lastElementBackgroundColor);
 
-    parentRef?.current?.updateEnabled(enabled);
+    (parentRef?.current as any).updateEnabled(enabled);
   }
   if (!enabled) return;
 
   if (message.eventAction === MACACA_RECORDER_EVENT_ACTIONS.UPDATE_MOUSE_SWITCH) {
     mousemoveEnabled = !mousemoveEnabled;
   } else if (message.eventAction === MACACA_RECORDER_EVENT_ACTIONS.UPDATE_STEPS) {
-    resetInputAndMouseEvent(message.action)
-    onRef?.current?.updateSteps(message);
+    resetInputAndMouseEvent(message.action);
+    (onWidgetRef?.current as any).updateSteps(message);
   } else if (message.eventAction === MACACA_RECORDER_EVENT_ACTIONS.COPY_CODE) {
-    resetInputAndMouseEvent()
-    onRef?.current?.copyCode();
+    resetInputAndMouseEvent();
+    (onWidgetRef?.current as any).copyCode();
   }
 });
 
@@ -201,8 +201,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
  * 监听鼠标移动事件
  * @param event
  */
-window.onmousemove = event => {
-
+window.onmousemove = (event) => {
   if (!enabled) return;
 
   if (event.target.id.includes(MACACA_RECORDER)) return;
@@ -212,31 +211,40 @@ window.onmousemove = event => {
   selectors = getElementSelector(event.target);
   if (!selectors.selectors.length) return;
 
-  // 选择样式
+  // 重置样式
   if (lastElement) resetStyle(lastElement, lastElementBackgroundColor);
-  lastElement = event.target;
-  lastElementBackgroundColor = lastElement.style.backgroundColor;
-  setStyle(lastElement, defaultBackgroundColor);
+  (onTooltipRef?.current as any).updateTooltip({}, {});
 
-  // 渲染 tooltip 组件
-  const rect = getElementOffset(lastElement);
-  renderTooltip(rect, selectors);
+  clearTimeout(mouseTimer);
+  mouseTimer = setTimeout(() => {
+    lastElement = event.target;
+    lastElementBackgroundColor = lastElement.style.backgroundColor;
+    setStyle(lastElement, defaultBackgroundColor);
 
-  if (!mousemoveEnabled) return;
-  // 更新悬浮组件的 selectors 数据
-  onRef?.current?.updateSelectors(selectors.selectors);
+    // 更新 tooltip 的 selectors 数据
+    const rect = getElementOffset(lastElement);
+    (onTooltipRef?.current as any).updateTooltip(rect, selectors);
+
+    if (!mousemoveEnabled) return;
+    // 更新 wedget 的 selectors 数据
+    (onWidgetRef?.current as any).updateSelectors(selectors.selectors);
+  }, 25);
 };
 
-
 const main = async () => {
-
-  enabled = await getStorageLocal(MACACA_RECORDER_ENABLED);
+  enabled = await getStorageLocal(MACACA_RECORDER_ENABLED) as boolean;
 
   const app = document.createElement('div');
   app.id = MACACA_RECORDER_CONTAINER;
   document.body.appendChild(app);
   const crxContainer = ReactDOM.createRoot(document.getElementById(app.id));
-  crxContainer.render(<MacacaRecorderCenter handleWidgetClick={handleWidgetClick} onRef={onRef} enabled={enabled} ref={parentRef}/>);
-}
+  crxContainer.render(<MacacaRecorderCenter
+    handleWidgetClick={handleWidgetClick}
+    onWidgetRef={onWidgetRef}
+    onTooltipRef={onTooltipRef}
+    enabled={enabled}
+    ref={parentRef}
+  />);
+};
 
 main();

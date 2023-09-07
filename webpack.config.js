@@ -46,7 +46,7 @@ const plugins = [
       },
       {
         from: 'public',
-      }
+      },
     ],
   }),
   new webpack.DefinePlugin({
@@ -84,7 +84,7 @@ const rules = [
     exclude: /node_modules/,
   },
   {
-    test: /\.js$/,
+    test: /\.(js|jsx)$/,
     exclude: /node_modules/,
     use: {
       loader: 'babel-loader',

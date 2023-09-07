@@ -3,13 +3,16 @@ import Widget from './widget/widget';
 import Tooltip from './tooltip/tooltip';
 
 interface Props {
-  handleWidgetClick: () => void;
-  onRef: any;
+  handleWidgetClick: (action: string, opts: object) => void;
+  onWidgetRef: any;
+  onTooltipRef: any
   enabled: boolean;
 }
 
 export default forwardRef((props: Props, ref) => {
-  const { handleWidgetClick, onRef, enabled: e } = props;
+  const {
+    handleWidgetClick, onWidgetRef, onTooltipRef, enabled: e,
+  } = props;
   const [enabled, setEnabled] = useState(e);
 
   const updateEnabled = (status) => {
@@ -24,8 +27,8 @@ export default forwardRef((props: Props, ref) => {
     <div>
       {enabled && (
         <>
-          <Tooltip />
-          <Widget handleWidgetClick={handleWidgetClick} onRef={onRef} />
+          <Tooltip onRef={onTooltipRef} />
+          <Widget handleWidgetClick={handleWidgetClick} onRef={onWidgetRef} />
         </>
       )}
     </div>
