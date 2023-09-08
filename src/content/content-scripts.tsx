@@ -152,12 +152,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 const addClickEvent = (event) => {
-  event.target.addEventListener(COMMON_ACTIONS.CLICK, (event) => {
+  event.target.addEventListener(COMMON_ACTIONS.CLICK, (e) => {
     // 处理点击事件的代码
     if (!enabled) return;
 
-    if ((event.target as any).id.includes(MACACA_RECORDER)) {
-      event.stopPropagation();
+    if ((e.target as any).id.includes(MACACA_RECORDER)) {
+      e.stopPropagation();
       return;
     }
     clicked = true;
@@ -177,11 +177,11 @@ const addClickEvent = (event) => {
 };
 
 const addDblClickEvent = (event) => {
-  event.target.addEventListener(COMMON_ACTIONS.DBLCLICK, (event) => {
+  event.target.addEventListener(COMMON_ACTIONS.DBLCLICK, (e) => {
     if (!enabled) return;
 
-    if ((event.target as any).id.includes(MACACA_RECORDER)) {
-      event.stopPropagation();
+    if ((e.target as any).id.includes(MACACA_RECORDER)) {
+      e.stopPropagation();
       return;
     }
 
