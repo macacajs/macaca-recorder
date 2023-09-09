@@ -140,7 +140,7 @@ function FloatingView(props: FloatingViewProps) {
               </div>
             </th>
           </tr>
-          {selectors.map((selector, index) => (
+          {selectors && selectors.map((selector, index) => (
             <tr>
               <td
                 onClick={handleTdClick}
@@ -195,7 +195,7 @@ function FloatingView(props: FloatingViewProps) {
         id={MACACA_RECORDER_WIDGET_ID}
         ref={scrollContainerRef}
       >
-        {steps.map((step) => (
+        {steps && steps.map((step) => (
           <span id={MACACA_RECORDER_WIDGET_ID}>
             {step}
             <br />
@@ -207,7 +207,7 @@ function FloatingView(props: FloatingViewProps) {
 }
 
 interface Props {
-  handleWidgetClick: () => void;
+  handleWidgetClick: (action: string, opts: object) => void;
   onRef: any;
 }
 

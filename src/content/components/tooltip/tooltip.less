@@ -1,10 +1,16 @@
 .macaca-recorder-container-tooltip {
+  padding: 3px;
+  margin: 3px;
   position: absolute;
   z-index: 9999;
-  background-color: rgb(18, 18, 18, 0.9);
+  background-color: #262626;
   color: #b1b1b1;
   font-weight: bold;
   font-size: 14px;
   cursor: 'pointer';
   border-radius: 2px;
+  max-width: 500px;
+  overflow: hidden; /* 隐藏超出部分 */
+  white-space: nowrap; /* 禁止文字换行 */
+  text-overflow: ellipsis;
 }
