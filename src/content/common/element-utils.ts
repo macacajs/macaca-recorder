@@ -43,17 +43,18 @@ const getElementXPath = (element) => {
   if (!element) return {};
   const xpaths = [];
   let tagName = element.tagName.toLowerCase();
-  const text = element.firstChild?.nodeValue;
-
   // 指定 text 的 xpath
-  if (text) {
-    xpaths.push({
-      xpath: `//*[text()="${text}"]`,
-      key: 'text',
-      value: text,
-      tag: tagName,
-    });
-  }
+  const { childNodes } = element;
+  childNodes.forEach((childNode) => {
+    if (childNode.nodeValue?.trim()) {
+      xpaths.push({
+        xpath: `//*[text()="${childNode.nodeValue}"]`,
+        key: 'text',
+        value: childNode.nodeValue,
+        tag: tagName,
+      });
+    }
+  });
 
   // 指定属性的 xpath
   ATTRIBUTE_NAMES_CONFIG.forEach((key) => {
