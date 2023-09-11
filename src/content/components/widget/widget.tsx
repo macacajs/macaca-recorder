@@ -216,7 +216,7 @@ function Widget(props: Props) {
   const [selectors, setSelectors] = useState([]);
   const [steps, setSteps] = useState([]);
   const [template, setTemplate] = useState();
-  const [position] = useState({ right: 20, bottom: 200 });
+  const [position] = useState({ right: 20, bottom: 150 });
   const { handleWidgetClick, onRef } = props;
 
   const updateSelectors = (data) => {
