@@ -13,7 +13,7 @@ import {
 import templates from './templates';
 
 const actions = {
-  template: null,
+  template: MACACA_RECORDER_TEMPLATE.MACACA,
 };
 
 /**
@@ -96,7 +96,7 @@ chrome.runtime.onInstalled.addListener(async () => {
   console.log('plug-in has been initialized.');
 
   const template = await getStorageLocal(MACACA_RECORDER_TEMPLATE.CURRENT_TEMPLATE);
-  actions.template = template || MACACA_RECORDER_TEMPLATE.MACACA;
+  actions.template = template as string || MACACA_RECORDER_TEMPLATE.MACACA;
 
   await setStorageLocal({ [MACACA_RECORDER_ENABLED]: true });
 
@@ -127,11 +127,7 @@ chrome.runtime.onMessage.addListener(async (message) => {
       break;
     }
     case COMMON_ACTIONS.CLEAN_CODE: {
-      const steps = MACACA_RECORDER_TEMPLATE.TEMPLATES.reduce((acc, curr) => {
-        acc[curr] = [];
-        return acc;
-      }, {});
-      actions[tabId].steps = steps;
+      delete actions[tabId];
       chrome.tabs.sendMessage(tabId, {
         eventAction: MACACA_RECORDER_EVENT_ACTIONS.UPDATE_STEPS,
         steps: [],
