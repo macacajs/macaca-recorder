@@ -142,6 +142,13 @@ chrome.runtime.onMessage.addListener(async (message) => {
       });
       break;
     }
+    case COMMON_ACTIONS.DEVTOOLS_SELECT: {
+      chrome.tabs.sendMessage(tabId, {
+        eventAction: MACACA_RECORDER_EVENT_ACTIONS.UPDATE_SELECTORS,
+        template: actions.template,
+      });
+      break;
+    }
     case COMMON_ACTIONS.CLICK:
     case COMMON_ACTIONS.DBLCLICK:
     case COMMON_ACTIONS.HOVER:
