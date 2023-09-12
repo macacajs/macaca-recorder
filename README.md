@@ -1,4 +1,4 @@
-# macaca-recorder 浏览器插件
+# Macaca Recorder 浏览器插件
 
 ---
 
@@ -11,7 +11,7 @@
 
 - 支持鼠标移动到指定元素获取对应的 xpath 信息
 - 支持记录鼠标点击、双击、输入、鼠标悬浮等操作步骤
-- 支持 macaca、cypress 等代码模版
+- 支持 Macaca、Cypress 等框架工具的用例代码模版
 
 <p align="left">
   <img
@@ -63,10 +63,10 @@ $ npm run build
 
 ## 贡献者
 
-|[<img src="https://avatars.githubusercontent.com/u/12947068?v=4" width="100px;"/><br/><sub><b>ilimei</b></sub>](https://github.com/ilimei)<br/>|[<img src="https://avatars.githubusercontent.com/u/1011681?v=4" width="100px;"/><br/><sub><b>xudafeng</b></sub>](https://github.com/xudafeng)<br/>|[<img src="https://avatars.githubusercontent.com/u/52845048?v=4" width="100px;"/><br/><sub><b>snapre</b></sub>](https://github.com/snapre)<br/>|[<img src="https://avatars.githubusercontent.com/u/10104168?v=4" width="100px;"/><br/><sub><b>yihuineng</b></sub>](https://github.com/yihuineng)<br/>|[<img src="https://avatars.githubusercontent.com/u/30293087?v=4" width="100px;"/><br/><sub><b>Jodeee</b></sub>](https://github.com/Jodeee)<br/>|
+|[<img src="https://avatars.githubusercontent.com/u/12947068?v=4" width="100px;"/><br/><sub><b>ilimei</b></sub>](https://github.com/ilimei)<br/>|[<img src="https://avatars.githubusercontent.com/u/1011681?v=4" width="100px;"/><br/><sub><b>xudafeng</b></sub>](https://github.com/xudafeng)<br/>|[<img src="https://avatars.githubusercontent.com/u/30293087?v=4" width="100px;"/><br/><sub><b>Jodeee</b></sub>](https://github.com/Jodeee)<br/>|[<img src="https://avatars.githubusercontent.com/u/52845048?v=4" width="100px;"/><br/><sub><b>snapre</b></sub>](https://github.com/snapre)<br/>|[<img src="https://avatars.githubusercontent.com/u/10104168?v=4" width="100px;"/><br/><sub><b>yihuineng</b></sub>](https://github.com/yihuineng)<br/>|
 | :---: | :---: | :---: | :---: | :---: |
 
 
-[git-contributor 说明](https://github.com/xudafeng/git-contributor)，自动生成时间：`Wed Aug 30 2023 15:12:58 GMT+0800`。
+[git-contributor 说明](https://github.com/xudafeng/git-contributor)，自动生成时间：`Tue Sep 12 2023 20:44:30 GMT+0800`。
 
 <!-- GITCONTRIBUTOR_END -->
