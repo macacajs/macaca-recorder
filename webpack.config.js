@@ -26,6 +26,7 @@ const fileExtensions = [
 const entries = {
   contentScript: 'content-scripts',
   background: 'background',
+  devtools: 'devtools',
   extensionPage: [ 'setting' ],
 };
 
@@ -67,6 +68,7 @@ if (isProd) {
 
 const entry = {
   [entries.background]: path.join(srcPath, entries.background),
+  [entries.devtools]: path.join(srcPath, entries.devtools),
   [entries.contentScript]: path.join(srcPath, 'content', entries.contentScript),
 };
 

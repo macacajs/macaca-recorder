@@ -6,6 +6,7 @@
   "background": {
     "service_worker": "background.js"
   },
+  "devtools_page": "devtools.html",
   "action": {},
   "content_scripts": [
     {

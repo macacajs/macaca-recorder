@@ -9,6 +9,7 @@ import {
   MACACA_RECORDER_CONTAINER,
   MACACA_RECORDER_ENABLED,
   MACACA_RECORDER_EVENT_ACTIONS,
+  DATA_MACACA_RECORDER_SELECT_TAG,
 } from '@/constants';
 import {
   getStorageLocal,
@@ -58,8 +59,6 @@ const parentRef = React.createRef();
 
 /**
  * 监听悬浮面板的操作
- * @param {*} action
- * @param {*} opts
  */
 const handleWidgetClick = (action, opts = {}) => {
   chrome.runtime.sendMessage({
@@ -148,9 +147,22 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } else if (message.eventAction === MACACA_RECORDER_EVENT_ACTIONS.COPY_CODE) {
     resetInputAndMouseEvent();
     (onWidgetRef?.current as any).copyCode();
+  } else if (message.eventAction === MACACA_RECORDER_EVENT_ACTIONS.UPDATE_SELECTORS) {
+    resetInputAndMouseEvent();
+
+    const selectElement = document.querySelector(`[${DATA_MACACA_RECORDER_SELECT_TAG}]`);
+    selectors = getElementSelector(selectElement);
+    if (!selectors.selectors.length) return;
+
+    mousemoveEnabled = false;
+
+    (onWidgetRef?.current as any).updateSelectors(selectors.selectors);
   }
 });
 
+/**
+ * 监听单击事件
+ */
 const addClickEvent = (event) => {
   event.target.addEventListener(COMMON_ACTIONS.CLICK, (e) => {
     // 处理点击事件的代码
@@ -176,6 +188,9 @@ const addClickEvent = (event) => {
   });
 };
 
+/**
+ * 监听双击事件
+ */
 const addDblClickEvent = (event) => {
   event.target.addEventListener(COMMON_ACTIONS.DBLCLICK, (e) => {
     if (!enabled) return;
@@ -201,7 +216,6 @@ const addDblClickEvent = (event) => {
 
 /**
  * 监听鼠标移动事件
- * @param event
  */
 window.onmousemove = (event) => {
   if (!enabled) return;
