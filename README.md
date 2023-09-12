@@ -9,14 +9,15 @@
 
 ## 插件说明
 
-- 支持获取指定元素 xpath 路径
-- 支持记录点击、双击、输入、鼠标悬浮等操作步骤，生成对应的代码模版
+- 支持鼠标移动到指定元素获取对应的 xpath 信息
+- 支持记录鼠标点击、双击、输入、鼠标悬浮等操作步骤
+- 支持 macaca、cypress 等代码模版
 
-<p align="center">
+<p align="left">
   <img
     alt="logo"
     src="./resources/demo.gif"
-    width="480"
+    width="800"
   />
 </p>
 
@@ -35,7 +36,7 @@ $ npm run build
 1. 浏览器输入：`chrome://extensions/` 
 2. 加载 build 后的产物 dist/* 文件夹
 
-<p align="center">
+<p align="left">
   <img
     alt="logo"
     src="./resources/dev-1.png"
@@ -45,7 +46,7 @@ $ npm run build
 
 3. 插件常驻
 
-<p align="center">
+<p align="left">
   <img
     alt="logo"
     src="./resources/dev-2.png"
@@ -53,8 +54,10 @@ $ npm run build
   />
 </p>
 
-4. 通过`Option+Space (MacOS) / Alt+Space(Windows)` 可开启、关闭鼠标移动状态监听
-5. 点击插件图标可开启(ON)/关闭(OFF)插件
+4. 将插件钉在浏览器右上角（点击插件可开启/关闭插件）
+5. 刷新页面，右下角可看到插件图标
+6. 鼠标移动到元素时，插件会实时展示当前元素 xpaht，点击、双击等操作会默认选择第一个 xpath，如需选择其它 xpath， 可通过`Option+Space (MacOS) / Alt+Space(Windows)` 开启、关闭鼠标移动监听，选择其它 xpath 后，点击对应的操作即可
+7. 如鼠标无法选择对应元素，可打开元素调试面板，选中对应的元素，即可获取该元素的 xpath
 
 <!-- GITCONTRIBUTOR_START -->
 
