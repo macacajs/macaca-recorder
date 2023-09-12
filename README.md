@@ -17,7 +17,7 @@
   <img
     alt="logo"
     src="./resources/demo.gif"
-    width="480"
+    width="800"
   />
 </p>
 
