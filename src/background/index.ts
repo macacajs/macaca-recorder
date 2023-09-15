@@ -98,9 +98,9 @@ chrome.runtime.onInstalled.addListener(async () => {
   const template = await getStorageLocal(MACACA_RECORDER_TEMPLATE.CURRENT_TEMPLATE);
   actions.template = template as string || MACACA_RECORDER_TEMPLATE.MACACA;
 
-  await setStorageLocal({ [MACACA_RECORDER_ENABLED]: true });
+  await setStorageLocal({ [MACACA_RECORDER_ENABLED]: false });
 
-  chrome.action.setBadgeText({ text: 'ON' });
+  chrome.action.setBadgeText({ text: 'OFF' });
 });
 
 /**
