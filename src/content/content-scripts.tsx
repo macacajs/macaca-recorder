@@ -45,7 +45,7 @@ let inputTimer: any = null;
 let inputActionId: number = null;
 
 // 插件开关
-let enabled = true;
+let enabled = false;
 
 // 鼠标移动监听开关
 let mousemoveEnabled = true;
