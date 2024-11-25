@@ -1,9 +1,8 @@
 export const MACACA_RECORDER = 'macaca-recorder';
 
 export const MACACA_RECORDER_TEMPLATE = {
-  TEMPLATES: ['macaca', 'cypress'],
+  TEMPLATES: ['macaca'],
   MACACA: 'macaca',
-  CYPRESS: 'cypress',
   CURRENT_TEMPLATE: 'current-template',
 };
 
@@ -29,6 +28,7 @@ export const KEYBOARD_ACTIONS = {
 
 export const MACACA_RECORDER_EVENT_ACTIONS = {
   UPDATE_SELECTORS: 'update-selectors',
+  TOGGLE_SELECTOR: 'toggle-selector',
   UPDATE_STEPS: 'update-steps',
   UPDATE_MAIN_SWITCH: 'update-main-switch',
   UPDATE_MOUSE_SWITCH: 'update-mouse-switch',
@@ -40,6 +40,9 @@ export const ATTRIBUTE_NAMES_CONFIG = ['data-testid', 'data-name', 'id', 'title'
 
 // 插件开关
 export const MACACA_RECORDER_ENABLED = 'macaca-recorder-enabled';
+
+// 切换选择器
+export const MACACA_RECORDER_TOGGLE_SELECTOR = 'macaca-recorder-toggle-selector';
 
 // 插件容器 id
 export const MACACA_RECORDER_CONTAINER = 'macaca-recorder-container';

@@ -4,6 +4,7 @@ import {
   COMMON_ACTIONS,
   MACACA_RECORDER_TEMPLATE,
   MACACA_RECORDER_ENABLED,
+  MACACA_RECORDER_TOGGLE_SELECTOR,
   MACACA_RECORDER_EVENT_ACTIONS,
 } from '@/constants';
 import {
@@ -74,7 +75,6 @@ const getCaseSteps = (tabId: number, opts: {
     const lastSteps = actions[tabId].data.slice(-1);
     if (lastSteps.length && lastSteps[0].actionId === actionId) {
       actions[tabId].steps.macaca = actions[tabId].steps.macaca.slice(0, -1);
-      actions[tabId].steps.cypress = actions[tabId].steps.cypress.slice(0, -1);
       actions[tabId].data = actions[tabId].data.slice(0, -1);
     }
   }
@@ -202,10 +202,16 @@ chrome.action.onClicked.addListener(async () => {
 chrome.commands.onCommand.addListener(async (command) => {
   const tabId = await getCurrentTabs() as number;
   if (!tabId) return;
-  if (command !== MACACA_RECORDER_ENABLED) return;
-  chrome.tabs.sendMessage(tabId, {
-    eventAction: MACACA_RECORDER_EVENT_ACTIONS.UPDATE_MOUSE_SWITCH,
-  });
+  // 开启/关闭鼠标移动监听事件
+  if (command === MACACA_RECORDER_ENABLED) {
+    chrome.tabs.sendMessage(tabId, {
+      eventAction: MACACA_RECORDER_EVENT_ACTIONS.UPDATE_MOUSE_SWITCH,
+    });
+  } else if (command === MACACA_RECORDER_TOGGLE_SELECTOR) {
+    chrome.tabs.sendMessage(tabId, {
+      eventAction: MACACA_RECORDER_EVENT_ACTIONS.TOGGLE_SELECTOR,
+    });
+  }
 });
 
 /**

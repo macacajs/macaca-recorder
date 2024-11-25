@@ -1,4 +1,4 @@
-import { COMMON_ACTIONS } from '@/constants';
+import { COMMON_ACTIONS, ATTRIBUTE_NAMES_CONFIG } from '@/constants';
 
 export default (opts:{
   action?: string,
@@ -23,40 +23,38 @@ export default (opts:{
 
   // 参数拼接
   const macacaCommonParameter = [];
-  if (key !== 'text') macacaCommonParameter.push('use: \'xpath\'');
-  if (selectorIndex) macacaCommonParameter.push(`index: ${selectorIndex}`);
-  const args = `${macacaCommonParameter.length ? `, { ${macacaCommonParameter.join(', ')} }` : ''}`;
+  if (selectorIndex) macacaCommonParameter.push(`index=${selectorIndex}`);
+  const args = `${macacaCommonParameter.length ? `, ${macacaCommonParameter.join(', ')}` : ''}`;
   // macaca 模版
-  let macacaTemplate = `'${key === 'text' ? selectorValue : xpath}'${args}`;
-  // cypress 模版
-  let cypressTemplate = `cy.xpath('${xpath}')${selectorIndex ? `.eq(${selectorIndex})` : ''}`;
+  let macacaTemplate;
+  if (key === 'text') {
+    macacaTemplate = `'${selectorValue}'${args}`;
+  } else if (ATTRIBUTE_NAMES_CONFIG.includes(key)) {
+    macacaTemplate = `'${key}=${selectorValue}'${args}`;
+  } else {
+    macacaTemplate = xpath
+  }
 
   switch (action) {
     case COMMON_ACTIONS.CLICK:
-      macacaTemplate = `await driver.clickOn(${macacaTemplate});`;
-      cypressTemplate = `${cypressTemplate}.click();`;
+      macacaTemplate = `driver.click(${macacaTemplate})`;
       break;
     case COMMON_ACTIONS.DBLCLICK:
-      macacaTemplate = `await driver.dblclick(${macacaTemplate});`;
-      cypressTemplate = `${cypressTemplate}.dblclick();`;
+      macacaTemplate = `driver.dblclick(${macacaTemplate})`;
       break;
     case COMMON_ACTIONS.INPUT:
-      macacaTemplate = `await driver.input('${inputValue}');`;
-      cypressTemplate = `${cypressTemplate}.clear().type('${inputValue}');`;
+      macacaTemplate = `driver.input('${inputValue}')`;
       break;
     case COMMON_ACTIONS.HOVER:
-      macacaTemplate = `await driver.move(${macacaTemplate});`;
-      cypressTemplate = `${cypressTemplate}.trigger('mouseover', { force: true });`;
+      macacaTemplate = `driver.hover(${macacaTemplate})`;
       break;
     case COMMON_ACTIONS.CHECK:
-      macacaTemplate = `await driver.check(${macacaTemplate});`;
-      cypressTemplate = `${cypressTemplate}.should('exist');`;
+      macacaTemplate = `driver.check(${macacaTemplate})`;
       break;
     default:
       break;
   }
   return {
     macaca: macacaTemplate,
-    cypress: cypressTemplate,
   };
 };

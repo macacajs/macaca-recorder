@@ -56,6 +56,13 @@
         "mac": "Alt+Space"
       },
       "description": "鼠标移动监听开关"
+    },
+    "macaca-recorder-toggle-selector": {
+      "suggested_key": {
+        "default": "Alt+S",
+        "mac": "Alt+S"
+      },
+      "description": "切换元素"
     }
   }
 }

@@ -68,6 +68,7 @@ const getElementXPath = (element) => {
         xpath,
         key,
         tag: tagName,
+        value: attribute,
       });
     }
   });
@@ -149,7 +150,7 @@ export const getElementSelector = (element): any => {
   if (!element) return {};
   const selectors = [];
   const xpaths = getElementXPath(element);
-  xpaths.forEach((item) => {
+  xpaths.forEach((item, idx) => {
     const elements = evaluate(item.xpath);
     // 获取失败，直接返回
     if (elements.length) {
@@ -159,12 +160,14 @@ export const getElementSelector = (element): any => {
           length: elements.length,
           index,
           ...item,
+          select: idx === 0 ? true : false
         });
       } else {
         selectors.push({
           length: elements.length,
           index: index === -1 ? 0 : index,
           ...item,
+          select: idx === 0 ? true : false
         });
       }
     }
@@ -211,3 +214,21 @@ export const getElementOffset = (element) => {
     left, top, width: rect.width, height: rect.height, pageWidth,
   };
 };
+
+export const toggleSelect = (selectors) => {
+  const currentIndex = selectors.findIndex(selector => selector.select);
+  if (currentIndex === -1) {
+      if (selectors.length > 0) {
+        selectors[0].select = true;
+      }
+  }
+  selectors[currentIndex].select = false;
+  const nextIndex = (currentIndex + 1) % selectors.length;
+  selectors[nextIndex].select = true;
+  return {
+    newSelectors: {
+      selectors
+    },
+    currentIndex: nextIndex
+  }
+}

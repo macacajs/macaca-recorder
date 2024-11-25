@@ -19,6 +19,7 @@ import {
   getElementOffset,
   resetStyle,
   setStyle,
+  toggleSelect
 } from './common/element-utils';
 import MacacaRecorderCenter from './components/MacacaRecorderCenter';
 
@@ -27,6 +28,7 @@ interface Selectors {
 }
 
 let selectors: Selectors;
+let selectIndex: number = 0;
 
 // 元素信息
 let lastElement: HTMLElement = null;
@@ -98,7 +100,7 @@ document.addEventListener(COMMON_ACTIONS.INPUT, (event) => {
     const inputSelectors = getElementSelector(target);
     chrome.runtime.sendMessage({
       action: COMMON_ACTIONS.INPUT,
-      index: 0,
+      index: selectIndex,
       value,
       tag: tagName,
       actionId: inputActionId,
@@ -122,6 +124,96 @@ document.addEventListener(COMMON_ACTIONS.KEYDOWN, (event) => {
     });
   }
 });
+
+/**
+ * 监听单击事件
+ */
+const addClickEvent = (event) => {
+  event.target.addEventListener(COMMON_ACTIONS.CLICK, (e) => {
+    // 处理点击事件的代码
+    if (!enabled) return;
+
+    if ((e.target as any).id.includes(MACACA_RECORDER)) {
+      e.stopPropagation();
+      return;
+    }
+    clicked = true;
+
+    // 重置点击状态
+    clearTimeout(clickTimer);
+    clickTimer = setTimeout(() => {
+      resetInputAndMouseEvent();
+      chrome.runtime.sendMessage({
+        action: COMMON_ACTIONS.CLICK,
+        index: selectIndex,
+        ...selectors,
+      });
+      clicked = false;
+    }, 200);
+  });
+};
+
+/**
+ * 监听双击事件
+ */
+const addDblClickEvent = (event) => {
+  event.target.addEventListener(COMMON_ACTIONS.DBLCLICK, (e) => {
+    if (!enabled) return;
+
+    if ((e.target as any).id.includes(MACACA_RECORDER)) {
+      e.stopPropagation();
+      return;
+    }
+
+    // 重置点击状态
+    clearTimeout(clickTimer);
+    clearTimeout(dbClickTimer);
+    dbClickTimer = setTimeout(() => {
+      resetInputAndMouseEvent();
+      chrome.runtime.sendMessage({
+        action: COMMON_ACTIONS.DBLCLICK,
+        index: selectIndex,
+        ...selectors,
+      });
+    }, 200);
+  });
+};
+
+/**
+ * 监听鼠标移动事件
+ */
+window.onmousemove = (event) => {
+  if (!enabled) return;
+
+  if (event.target.id.includes(MACACA_RECORDER)) return;
+
+  if (event.target === lastElement) return;
+
+  selectIndex = 0;
+  selectors = getElementSelector(event.target);
+  if (!selectors.selectors.length) return;
+
+  // 重置样式
+  if (lastElement) resetStyle(lastElement, lastElementBackgroundColor);
+  (onTooltipRef?.current as any).updateTooltip({}, {});
+
+  clearTimeout(mouseTimer);
+  mouseTimer = setTimeout(() => {
+    lastElement = event.target;
+    lastElementBackgroundColor = lastElement.style.backgroundColor;
+    setStyle(lastElement, defaultBackgroundColor);
+
+    addClickEvent(event);
+    addDblClickEvent(event);
+    // 更新 tooltip 的 selectors 数据
+    const rect = getElementOffset(lastElement);
+    (onTooltipRef?.current as any).updateTooltip(rect, selectors);
+
+    if (!mousemoveEnabled) return;
+    // 更新 wedget 的 selectors 数据
+    (onWidgetRef?.current as any).updateSelectors(selectors.selectors);
+  }, 25);
+};
 
 /**
  * 监听事件消息
@@ -157,97 +249,17 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     mousemoveEnabled = false;
 
     (onWidgetRef?.current as any).updateSelectors(selectors.selectors);
-  }
-});
-
-/**
- * 监听单击事件
- */
-const addClickEvent = (event) => {
-  event.target.addEventListener(COMMON_ACTIONS.CLICK, (e) => {
-    // 处理点击事件的代码
-    if (!enabled) return;
-
-    if ((e.target as any).id.includes(MACACA_RECORDER)) {
-      e.stopPropagation();
-      return;
-    }
-    clicked = true;
-
-    // 重置点击状态
-    clearTimeout(clickTimer);
-    clickTimer = setTimeout(() => {
-      resetInputAndMouseEvent();
-      chrome.runtime.sendMessage({
-        action: COMMON_ACTIONS.CLICK,
-        index: 0,
-        ...selectors,
-      });
-      clicked = false;
-    }, 200);
-  });
-};
-
-/**
- * 监听双击事件
- */
-const addDblClickEvent = (event) => {
-  event.target.addEventListener(COMMON_ACTIONS.DBLCLICK, (e) => {
-    if (!enabled) return;
-
-    if ((e.target as any).id.includes(MACACA_RECORDER)) {
-      e.stopPropagation();
-      return;
-    }
-
-    // 重置点击状态
-    clearTimeout(clickTimer);
-    clearTimeout(dbClickTimer);
-    dbClickTimer = setTimeout(() => {
-      resetInputAndMouseEvent();
-      chrome.runtime.sendMessage({
-        action: COMMON_ACTIONS.DBLCLICK,
-        index: 0,
-        ...selectors,
-      });
-    }, 200);
-  });
-};
-
-/**
- * 监听鼠标移动事件
- */
-window.onmousemove = (event) => {
-  if (!enabled) return;
-
-  if (event.target.id.includes(MACACA_RECORDER)) return;
-
-  if (event.target === lastElement) return;
-
-  selectors = getElementSelector(event.target);
-  if (!selectors.selectors.length) return;
-
-  // 重置样式
-  if (lastElement) resetStyle(lastElement, lastElementBackgroundColor);
-  (onTooltipRef?.current as any).updateTooltip({}, {});
-
-  clearTimeout(mouseTimer);
-  mouseTimer = setTimeout(() => {
-    lastElement = event.target;
-    lastElementBackgroundColor = lastElement.style.backgroundColor;
-    setStyle(lastElement, defaultBackgroundColor);
-
-    addClickEvent(event);
-    addDblClickEvent(event);
+  } else if (message.eventAction === MACACA_RECORDER_EVENT_ACTIONS.TOGGLE_SELECTOR) {
+    const { newSelectors, currentIndex } = toggleSelect(selectors.selectors);
     // 更新 tooltip 的 selectors 数据
     const rect = getElementOffset(lastElement);
-    (onTooltipRef?.current as any).updateTooltip(rect, selectors);
-
-    if (!mousemoveEnabled) return;
+    (onTooltipRef?.current as any).updateTooltip(rect, newSelectors);
     // 更新 wedget 的 selectors 数据
-    (onWidgetRef?.current as any).updateSelectors(selectors.selectors);
-  }, 25);
-};
+    (onWidgetRef?.current as any).updateSelectors(newSelectors.selectors);
+    selectIndex = currentIndex;
+    selectors = newSelectors
+  }
+});
 
 const main = async () => {
   enabled = await getStorageLocal(MACACA_RECORDER_ENABLED) as boolean;

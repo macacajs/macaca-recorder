@@ -20,6 +20,7 @@ interface selectorsProps {
   index: number,
   length: number,
   xpath: string,
+  select: boolean,
 }
 
 interface FloatingViewProps {
@@ -29,20 +30,25 @@ interface FloatingViewProps {
   ) => void;
   selectors: Array<selectorsProps>;
   steps: Array<string>,
-  template: string
+  template: string,
+  onRef: any,
 }
 
 function FloatingView(props: FloatingViewProps) {
   const {
-    handleWidgetClick, selectors, steps, template,
+    handleWidgetClick, selectors, steps, template, onRef
   } = props;
   const [selectIndex, setSelectIndex] = useState(0);
   const scrollContainerRef = useRef(null);
 
   useEffect(() => {
     const tds = document.getElementsByTagName('td') as HTMLCollection;
-    Array.prototype.forEach.call(tds, (td) => {
-      td.classList.remove(MACACA_RECORDER_CELL_SELECT);
+    Array.prototype.forEach.call(tds, (td, index) => {
+      if (index === 0) {
+        td.classList.add(MACACA_RECORDER_CELL_SELECT);
+      } else {
+        td.classList.remove(MACACA_RECORDER_CELL_SELECT);
+      }
     });
     setSelectIndex(0);
   }, [selectors]);
@@ -53,6 +59,19 @@ function FloatingView(props: FloatingViewProps) {
       scrollContainerRef.current.scrollHeight,
     );
   }, [steps]);
+
+  const updateSelectors = (selectors) => {
+    const currentIndex = selectors.findIndex(selector => selector.select);
+    const tds = document.getElementsByTagName('td');
+    Array.prototype.forEach.call(tds, (td, index) => {
+      if (index === currentIndex) {
+        td.classList.add(MACACA_RECORDER_CELL_SELECT);
+      } else {
+        td.classList.remove(MACACA_RECORDER_CELL_SELECT);
+      }
+    });
+    setSelectIndex(currentIndex);
+  };
 
   const handleActionClick = (event) => {
     const action = event.target.getAttribute('data-action');
@@ -86,6 +105,10 @@ function FloatingView(props: FloatingViewProps) {
     const dataIndex = Number(target.getAttribute('data-index'));
     setSelectIndex(dataIndex);
   };
+
+  useImperativeHandle(onRef, () => ({
+    updateSelectors,
+  }));
 
   return (
     <div
@@ -164,7 +187,6 @@ function FloatingView(props: FloatingViewProps) {
           value={template}
         >
           <option id={MACACA_RECORDER_WIDGET_ID}>macaca</option>
-          <option id={MACACA_RECORDER_WIDGET_ID}> cypress </option>
         </select>
         <div
           className={MACACA_RECORDER_BUTTON_DIV}
@@ -218,9 +240,11 @@ function Widget(props: Props) {
   const [template, setTemplate] = useState();
   const [position] = useState({ right: 20, bottom: 150 });
   const { handleWidgetClick, onRef } = props;
+  const onFloatingViewRef = React.createRef();
 
   const updateSelectors = (data) => {
     setSelectors(data);
+    (onFloatingViewRef?.current as any)?.updateSelectors(data);
   };
 
   const updateSteps = (data) => {
@@ -259,6 +283,7 @@ function Widget(props: Props) {
           selectors={selectors}
           steps={steps}
           template={template}
+          onRef={onFloatingViewRef}
         />
       )}
     </div>

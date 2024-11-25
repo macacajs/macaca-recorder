@@ -52,7 +52,9 @@ function Tooltip(props: Props) {
     >
       {selectors && selectors.map((selector) => (
         <>
-          <span id={MACACA_RECORDER_CONTAINER_TOOLTIP}>
+          <span
+            className={selector.select ? `${MACACA_RECORDER_CONTAINER_TOOLTIP}-select` : ''}
+            id={MACACA_RECORDER_CONTAINER_TOOLTIP}>
             {`[${selector.index + 1}/${selector.length}] ${selector.xpath}`}
           </span>
           <br />
