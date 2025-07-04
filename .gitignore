@@ -6,3 +6,5 @@ package-lock.json
 macaca-recorder-testcase
 src/node/plugins/generator/
 src/node/plugins/page/index.js
+.DS_Store
+*.zip

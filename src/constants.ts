@@ -13,9 +13,7 @@ export const COMMON_ACTIONS = {
   INPUT: 'input',
   KEYDOWN: 'keydown',
   CHECK: 'check',
-  COPY: 'copy',
   HOVER: 'hover',
-  CHANGE: 'change',
   COPY_CODE: 'copy-code',
   CLEAN_CODE: 'clean-code',
   CHANGE_TEMPLATE: 'change-template',
@@ -28,12 +26,13 @@ export const KEYBOARD_ACTIONS = {
 
 export const MACACA_RECORDER_EVENT_ACTIONS = {
   UPDATE_SELECTORS: 'update-selectors',
-  TOGGLE_SELECTOR: 'toggle-selector',
   UPDATE_STEPS: 'update-steps',
   UPDATE_MAIN_SWITCH: 'update-main-switch',
   UPDATE_MOUSE_SWITCH: 'update-mouse-switch',
   COPY_CODE: 'copy-code',
-
+  HOTKEYS_SWITCH_SELECTOR: 'hotkeys-switch-selector',
+  HOTKEYS_CLICK_SELECTOR: 'hotkeys_click_selector',
+  HOTKEYS_CHECK_SELECTOR: 'hotkeys_check_selector',
 };
 
 export const ATTRIBUTE_NAMES_CONFIG = ['data-testid', 'data-name', 'id', 'title', 'placeholder', 'name', 'value', 'class'];
@@ -41,8 +40,14 @@ export const ATTRIBUTE_NAMES_CONFIG = ['data-testid', 'data-name', 'id', 'title'
 // 插件开关
 export const MACACA_RECORDER_ENABLED = 'macaca-recorder-enabled';
 
-// 切换选择器
-export const MACACA_RECORDER_TOGGLE_SELECTOR = 'macaca-recorder-toggle-selector';
+// 切换元素快捷键
+export const MACACA_RECORDER_SWITCH_SELECTOR = 'macaca-recorder-switch-selector';
+
+// click 快捷键
+export const MACACA_RECORDER_CLICK = 'macaca-recorder-click';
+
+// check 快捷键
+export const MACACA_RECORDER_CHECK = 'macaca-recorder-check';
 
 // 插件容器 id
 export const MACACA_RECORDER_CONTAINER = 'macaca-recorder-container';

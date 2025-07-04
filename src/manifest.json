@@ -57,12 +57,26 @@
       },
       "description": "鼠标移动监听开关"
     },
-    "macaca-recorder-toggle-selector": {
+    "macaca-recorder-switch-selector": {
       "suggested_key": {
         "default": "Alt+S",
         "mac": "Alt+S"
       },
       "description": "切换元素"
+    },
+    "macaca-recorder-click": {
+      "suggested_key": {
+        "default": "Alt+C",
+        "mac": "Alt+C"
+      },
+      "description": "点击元素"
+    },
+    "macaca-recorder-check": {
+      "suggested_key": {
+        "default": "Alt+V",
+        "mac": "Alt+V"
+      },
+      "description": "检查元素"
     }
   }
 }

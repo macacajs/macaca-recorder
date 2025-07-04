@@ -19,7 +19,7 @@ import {
   getElementOffset,
   resetStyle,
   setStyle,
-  toggleSelect
+  switchSelect,
 } from './common/element-utils';
 import MacacaRecorderCenter from './components/MacacaRecorderCenter';
 
@@ -28,7 +28,7 @@ interface Selectors {
 }
 
 let selectors: Selectors;
-let selectIndex: number = 0;
+let selectIndex = 0;
 
 // 元素信息
 let lastElement: HTMLElement = null;
@@ -241,23 +241,35 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     (onWidgetRef?.current as any).copyCode();
   } else if (message.eventAction === MACACA_RECORDER_EVENT_ACTIONS.UPDATE_SELECTORS) {
     resetInputAndMouseEvent();
-
     const selectElement = document.querySelector(`[${DATA_MACACA_RECORDER_SELECT_TAG}]`);
     selectors = getElementSelector(selectElement);
+
     if (!selectors.selectors.length) return;
-
     mousemoveEnabled = false;
-
     (onWidgetRef?.current as any).updateSelectors(selectors.selectors);
-  } else if (message.eventAction === MACACA_RECORDER_EVENT_ACTIONS.TOGGLE_SELECTOR) {
-    const { newSelectors, currentIndex } = toggleSelect(selectors.selectors);
+  } else if (message.eventAction === MACACA_RECORDER_EVENT_ACTIONS.HOTKEYS_SWITCH_SELECTOR) {
+    const { newSelectors, currentIndex } = switchSelect(selectors.selectors);
     // 更新 tooltip 的 selectors 数据
     const rect = getElementOffset(lastElement);
     (onTooltipRef?.current as any).updateTooltip(rect, newSelectors);
     // 更新 wedget 的 selectors 数据
     (onWidgetRef?.current as any).updateSelectors(newSelectors.selectors);
     selectIndex = currentIndex;
-    selectors = newSelectors
+    selectors = newSelectors;
+  } else if (message.eventAction === MACACA_RECORDER_EVENT_ACTIONS.HOTKEYS_CLICK_SELECTOR) {
+    resetInputAndMouseEvent();
+    chrome.runtime.sendMessage({
+      action: COMMON_ACTIONS.CLICK,
+      index: selectIndex,
+      ...selectors,
+    });
+  } else if (message.eventAction === MACACA_RECORDER_EVENT_ACTIONS.HOTKEYS_CHECK_SELECTOR) {
+    resetInputAndMouseEvent();
+    chrome.runtime.sendMessage({
+      action: COMMON_ACTIONS.CHECK,
+      index: selectIndex,
+      ...selectors,
+    });
   }
 });
 

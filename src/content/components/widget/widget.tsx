@@ -36,7 +36,7 @@ interface FloatingViewProps {
 
 function FloatingView(props: FloatingViewProps) {
   const {
-    handleWidgetClick, selectors, steps, template, onRef
+    handleWidgetClick, selectors, steps, template, onRef,
   } = props;
   const [selectIndex, setSelectIndex] = useState(0);
   const scrollContainerRef = useRef(null);
@@ -60,8 +60,8 @@ function FloatingView(props: FloatingViewProps) {
     );
   }, [steps]);
 
-  const updateSelectors = (selectors) => {
-    const currentIndex = selectors.findIndex(selector => selector.select);
+  const updateSelectors = (currentSelectors) => {
+    const currentIndex = currentSelectors.findIndex((selector) => selector.select);
     const tds = document.getElementsByTagName('td');
     Array.prototype.forEach.call(tds, (td, index) => {
       if (index === currentIndex) {
@@ -119,7 +119,7 @@ function FloatingView(props: FloatingViewProps) {
         <table id={MACACA_RECORDER_WIDGET_ID}>
           <tr id={MACACA_RECORDER_WIDGET_ID}>
             <th id={MACACA_RECORDER_WIDGET_ID}>
-              <span id={MACACA_RECORDER_WIDGET_ID}>元素 / 操作</span>
+              <span id={MACACA_RECORDER_WIDGET_ID}> Action: </span>
               <div
                 className={MACACA_RECORDER_BUTTON_DIV}
                 id={MACACA_RECORDER_WIDGET_ID}
@@ -131,25 +131,7 @@ function FloatingView(props: FloatingViewProps) {
                   id={MACACA_RECORDER_WIDGET_ID}
                   data-action={COMMON_ACTIONS.CLICK}
                 >
-                  点击
-                </button>
-                <button
-                  type="button"
-                  className={MACACA_RECORDER_BUTTON}
-                  onClick={handleActionClick}
-                  id={MACACA_RECORDER_WIDGET_ID}
-                  data-action={COMMON_ACTIONS.DBLCLICK}
-                >
-                  双击
-                </button>
-                <button
-                  type="button"
-                  className={MACACA_RECORDER_BUTTON}
-                  onClick={handleActionClick}
-                  id={MACACA_RECORDER_WIDGET_ID}
-                  data-action={COMMON_ACTIONS.HOVER}
-                >
-                  悬浮
+                  click(Alt+C)
                 </button>
                 <button
                   type="button"
@@ -158,7 +140,25 @@ function FloatingView(props: FloatingViewProps) {
                   id={MACACA_RECORDER_WIDGET_ID}
                   data-action={COMMON_ACTIONS.CHECK}
                 >
-                  检查
+                  check(Alt+V)
+                </button>
+                <button
+                  type="button"
+                  className={MACACA_RECORDER_BUTTON}
+                  onClick={handleActionClick}
+                  id={MACACA_RECORDER_WIDGET_ID}
+                  data-action={COMMON_ACTIONS.DBLCLICK}
+                >
+                  dblclick
+                </button>
+                <button
+                  type="button"
+                  className={MACACA_RECORDER_BUTTON}
+                  onClick={handleActionClick}
+                  id={MACACA_RECORDER_WIDGET_ID}
+                  data-action={COMMON_ACTIONS.HOVER}
+                >
+                  hover
                 </button>
               </div>
             </th>
@@ -177,7 +177,7 @@ function FloatingView(props: FloatingViewProps) {
         </table>
       </div>
       <div className={MACACA_RECORDER_TEMPLATE} id={MACACA_RECORDER_WIDGET_ID}>
-        <span id={MACACA_RECORDER_WIDGET_ID}> 模板：</span>
+        <span id={MACACA_RECORDER_WIDGET_ID}> Template: </span>
         <select
           className={MACACA_RECORDER_TEMPLATEL_SELECT}
           onChange={handleTemplateChange}
@@ -199,7 +199,7 @@ function FloatingView(props: FloatingViewProps) {
             id={MACACA_RECORDER_WIDGET_ID}
             data-action={COMMON_ACTIONS.COPY_CODE}
           >
-            复制代码
+            copy
           </button>
           <button
             type="button"
@@ -208,7 +208,7 @@ function FloatingView(props: FloatingViewProps) {
             id={MACACA_RECORDER_WIDGET_ID}
             data-action={COMMON_ACTIONS.CLEAN_CODE}
           >
-            清除代码
+            clean
           </button>
         </div>
       </div>

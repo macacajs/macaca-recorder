@@ -55,8 +55,13 @@ $ npm run build
 
 4. 将插件钉在浏览器右上角（点击插件可开启/关闭插件）
 5. 刷新页面，右下角可看到插件图标
-6. 鼠标移动到元素时，插件会实时展示当前元素 xpaht，点击、双击等操作会默认选择第一个 xpath，如需选择其它 xpath， 可通过`Option+Space (MacOS) / Alt+Space(Windows)` 开启、关闭鼠标移动监听，选择其它 xpath 后，点击对应的操作即可
-7. 如鼠标无法选择对应元素，可打开元素调试面板，选中对应的元素，即可获取该元素的 xpath
+6. 快捷键 Option(Mac)、Alt(Win)：
+```
+(Option/Alt)+Space: 开启、关闭鼠标移动监听
+(Option/Alt)+S: 切换元素
+(Option/Alt)+C: 点击元素
+(Option/Alt)+V: 检查元素
+```
 
 <!-- GITCONTRIBUTOR_START -->
 

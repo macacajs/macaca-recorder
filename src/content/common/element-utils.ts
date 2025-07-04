@@ -160,14 +160,14 @@ export const getElementSelector = (element): any => {
           length: elements.length,
           index,
           ...item,
-          select: idx === 0 ? true : false
+          select: idx === 0,
         });
       } else {
         selectors.push({
           length: elements.length,
           index: index === -1 ? 0 : index,
           ...item,
-          select: idx === 0 ? true : false
+          select: idx === 0,
         });
       }
     }
@@ -215,20 +215,20 @@ export const getElementOffset = (element) => {
   };
 };
 
-export const toggleSelect = (selectors) => {
-  const currentIndex = selectors.findIndex(selector => selector.select);
+export const switchSelect = (selectors) => {
+  const currentIndex = selectors.findIndex((selector) => selector.select);
   if (currentIndex === -1) {
-      if (selectors.length > 0) {
-        selectors[0].select = true;
-      }
+    if (selectors.length > 0) {
+      selectors[0].select = true;
+    }
   }
   selectors[currentIndex].select = false;
   const nextIndex = (currentIndex + 1) % selectors.length;
   selectors[nextIndex].select = true;
   return {
     newSelectors: {
-      selectors
+      selectors,
     },
-    currentIndex: nextIndex
-  }
-}
+    currentIndex: nextIndex,
+  };
+};

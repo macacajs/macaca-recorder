@@ -4,7 +4,9 @@ import {
   COMMON_ACTIONS,
   MACACA_RECORDER_TEMPLATE,
   MACACA_RECORDER_ENABLED,
-  MACACA_RECORDER_TOGGLE_SELECTOR,
+  MACACA_RECORDER_SWITCH_SELECTOR,
+  MACACA_RECORDER_CLICK,
+  MACACA_RECORDER_CHECK,
   MACACA_RECORDER_EVENT_ACTIONS,
 } from '@/constants';
 import {
@@ -207,9 +209,17 @@ chrome.commands.onCommand.addListener(async (command) => {
     chrome.tabs.sendMessage(tabId, {
       eventAction: MACACA_RECORDER_EVENT_ACTIONS.UPDATE_MOUSE_SWITCH,
     });
-  } else if (command === MACACA_RECORDER_TOGGLE_SELECTOR) {
+  } else if (command === MACACA_RECORDER_SWITCH_SELECTOR) {
     chrome.tabs.sendMessage(tabId, {
-      eventAction: MACACA_RECORDER_EVENT_ACTIONS.TOGGLE_SELECTOR,
+      eventAction: MACACA_RECORDER_EVENT_ACTIONS.HOTKEYS_SWITCH_SELECTOR,
+    });
+  } else if (command === MACACA_RECORDER_CLICK) {
+    chrome.tabs.sendMessage(tabId, {
+      eventAction: MACACA_RECORDER_EVENT_ACTIONS.HOTKEYS_CLICK_SELECTOR,
+    });
+  } else if (command === MACACA_RECORDER_CHECK) {
+    chrome.tabs.sendMessage(tabId, {
+      eventAction: MACACA_RECORDER_EVENT_ACTIONS.HOTKEYS_CHECK_SELECTOR,
     });
   }
 });

@@ -32,7 +32,7 @@ export default (opts:{
   } else if (ATTRIBUTE_NAMES_CONFIG.includes(key)) {
     macacaTemplate = `'${key}=${selectorValue}'${args}`;
   } else {
-    macacaTemplate = xpath
+    macacaTemplate = xpath;
   }
 
   switch (action) {
